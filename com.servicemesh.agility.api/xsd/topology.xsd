@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- COPYRIGHT (C) 2008-2012 SERVICEMESH, INC. ALL RIGHTS RESERVED. CONFIDENTIAL 
+	AND PROPRIETARY. ALL SOFTWARE, INFORMATION AND ANY OTHER RELATED COMMUNICATIONS 
+	(COLLECTIVELY, "WORKS") ARE CONFIDENTIAL AND PROPRIETARY INFORMATION THAT 
+	ARE THE EXCLUSIVE PROPERTY OF SERVICEMESH. ALL WORKS ARE PROVIDED UNDER THE 
+	APPLICABLE AGREEMENT OR END USER LICENSE AGREEMENT IN EFFECT BETWEEN YOU 
+	AND SERVICEMESH. UNLESS OTHERWISE SPECIFIED IN THE APPLICABLE AGREEMENT, 
+	ALL WORKS ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND EITHER EXPRESSED 
+	OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY 
+	AND/OR FITNESS FOR A PARTICULAR PURPOSE. ALL USE, DISCLOSURE AND/OR REPRODUCTION 
+	OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIBITED. -->
+
+<xsd:schema targetNamespace="http://servicemesh.com/agility/api"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+	attributeFormDefault="qualified" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+	jaxb:version="2.0" jaxb:extensionBindingPrefixes="xjc annox"
+	xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns:annox="http://annox.dev.java.net"
+	xmlns:a="http://annox.dev.java.net/com.servicemesh.agility.tools.annotation"
+	xmlns:jl="http://annox.dev.java.net/java.lang" xmlns:jxml="http://annox.dev.java.net/javax.xml.bind.annotation"
+	xmlns:agility="http://servicemesh.com/agility/api">
+
+	<xsd:include schemaLocation="container.xsd" />
+	<xsd:include schemaLocation="general.xsd" />
+	<xsd:include schemaLocation="infrastructure.xsd" />
+
+	<xsd:complexType name="Topology">
+
+		<xsd:annotation>
+			<xsd:appinfo>
+				<annox:annotate target="class">
+					<jxml:XmlRootElement>
+						<jxml:name>Topology</jxml:name>
+					</jxml:XmlRootElement>
+					<a:ApiModel comment="{{topologyComment}}" description="{{topologyDescription}}"
+						externalDocLink="" />
+				</annox:annotate>
+			</xsd:appinfo>
+		</xsd:annotation>
+
+		<xsd:complexContent>
+
+			<xsd:extension base="agility:Container">
+				<xsd:sequence>
+
+					<xsd:element name="parentProject" type="agility:Link"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField comment="The parent project."
+										introducedIn="3.2"
+										systemGenerated="true" />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="fixedOrder" type="agility:Link"
+						minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField
+										comment="List of references to child assets that are started in a fixed order." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="anyOrder" type="agility:Link"
+						minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField
+										comment="List of references to child assets that are started in any order." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="manualStartup" type="agility:Link"
+						minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField
+										comment="List of references to child assets that are started manually." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="variables" type="agility:AssetProperty"
+						minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField comment="List of variables." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="aliases" type="agility:Alias"
+						minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField comment="List of alias objects." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="accessUri" type="xsd:string"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField comment="URI pattern." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="accessUriExpanded" type="xsd:string"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField comment="Expanded pattern using field variables." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="launcherAccessUri" type="agility:AccessUri"
+						minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField
+										comment="List of access URI objects for optional Agility Store product applications." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="deployer" type="agility:Link"
+						minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField
+										comment="List of references to deployer objects.  This is used with Release Manager solutions." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="sourceBlueprint" type="agility:Link"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField
+										comment="Reference to the blueprint object from which the topology was deployed." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="blueprintSubcontainer" type="xsd:boolean"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField
+										comment="True if the topology was deployed from a blueprint design container." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="resourceAffinity" type="agility:ResourceAffinity">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField
+										comment="The affinity group setting for the design container from which the topology deployed."
+										required="true" />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="mandatoryAffinity" type="xsd:boolean"
+						minOccurs="0" default="false">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField comment="True if the affinity group setting is required." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="antiAffinity" type="xsd:boolean"
+						minOccurs="0" default="false">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField
+										comment="True if the affinity group setting is an anti-affinity." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="stats" type="agility:TopologyStats"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField comment="The instance stats counts for this topology."
+										systemGenerated="true"
+										introducedIn="3.2" />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+</xsd:schema>

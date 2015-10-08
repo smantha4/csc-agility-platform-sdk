@@ -1,0 +1,1 @@
+s/return checkoutAllowed;/return checkoutAllowed != null \&\& checkoutAllowed;/

@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+COPYRIGHT (C) 2008-2012 SERVICEMESH, INC.  ALL RIGHTS RESERVED.  CONFIDENTIAL AND PROPRIETARY. 
+ 
+ALL SOFTWARE, INFORMATION AND ANY OTHER RELATED COMMUNICATIONS (COLLECTIVELY, "WORKS") ARE CONFIDENTIAL AND PROPRIETARY 
+INFORMATION THAT ARE THE EXCLUSIVE PROPERTY OF SERVICEMESH.     ALL WORKS ARE PROVIDED UNDER THE APPLICABLE AGREEMENT OR 
+END USER LICENSE AGREEMENT IN EFFECT BETWEEN YOU AND SERVICEMESH.  UNLESS OTHERWISE SPECIFIED IN THE APPLICABLE AGREEMENT, 
+ALL WORKS ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, 
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.  ALL USE, DISCLOSURE AND/OR 
+REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIBITED.
+-->
+
+<xsd:schema targetNamespace="http://servicemesh.com/agility/api"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="qualified"
+   xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0" jaxb:extensionBindingPrefixes="xjc annox"
+   xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+   xmlns:annox="http://annox.dev.java.net" 
+   xmlns:a="http://annox.dev.java.net/com.servicemesh.agility.tools.annotation"
+   xmlns:jl="http://annox.dev.java.net/java.lang"
+   xmlns:jxml="http://annox.dev.java.net/javax.xml.bind.annotation"
+   xmlns:agility="http://servicemesh.com/agility/api">
+
+   <xsd:include schemaLocation="link.xsd" />
+   
+   <xsd:complexType name="Task">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>Task</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "A Task represents a named, stateful, long-running operation." 
+                           description = "A Task is used to track the progress of a long-running operation.  The task is considered done when the  completionTime is not null.  If the task finishes due to an error, the errorMessage will be not null." 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:sequence>
+         <xsd:element name="id"   type="xsd:int" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Unique identifier.  If the ID value is negative it represents an Agility task." systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="name" type="xsd:string" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Name of task.  Used to identify the purpose." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="type" type="xsd:string" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Type of object represented by the task." systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="status" type="xsd:string" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Current status of task." systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="startedTime" type="xsd:dateTime" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Time task started." systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="completedTime" type="xsd:dateTime" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="If the task is complete, this will represent the ending time." systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="user" type="xsd:string" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Identifier of user that initiated the action that created the task." systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="proxyUser" type="xsd:string" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="User information for proxy." systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="errorMessage" type="xsd:string" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Any messages generated if an error occurred during the task execution." systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="completed" type="xsd:boolean" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="True if the task is complete." systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="paused" type="xsd:boolean" minOccurs="0">
+			<xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="true if the task is paused."
+                     		introducedIn="3.2"
+                     		systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="pausedTime" type="xsd:dateTime" minOccurs="0">
+			<xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="The time the task was paused."
+                     		introducedIn="3.2"
+                     		systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="pausedWorkItemId"  type="xsd:long" minOccurs="0">
+			<xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Used for jBPM workflow tasks. The identifier of a jBPM work item for a paused task. Null if the task is not paused."
+                     		introducedIn="3.2"
+                     		systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="currentNodeName"  type="xsd:string" minOccurs="0">
+         	<xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Used for jBPM workflow tasks. Contains the name of the current node of the workflow process if the workflow is still active."
+                     		introducedIn="3.2"
+                     		systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="currentNodeId"  type="xsd:long" minOccurs="0">
+			<xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Used for jBPM workflow tasks. Contains the id of the current node of the workflow process if the workflow is still active."
+                     		introducedIn="3.2"
+                     		systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="workItemId"  type="xsd:long" minOccurs="0"> 
+			<xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Used for jBPM workflow tasks. The identifier of the current jBPM work item if the workflow is still active."
+                     		introducedIn="3.2"
+                     		systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+
+         <xsd:element name="cancelled" type="xsd:boolean" default="false">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="True if the task was cancelled before completion." systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="visible" type="xsd:boolean" default="true">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="True if the task is to be displayed to the user."
+                     		introducedIn="3.2"
+                     		systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="result" type="agility:Link" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Reference to an execution result object." systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="parentTask" type="agility:Link" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="If the task is a child task, this is a reference to the parent." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="progress" type="xsd:int" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Completion percentage of task." systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="hasDependency" type="xsd:boolean" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="True when the start of a task depends on the completion of another task." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+
+         <xsd:element name="cancellable" type="xsd:boolean" minOccurs="0"/>
+         
+      </xsd:sequence>
+   </xsd:complexType>
+   
+   <xsd:complexType name="Tasklist">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>Tasklist</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Manages a list of task objects." 
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="agility:ServiceMeshList">
+		      <xsd:sequence>
+		         <xsd:element name="Task" type="agility:Task" minOccurs="0" maxOccurs="unbounded">
+		            <xsd:annotation>
+		               <xsd:appinfo>
+		                  <annox:annotate target="field">
+		                     <a:ApiField comment="List of task objects." />
+		                  </annox:annotate>
+		               </xsd:appinfo>
+		            </xsd:annotation>
+		         </xsd:element>
+		      </xsd:sequence>
+		      
+		      <xsd:attribute name="name" type="xsd:string" use="optional">
+		         <xsd:annotation>
+		            <xsd:appinfo>
+		               <annox:annotate target="field">
+		                  <a:ApiField comment="Optional attribute representing the name of the task." />
+		               </annox:annotate>
+		            </xsd:appinfo>
+		         </xsd:annotation>
+		      </xsd:attribute>
+		      
+		      <xsd:attribute name="offset" type="xsd:int" use="optional">
+		         <xsd:annotation>
+		            <xsd:appinfo>
+		               <annox:annotate target="field">
+		                  <a:ApiField comment="Optional attribute representing the paging offset." />
+		               </annox:annotate>
+		            </xsd:appinfo>
+		         </xsd:annotation>
+		      </xsd:attribute>
+		      
+		      <xsd:attribute name="limit" type="xsd:int" use="optional">
+		         <xsd:annotation>
+		            <xsd:appinfo>
+		               <annox:annotate target="field">
+		                  <a:ApiField comment="Optional attribute representing the page size." />
+		               </annox:annotate>
+		            </xsd:appinfo>
+		         </xsd:annotation>
+		      </xsd:attribute>
+		      
+		      <xsd:attribute name="totalCount" type="xsd:int" use="optional">
+		         <xsd:annotation>
+		            <xsd:appinfo>
+		               <annox:annotate target="field">
+		                  <a:ApiField comment="Optional attribute representing the total number of tasks in the list." />
+		               </annox:annotate>
+		            </xsd:appinfo>
+		         </xsd:annotation>
+		      </xsd:attribute>
+		      
+		      <xsd:attribute name="parentId" type="xsd:int" use="optional">
+		         <xsd:annotation>
+		            <xsd:appinfo>
+		               <annox:annotate target="field">
+		                  <a:ApiField comment="Optional attribute representing the identifier of the parent task." />
+		               </annox:annotate>
+		            </xsd:appinfo>
+		         </xsd:annotation>
+		      </xsd:attribute>
+		      
+         </xsd:extension>
+      </xsd:complexContent>
+      
+   </xsd:complexType>
+   
+</xsd:schema>

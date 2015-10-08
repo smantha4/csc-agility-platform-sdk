@@ -1,0 +1,9 @@
+cd xsd
+rm /tmp/ttt
+grep '<xsd:complexType' *.xsd \
+      | sed -e 's/<xsd:complexType[ \t]*name=\"\([a-zA-Z0-9]*\).*$/\1/' \
+      | sed -e 's/:   /	/' > /tmp/ttt
+grep '<xsd:simpleType' *.xsd \
+      | sed -e 's/<xsd:simpleType[ \t]*name=\"\([a-zA-Z0-9]*\).*$/\1/' \
+      | sed -e 's/:   /	/' >> /tmp/ttt
+sort -t"	" -k2,2 < /tmp/ttt  | awk -F "	" '{printf "%-40s %s\n", $2,  $1}'

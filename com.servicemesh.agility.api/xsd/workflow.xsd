@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+COPYRIGHT (C) 2008-2012 SERVICEMESH, INC.  ALL RIGHTS RESERVED.  CONFIDENTIAL AND PROPRIETARY. 
+ 
+ALL SOFTWARE, INFORMATION AND ANY OTHER RELATED COMMUNICATIONS (COLLECTIVELY, "WORKS") ARE CONFIDENTIAL AND PROPRIETARY 
+INFORMATION THAT ARE THE EXCLUSIVE PROPERTY OF SERVICEMESH.     ALL WORKS ARE PROVIDED UNDER THE APPLICABLE AGREEMENT OR 
+END USER LICENSE AGREEMENT IN EFFECT BETWEEN YOU AND SERVICEMESH.  UNLESS OTHERWISE SPECIFIED IN THE APPLICABLE AGREEMENT, 
+ALL WORKS ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, 
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.  ALL USE, DISCLOSURE AND/OR 
+REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIBITED.
+-->
+
+<xsd:schema targetNamespace="http://servicemesh.com/agility/api"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="qualified"
+   xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0" jaxb:extensionBindingPrefixes="xjc annox"
+   xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+   xmlns:annox="http://annox.dev.java.net" 
+   xmlns:a="http://annox.dev.java.net/com.servicemesh.agility.tools.annotation"
+   xmlns:jl="http://annox.dev.java.net/java.lang"
+   xmlns:jxml="http://annox.dev.java.net/javax.xml.bind.annotation"
+   xmlns:agility="http://servicemesh.com/agility/api">
+
+   <xsd:include schemaLocation="link.xsd" />
+   
+   <!-- Inbox -->
+
+   <xsd:complexType name="WorkflowMeta">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>WorkflowMeta</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "WorkflowMeta object." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      
+      <xsd:sequence>
+         <xsd:element name="workflowEventId" type="xsd:int" minOccurs="1">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Event identifier for workflow event." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="workflowVersion" type="xsd:int" minOccurs="1">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Asset version associated with workflow event." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="assetTypeId" type="xsd:int" minOccurs="1">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Identifies the asset type." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="expectedExecutionPath" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="(no longer used)" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="publishStates" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="(no longer used)" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="stateMeta" type="agility:Link" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Reference to asset state meta data." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="taskMeta" type="agility:Link" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Reference to task meta data." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+
+   <xsd:complexType name="WorkflowTask">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>WorkflowTask</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "WorkflowTask object." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:sequence>
+         <xsd:element name="id" type="xsd:int" minOccurs="1">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Identifier of workflow event task." systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="name" type="xsd:string">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Name of task." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="description" type="xsd:string">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Description of task." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="assignee" type="xsd:string">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="The user for which this WorkflowTask was created." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="asset" type="agility:Link" minOccurs="1">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Asset associated with the task." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="displayName" type="xsd:string">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Display name of the asset." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="sourceLocation" type="xsd:string">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Source location of the workflow event (in-progress asset location)." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="destinationLocation" type="xsd:string">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Destination of the workflow event (check-in location)." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="formName" type="xsd:string">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Name of a property definition group which defines the fields used for approve and reject." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="workflowEventId" type="xsd:int" minOccurs="1">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Identifier for the workflow event." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="workflowVersionId" type="xsd:int" minOccurs="1">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Version identifier for the workflow event." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="actions" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="List of actions associated with the task." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="variables" type="agility:Link" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="List of references to variables associated with the task." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="comments" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="List of comment texts associated with the task." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="candidateUserIds" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="List of candidate user ids associated with the task." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="candidateGroupIds" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="List of candidate group ids associated with the task" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+
+   <xsd:complexType name="WorkflowTaskList">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>WorkflowTaskList</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "WorkflowTaskList object." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="agility:ServiceMeshList">
+		      <xsd:sequence>
+		         <xsd:element name="totalCount" type="xsd:int" minOccurs="1">
+		            <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Count of tasks." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+		         <xsd:element name="tasks" type="agility:Link" minOccurs="0" maxOccurs="unbounded">
+		            <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="List of references to WorkflowTask items." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+		      </xsd:sequence>
+		   </xsd:extension>
+		</xsd:complexContent>
+		
+   </xsd:complexType>
+
+   <xsd:complexType name="WorkflowTaskMeta">
+   
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>WorkflowTaskMeta</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "WorkflowTaskMeta object." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:sequence>
+         <xsd:element name="name" type="xsd:string">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Name of workflow task." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+            <xsd:element name="description" type="xsd:string">
+               <xsd:annotation>
+                  <xsd:appinfo>
+                     <annox:annotate target="field">
+                        <a:ApiField comment="Description for workflow task." />
+                     </annox:annotate>
+                  </xsd:appinfo>
+               </xsd:annotation>
+            </xsd:element>
+            
+            <xsd:element name="icon" type="xsd:string">
+               <xsd:annotation>
+                  <xsd:appinfo>
+                     <annox:annotate target="field">
+                        <a:ApiField comment="Icon associated with workflow task." />
+                     </annox:annotate>
+                  </xsd:appinfo>
+               </xsd:annotation>
+            </xsd:element>
+            
+            <xsd:element name="pathIcon" type="xsd:string">
+               <xsd:annotation>
+                  <xsd:appinfo>
+                     <annox:annotate target="field">
+                        <a:ApiField comment="Path for icon." />
+                     </annox:annotate>
+                  </xsd:appinfo>
+               </xsd:annotation>
+            </xsd:element>
+            
+            <xsd:element name="transitions" type="agility:Link" minOccurs="0" maxOccurs="unbounded">
+               <xsd:annotation>
+                  <xsd:appinfo>
+                     <annox:annotate target="field">
+                        <a:ApiField comment="List of references to WorkflowTransitionMeta items." />
+                     </annox:annotate>
+                  </xsd:appinfo>
+               </xsd:annotation>
+            </xsd:element>
+         </xsd:sequence>
+      </xsd:complexType>
+
+   <xsd:complexType name="WorkflowTransitionMeta">
+   
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>WorkflowTransitionMeta</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "WorkflowTransitionMeta object." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:sequence>
+         <xsd:element name="name" type="xsd:string">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Name for transition workflow." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+               
+         <xsd:element name="skipValidation" type="xsd:boolean" default="false">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="True if the validation is to be skipped; defaults to false." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="formName" type="xsd:string">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Name for form property." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   
+  <!-- Workflow/Inbox -->
+
+  <xsd:complexType name="WorkflowType">
+          <xsd:annotation>
+            <xsd:appinfo>
+              <annox:annotate target="class">
+                <jxml:XmlRootElement>
+                  <jxml:name>WorkflowType</jxml:name>
+                </jxml:XmlRootElement>
+                <a:ApiModel comment = "" 
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+              </annox:annotate>
+            </xsd:appinfo>
+          </xsd:annotation>
+          <xsd:sequence>
+            <xsd:element name="id" type="xsd:int" minOccurs="1"/>
+            <xsd:element name="name" type="xsd:string" />
+            <xsd:element name="description" type="xsd:string" />
+          </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="UserTask">
+          <xsd:annotation>
+            <xsd:appinfo>
+              <annox:annotate target="class">
+                <jxml:XmlRootElement>
+                  <jxml:name>UserTask</jxml:name>
+                </jxml:XmlRootElement>
+                <a:ApiModel comment = "User Task." 
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+              </annox:annotate>
+            </xsd:appinfo>
+          </xsd:annotation>
+          <xsd:sequence>
+            <xsd:element name="id" type="xsd:int" minOccurs="1">
+              <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Unique identifier of the User Task." systemGenerated="true" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+            </xsd:element>
+            
+            <xsd:element name="name" type="xsd:string" />
+            <xsd:element name="description" type="xsd:string" />
+            <xsd:element name="assignee" type="xsd:string" />
+            <xsd:element name="asset" type="agility:Link" minOccurs="1"/>
+            <xsd:element name="source" type="agility:Link" />
+            <xsd:element name="destination" type="agility:Link" />
+            
+            <xsd:element name="requested" type="xsd:dateTime">
+              <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Time the User task was requested." systemGenerated="true" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+            </xsd:element>
+            
+            <xsd:element name="completed" type="xsd:dateTime">
+              <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Time the User Task was commpleted." systemGenerated="true" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+            </xsd:element>
+            
+            <xsd:element name="comment" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="candidateUser" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="candidateGroup" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="workflowTask" type="agility:Link" />
+            <xsd:element name="workflowType" type="agility:Link" />
+          </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="UserTaskList">
+          <xsd:annotation>
+            <xsd:appinfo>
+              <annox:annotate target="class">
+                <jxml:XmlRootElement>
+                  <jxml:name>UserTaskList</jxml:name>
+                </jxml:XmlRootElement>
+                <a:ApiModel comment = "List of User Tasks." 
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+              </annox:annotate>
+            </xsd:appinfo>
+          </xsd:annotation>
+          <xsd:sequence>
+            <xsd:element name="totalCount" type="xsd:int" minOccurs="1"/>
+            <xsd:element name="tasks" type="agility:UserTask" minOccurs="0" maxOccurs="unbounded"/>
+          </xsd:sequence>
+  </xsd:complexType>
+
+</xsd:schema>

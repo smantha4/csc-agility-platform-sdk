@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="test/unit/src"/>
+	<classpathentry kind="lib" path="/agility/test/unit/lib/junit-4.8.1.jar"/>
+	<classpathentry kind="lib" path="lib/java-uuid-generator-3.0.0.jar"/>
+	<classpathentry kind="lib" path="/karaf/system/org/apache/log4j/log4j/1.2.17/log4j-1.2.17.jar"/>
+	<classpathentry kind="lib" path="/karaf/system/org/apache/zookeeper/zookeeper/3.4.2/zookeeper-3.4.2.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

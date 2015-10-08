@@ -1,0 +1,110 @@
+<project>
+
+  <import file="javac.xml" />
+
+  <property name="module.name" value="${ant.project.name}"/>
+  <property name="src.dir" value="."/>
+  <property name="build.dir" value="../Build"/>
+  <property name="module.dir" value="${build.dir}/${module.name}"/>
+  <property name="depend.dir" value="${module.dir}/depend"/>
+  <property name="gen.dir" value="${module.dir}/generated"/>
+  <property name="classes.dir" value="${module.dir}/classes"/>
+  <property name="jar.dir" value="${build.dir}/lib"/>
+  <property name="jar.file" value="${jar.dir}/${module.name}.jar"/>
+  <property name="thirdParty.dir" value="../ThirdParty"/>
+  <property name="pkg.root.dir" value="com/servicemesh/core"/>
+  <property name="ivy.lib" value="../../ivy-lib"/>
+
+  <target name="init">
+    <mkdir dir="${jar.dir}"/>
+    <path id="classpath">
+      <pathelement location="${classes.dir}"/>
+      <fileset dir="${jar.dir}">
+        <include name="**/*.jar"/>
+        <exclude name="**/${module.name}.jar"/>
+      </fileset>
+      <fileset dir="${thirdParty.dir}">
+        <include name="**/*.jar"/>
+      </fileset>
+      <fileset dir="${ivy.lib}" >
+         <include name="log4j-1.2.17.jar"/>
+         <include name="junit-4.11.jar"/>
+         <include name="antlr4-4.1.jar" />
+         <include name="slf4j-api-1.7.5.jar" />
+         <include name="freemarker-2.3.20.jar" />
+         <include name="hamcrest-core-1.3.jar" />
+         <include name="jsr173-1.0.jar" />
+         <include name="logback-classic-1.0.13.jar" />
+         <include name="logback-core-1.0.13.jar" />
+      </fileset>
+    </path>
+  </target>
+
+  <target name="verify" depends="init">
+    <echo message="module.name = ${module.name}"/>
+    <echo message="src.dir = ${src.dir}"/>
+    <echo message="build.dir = ${build.dir}"/>
+    <echo message="module.dir = ${module.dir}"/>
+    <echo message="depend.dir = ${depend.dir}"/>
+    <echo message="gen.dir = ${gen.dir}"/>
+    <echo message="classes.dir = ${classes.dir}"/>
+    <echo message="jar.dir = ${jar.dir}"/>
+    <echo message="jar.file = ${jar.file}"/>
+    <echo message="thirdParty.dir = ${thirdParty.dir}"/>
+    <echo message="pkg.root.dir = ${pkg.root.dir}"/>
+  </target>
+
+  <target name="generate" depends="init">
+    <mkdir dir="${gen.dir}"/>
+    <!-- Can be overridden to do something interesting. -->
+  </target>
+
+  <target name="compile" depends="generate">
+    <mkdir dir="${classes.dir}"/>
+    <mkdir dir="${depend.dir}"/>
+    <depend srcdir="${src.dir}:${gen.dir}"
+            destdir="${classes.dir}" cache="${depend.dir}"/>
+    <javac includeantruntime="false" debug="on" destdir="${classes.dir}">
+      <src location="${src.dir}"/>
+      <src location="${gen.dir}"/>
+      <exclude name="**/tmp/**"/>
+      <classpath refid="classpath"/>
+    </javac>
+  </target>
+
+  <target name="test" depends="compile" unless="skipTests">
+    <!-- Is there a less ugly way to do this? -->
+    <condition property="internal.excludeFromTests"
+               value="${excludeFromTests}">
+      <isset property="excludeFromTests"/>
+    </condition>
+    <condition property="internal.excludeFromTests"
+               value="">
+      <not><isset property="excludeFromTests"/></not>
+    </condition>
+    <junit failureProperty="junit.failed" errorProperty="junit.failed">
+      <classpath refid="classpath"/>
+      <formatter type="plain" usefile="false"/>
+      <batchtest>
+        <fileset dir="${classes.dir}">
+          <include name="**/test/*Test.class"/>
+          <exclude name="${internal.excludeFromTests}"/>
+        </fileset>
+        <fileset dir="${gen.dir}">
+          <include name="**/test/*Test.class"/>
+          <exclude name="${internal.excludeFromTests}"/>
+        </fileset>
+      </batchtest>
+    </junit>
+    <fail message="Not all JUnit Tests Passed" if="junit.failed"/>
+  </target>
+
+  <target name="jar" depends="test">
+    <jar jarfile="${jar.file}" basedir="${classes.dir}"/>
+  </target>
+
+  <target name="clean">
+    <delete dir="${module.dir}"/>
+    <delete file="${jar.file}"/>
+  </target>
+</project>

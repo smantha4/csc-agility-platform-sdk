@@ -1,0 +1,183 @@
+<?xml version="1.0" standalone="yes"?>
+<project name="com.servicemesh.io" basedir="." default="help" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+   <property name="bundle.version" value="1.0.0"/>
+   <property environment="env" />
+   <property name="src" value="src" />
+   <property name="bin" value="bin" />
+   <property name="lib" value="lib" />
+   <property name="dist" value="../dist" />
+   <property name="ivy.lib" value="../ivy-lib" />
+   <property name="root" value="../../" />
+   <property name="karaf" value="${root}karaf" />
+   <property name="platform.bundles" value="${karaf}/bundles" />
+   <property name="platform.system" value="${karaf}/system" />
+   <property name="externs.dir" value="${root}externs" />
+   <property name="unit.test.src" value="test/unit/src" />
+   <property name="unit.test.resources" value="test/unit/resources"/>
+   <property name="unit.test.bin" value="test/unit/bin" />
+   <property name="unit.test.lib" value="test/unit/lib" />
+   <property name="unit.test.reports" value="test/unit/reports" />
+   <property name="version" value = "v1_0" />
+   <property name="bundle.jar" value = "com.servicemesh.io-${bundle.version}.jar" />
+   <property name="classes" value="${bin}/classes"/>
+   <import file="../coverage.xml" />
+   <set-coverage-properties repo-base-dir="../"/>
+
+   <target name="init">
+      <mkdir dir="${bin}" />
+      <mkdir dir="${unit.test.bin}" />
+      <mkdir dir="${unit.test.bin}/resources"/>
+      <mkdir dir="${unit.test.reports}" />
+      <mkdir dir="${dist}" />
+   </target>
+
+   <path id="compile.classpath">
+      <fileset dir="${lib}" includes="*.jar"/>
+      <fileset dir="${ivy.lib}" >
+         <include name="javax.servlet-5.1.12.jar" />
+         <include name="jaxb-impl-2.2.5-2.jar" />
+         <include name="jaxb-xjc-2.2.5-2.jar" />
+         <include name="jaxb2-basics-0.6.4.jar" />
+         <include name="jaxb2-basics-annotate-0.6.4.jar" />
+         <include name="jaxb2-basics-ant-0.6.4.jar" />
+         <include name="jaxb2-basics-runtime-0.6.4.jar" />
+         <include name="jaxb2-basics-tools-0.6.4.jar" />
+         <include name="slf4j-api-1.7.5.jar" />
+         <include name="log4j-1.2.17.jar"/>
+         <include name="commons-logging-1.1.1.jar" />
+      </fileset>
+      <fileset dir="${dist}">
+         <include name="com.servicemesh.core-*.jar"/>
+      </fileset>
+   </path>
+
+   <path id="unit.test.compile.classpath">
+      <path refid="compile.classpath"/>
+      <pathelement location="${bin}"/>
+      <fileset dir="${ivy.lib}">
+         <include name="junit-4.11.jar"/>
+         <include name="wiremock-1.43.jar"/>
+         <include name="mockito-all-1.9.5-rc1.jar"/>
+         <include name="jackson-annotations-2.3.1.jar"/>
+         <include name="jackson-core-2.3.1.jar"/>
+         <include name="jackson-databind-2.3.1.jar"/>
+         <include name="jetty-6.1.26.jar"/>
+         <include name="jetty-util-6.1.26.jar"/>
+         <include name="json-20140107.jar"/>
+         <include name="jsonassert-1.2.1.jar"/>
+         <include name="sshd-core-0.13.0.jar" />
+         <include name="cglib-nodep-2.2.2.jar" />
+         <include name="javassist-3.18.2-GA.jar" />
+      </fileset>
+      <fileset dir="${unit.test.lib}" includes="*.jar"/>
+   </path>
+
+   <path id="unit.test.classpath">
+      <pathelement location="${unit.test.bin}"/>
+      <pathelement location="${unit.test.bin}/resources"/>
+      <pathelement location="${unit.test.lib}"/>
+      <path refid="unit.test.compile.classpath"/>
+      <path refid="coverage.classpath"/>
+   </path>
+
+   <target name="compile" description="Compile all Java source files" depends="init">
+      <echo message="Compiling the async HTTP java source files..." />
+      <javac destdir="${bin}" debug="on">
+         <src path="${src}" />
+         <classpath>
+            <path refid="compile.classpath"/>
+         </classpath>
+      </javac>
+   </target>
+
+   <target name="deploy_unit_test" unless="coverage_requested"
+           description="Run junit tests with deploy if no coverage requested">
+      <antcall target="unit_test"/>
+   </target>
+
+   <target name="unit_test" depends="unit_test_compile" unless="skipTests" description="Run junit tests">
+      <junit fork="no" forkmode="perBatch" haltonfailure="yes" printsummary="true">
+         <classpath refid="unit.test.classpath" />
+         <jvmarg value="-noverify"/>
+         <formatter type="xml"/>
+         <sysproperty key="${coverage.sysproperty.datafile}" value="${coverage.datafile}"/>
+         <batchtest fork="yes" todir="${unit.test.reports}">
+            <fileset dir="${unit.test.src}">
+               <include name="**/*Test*.java"/>
+               <exclude name="**/AllTests.java"/>
+               <exclude name="**/TestHelpers.java"/>
+            </fileset>
+        </batchtest>
+      </junit>
+   </target>
+
+   <target name="unit_test_compile" depends="compile" unless="skipTests" description="Compile all JUnit source files">
+     <echo message="Compiling the bundles/io java source files..." />
+     <property name="build.sysclasspath" value="ignore"/>
+     <javac destdir="${unit.test.bin}" debug="on">
+        <src path="${unit.test.src}" />
+        <classpath>
+           <path refid="unit.test.compile.classpath"/>
+        </classpath>
+     </javac>
+     <copy file="${unit.test.resources}/junitkeystore.jks" tofile="${unit.test.bin}/resources/junitkeystore.jks"/>
+   </target>
+
+   <target name='javadoc'>
+     <javadoc
+         destdir="../root/WebContent/javadoc/io"
+         author="false"
+         version="true"
+         use="true"
+         windowtitle="Agility Platform IO SDK v1.0">
+
+       <classpath>
+         <pathelement path="${classes}"/>
+         <path refid="compile.classpath"/>
+       </classpath>
+
+       <fileset dir="${src}/com/servicemesh/io" includes="*/*.java"/>
+
+       <doctitle><![CDATA[<h1>Agility Platform I/O Services</h1>]]></doctitle>
+       <bottom><![CDATA[<i>Copyright &#169; 2013-Present Computer Sciences Corporation</i>]]></bottom>
+       <link href="../core"/>
+       <link offline="true"
+             href="http://docs.oracle.com/javase/7/docs/api"
+             packagelistLoc="../root"/>
+     </javadoc>
+   </target>
+
+   <target name="deploy" depends="compile,javadoc,deploy_unit_test" description="Generate and deploy bundle">
+      <jar destfile="${dist}/${bundle.jar}" manifest="META-INF/MANIFEST.MF" basedir="${bin}">
+      	  <fileset dir="${lib}" includes="commons-lang-2.5.jar"/>
+          <fileset dir="${lib}" includes="guava-16.0.1.jar"/>
+          <fileset dir="${lib}" includes="httpasyncclient-4.1.jar"/>
+          <fileset dir="${lib}" includes="httpclient-4.4.1.jar"/>
+          <fileset dir="${lib}" includes="httpcore-4.4.1.jar"/>
+          <fileset dir="${lib}" includes="httpcore-nio-4.4.1.jar"/>
+          <fileset dir="${ivy.lib}" includes="jaxb-impl-2.2.5-2.jar"/>
+          <fileset dir="${ivy.lib}" includes="jaxb-xjc-2.2.5-2.jar"/>
+          <fileset dir="${ivy.lib}" includes="jaxb2-basics-0.6.4.jar"/>
+          <fileset dir="${ivy.lib}" includes="jaxb2-basics-annotate-0.6.4.jar"/>
+          <fileset dir="${ivy.lib}" includes="jaxb2-basics-ant-0.6.4.jar"/>
+          <fileset dir="${ivy.lib}" includes="jaxb2-basics-runtime-0.6.4.jar"/>
+          <fileset dir="${ivy.lib}" includes="jaxb2-basics-tools-0.6.4.jar"/>
+          <fileset dir="${lib}" includes="mindterm.jar"/>
+      </jar>
+   </target>
+
+    <!-- depends="local-coverage-clean" -->
+   <target name="clean" description="Deletes all generated artifacts.">
+      <delete dir="${bin}" />
+      <delete dir="${unit.test.bin}" />
+      <delete file="${unit.test.reports}" />
+   </target>
+
+   <target name="help" description="Help">
+      <echo message="ServiceMesh Asynchronous HTTP Service:"/>
+      <echo message="deploy - Compiles the ServiceMesh Async HTTP Service and creates the jar file."/>
+   </target>
+
+   <!-- import file="../local-coverage.xml"/ -->
+</project>

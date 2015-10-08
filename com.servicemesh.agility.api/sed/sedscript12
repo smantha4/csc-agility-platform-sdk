@@ -1,0 +1,1 @@
+s/public boolean sdkService;/public boolean sdkService = true;/g

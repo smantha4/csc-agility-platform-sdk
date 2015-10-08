@@ -1,0 +1,235 @@
+<?xml version="1.0" standalone="yes"?>
+<project name="com.servicemesh.agility.distributed.sync" basedir="." default="help" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+   <property environment="env" />
+   <property name="src" value="src" />
+   <property name="bin" value="bin" />
+   <property name="ivy.lib" value="../ivy-lib" />
+   <property name="dist" value="../dist" />
+   <property name="bundle.jar" value="com.servicemesh.agility.distributed.sync-1.0.0.jar"/>
+   <property name="bundle.instrumented.jar" value="${bundle.jar}"/>
+   <property name="version" value = "v1_0" />
+   <property name="instrumented" value="${bin}/instrumented" />
+   <import file="../coverage.xml" />
+   <set-coverage-properties repo-base-dir="../"/>
+
+   <property name="unit.test.bin" value="test/unit/bin" />
+   <property name="unit.test.reports" value="test/unit/reports" />
+   <property name="unit.test.src" value="test/unit/src" />
+   <property name="bundle.version" value="1.0.0"/>
+
+   <target name="init">
+      <mkdir dir="${bin}" />
+      <mkdir dir="${unit.test.bin}" />
+      <mkdir dir="${unit.test.reports}" />
+   </target>
+
+   <target name="coverage-init">
+     <initialize-coverage/>
+   </target>
+
+   <path id="compile.classpath">
+      <fileset dir="${dist}" includes="com.servicemesh.core-1.0.0.jar"/>
+      <fileset dir="${ivy.lib}">
+         <include name="java-uuid-generator-3.0.0.jar" />
+         <include name="slf4j-api-1.7.5.jar" />
+         <include name="log4j-1.2.17.jar"/>
+         <include name="zookeeper-3.4.2.jar" />
+         <include name="org.apache.felix.configadmin-1.8.4.jar" />
+         <include name="org.apache.felix.fileinstall-3.5.0.jar" />
+         <include name="org.apache.felix.framework-4.2.1.jar" />
+      </fileset>
+   </path>
+
+   <path id="unit.test.compile.classpath">
+     <path refid="compile.classpath"/>
+     <pathelement location="${bin}"/>
+     <fileset dir="${ivy.lib}">
+        <include name="mockito-all-1.9.5-rc1.jar" />
+        <include name="junit-4.11.jar" />
+        <include name="commons-cli-1.2.jar" />
+        <include name="groovy-1.8.9.jar" />
+        <include name="groovy-all-1.8.9.jar" />
+        <include name="spock-core-0.6-groovy-1.8.jar" />
+        <include name="asm-5.0.1.jar" />
+        <include name="cglib-nodep-2.2.2.jar" />
+     </fileset>
+     <path refid="coverage.classpath"/>
+   </path>
+
+   <path id="spock.classpath">
+      <fileset dir="${ivy.lib}">
+         <include name="cglib-nodep-2.2.2.jar" />
+         <include name="slf4j-api-1.7.5.jar" />
+         <include name="slf4j-jcl-1.7.5.jar" />
+         <include name="groovy-all-1.8.9.jar" />
+         <include name="spock-core-0.6-groovy-1.8.jar" />
+         <include name="asm-5.0.1.jar" />
+      </fileset>
+     <!--fileset dir="${platform.bundles}" includes="com.springsource.slf4j.api-1.5.10.jar"/>
+     <fileset dir="${platform.bundles}" includes="com.springsource.slf4j.jcl-1.5.10.jar"/-->
+   </path>
+
+   <path id="unit.test.classpath">
+     <pathelement location="${unit.test.bin}"/>
+     <fileset dir="${ivy.lib}">
+        <include name="java-uuid-generator-3.0.0.jar" />
+        <include name="junit-4.11.jar" />
+        <include name="log4j-1.2.17.jar"/>
+        <include name="zookeeper-3.4.2.jar" />
+        <include name="org.apache.felix.configadmin-1.8.4.jar" />
+        <include name="org.apache.felix.fileinstall-3.5.0.jar" />
+        <include name="org.apache.felix.framework-4.2.1.jar" />
+        <include name="cglib-nodep-2.2.2.jar" />
+        <include name="mockito-all-1.9.5-rc1.jar"/>
+        <include name="commons-logging-1.1.1.jar" />
+        <include name="commons-cli-1.2.jar" />
+        <include name="groovy-1.8.9.jar" />
+        <include name="groovy-all-1.8.9.jar" />
+        <include name="spock-core-0.6-groovy-1.8.jar" />
+        <include name="asm-5.0.1.jar" />
+     </fileset>
+     <pathelement location="${bin}"/>
+     <path refid="coverage-lib.classpath"/>
+   </path>
+
+   <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="spock.classpath" />
+
+   <!-- ============= build ============ -->
+
+   <target name="compile" description="Compile all Java source files" depends="init">
+      <echo message="Compiling the bundles/distributed/sync java source files..." />
+      <javac destdir="${bin}" debug="on" fork="true">
+         <src path="${src}" />
+         <classpath>
+            <path refid="compile.classpath"/>
+         </classpath>
+      </javac>
+   </target>
+
+   <target name="deploy" depends="compile,deploy_unit_test" description="Generate and deploy bundle">
+      <jar destfile="${dist}/${bundle.jar}"
+           manifest="META-INF/MANIFEST.MF"
+           basedir="${bin}">
+          <fileset dir="${bin}" includes="**/*.class"/>
+          <zipfileset src="${ivy.lib}/java-uuid-generator-3.0.0.jar" includes="**/*.class"/>
+      </jar>
+   </target>
+
+   <target name='javadoc' >
+      <javadoc destdir="../root/WebContent/javadoc/distributed/sync"
+               author="false"
+               version="true"
+               use="true"
+               Public="true"
+               windowtitle="Agility Platform Distributed Sync">
+          <classpath>
+             <pathelement path="${classes}"/>
+             <path refid="compile.classpath"/>
+          </classpath>
+
+          <fileset dir="${src}">
+             <include name="**/*.java"/>
+             <exclude name="**/DistributedQueue.java"/>
+             <exclude name="**/LockListener.java"/>
+             <exclude name="**/WriteLock.java"/>
+             <exclude name="**/ZNodeName.java"/>
+             <exclude name="**/ZooKeeperOperation.java"/>
+             <exclude name="**/impl/*.java"/>
+             <exclude name="**/node/*.java"/>
+          </fileset>
+
+          <doctitle><![CDATA[<h1>Agility Platform Distributed Sync</h1>]]></doctitle>
+          <bottom><![CDATA[<i>Copyright &#169; 2013-Present Computer Sciences Corporation</i>]]></bottom>
+          <link href="../../core"/>
+          <link offline="true"
+            href="http://docs.oracle.com/javase/7/docs/api"
+            packagelistLoc="../../root"/>
+      </javadoc>
+   </target>
+	
+  <!-- =========== instrument/coverage ========= -->
+
+  <target name="instrument" depends="compile,coverage-init">
+    <mkdir dir="${instrumented}"/>
+    <cobertura-instrument todir="${instrumented}" datafile="${platform.coverage}/${coverage.datafile.base}">
+      <ignore regex="org.apache.log4j.*" />
+      <fileset dir="${bin}">
+        <include name="**/*.class"/>
+      </fileset>
+    </cobertura-instrument>
+  </target>
+
+  <target name="deploy-coverage" depends="instrument" description="Generate and deploy bundle">
+    <delete file="${platform.deploy}/${bundle.jar}" quiet="true" />
+    <delete file="${test.lib}/${bundle.jar}" quiet="true" />
+    <mkdir dir="${bin}/META-INF"/>
+    <copy todir="${bin}/META-INF">
+      <fileset dir="META-INF" includes="**/*"/>
+    </copy>
+    <jar destfile="${platform.deploy}/${bundle.instrumented.jar}"
+         manifest="META-INF/MANIFEST.MF"
+         filesetmanifest="skip">
+      <fileset dir="META-INF" includes="**/*"/>
+      <fileset dir="${bin}" includes="**/*.class"/>
+      <fileset dir="${instrumented}" includes="**/*.class"/>
+      <fileset dir="${coverage.tool.dir}" includes="${coverage.tool.jar}"/>
+    </jar>
+    <copy file="${platform.deploy}/${bundle.instrumented.jar}" todir="${test.lib}" />
+  </target>
+
+  <!-- ============= unit test ============ -->
+
+  <target name="unit_test_compile" unless="skipTests">
+    <echo message="Compiling the test source files..."/>
+    <groovyc verbose="true"
+            srcdir="${unit.test.src}"
+            destdir="${unit.test.bin}"
+            classpathref="unit.test.compile.classpath" />
+    <javac destdir="${unit.test.bin}" debug="on" fork="true">
+       <src path="${unit.test.src}"/>
+       <classpath>
+          <path refid="unit.test.compile.classpath"/>
+       </classpath>
+    </javac>
+  </target>
+
+  <target name="deploy_unit_test" unless="coverage_requested"
+           description="Run junit tests with deploy if no coverage requested">
+      <antcall target="unit_test"/>
+  </target>
+
+  <target name="unit_test" unless="skipTests" depends="unit_test_compile">
+    <junit fork="yes" printsummary="true" showoutput="true">
+      <!-- <formatter type="plain" usefile="false" /> -->
+      <formatter type="xml" />
+      <sysproperty key="${coverage.sysproperty.datafile}" value="${coverage.datafile}"/>
+
+      <classpath refid="spock.classpath" />
+      <classpath refid="unit.test.classpath" />
+      <jvmarg value="-noverify" />
+      <batchtest fork="yes" todir="${unit.test.reports}">
+        <fileset dir="${unit.test.src}">
+          <include name="**/*Test*.java"/>
+          <exclude name="**/AllTests.java"/>
+          <exclude name="**/TestHelpers.java"/>
+        </fileset>
+      </batchtest>
+
+    </junit>
+  </target>
+
+  <!-- ============= cleanup ============ -->
+
+   <target name="clean" description="Deletes all generated artifacts.">
+      <delete dir="${bin}" />
+      <delete file="${dist}/${bundle.jar}"/>
+      <delete dir="${unit.test.bin}" />
+      <delete dir="${unit.test.reports}" />
+   </target>
+
+   <target name="help" description="Help">
+      <echo message="deploy - Compiles and creates the jar file."/>
+   </target>
+
+</project>
