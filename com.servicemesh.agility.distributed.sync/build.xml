@@ -102,7 +102,7 @@
 
    <target name="compile" description="Compile all Java source files" depends="init">
       <echo message="Compiling the bundles/distributed/sync java source files..." />
-      <javac destdir="${bin}" debug="on" fork="true">
+      <javac destdir="${bin}" debug="on" fork="true" includeantruntime="false">
          <src path="${src}" />
          <classpath>
             <path refid="compile.classpath"/>
@@ -189,7 +189,7 @@
             srcdir="${unit.test.src}"
             destdir="${unit.test.bin}"
             classpathref="unit.test.compile.classpath" />
-    <javac destdir="${unit.test.bin}" debug="on" fork="true">
+    <javac destdir="${unit.test.bin}" debug="on" fork="true" includeantruntime="false">
        <src path="${unit.test.src}"/>
        <classpath>
           <path refid="unit.test.compile.classpath"/>

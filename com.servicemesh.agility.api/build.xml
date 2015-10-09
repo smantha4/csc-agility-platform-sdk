@@ -228,7 +228,7 @@
    <target name="compile" depends="sedfix" description="Compile all Java source files">
       <echo message="Compiling the bundles/api java source files..." />
    	 <mkdir dir="${classes}" />  
-   	 <javac destdir="${classes}" debug="on" fork="true">
+   	 <javac destdir="${classes}" debug="on" fork="true" includeantruntime="false">
          <src path="${src}" />
          <classpath>
             <path refid="compile.classpath"/>

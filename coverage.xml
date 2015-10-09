@@ -3,7 +3,7 @@
     <attribute name="repo-base-dir"/>
     <sequential>
       <property name="coverage.tool.dir"
-                value="../coverage-lib"/>
+                value="../lib"/>
       <property name="coverage.tool.jar" value="cobertura-2.1.1.jar"/>
       <property name="coverage.dir" value="@{repo-base-dir}/coverage"/>
       <property name="coverage.datafile.base" value="cobertura.ser"/>

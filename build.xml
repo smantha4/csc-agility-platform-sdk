@@ -8,8 +8,14 @@ default="help" xmlns:ivy="antlib:org.apache.ivy.ant">
 <!-- standard properties -->
    <property name="dist.dir" value="dist"/>
    <property name="ivylib" value="ivy-lib" />
+   
+   <target name="help">
+      <java classname="org.apache.tools.ant.Main">
+         <arg value="-projecthelp"/>
+      </java>
+   </target>
 
-   <target name="init">
+   <target name="init" description="Downloads third party jar files needed by the projects in this repo.">
       <mkdir dir="${dist.dir}" />
       <mkdir dir="${ivylib}" />
       <ivy:settings file="ivysettings.xml" />
@@ -26,9 +32,11 @@ default="help" xmlns:ivy="antlib:org.apache.ivy.ant">
       <ant dir="com.servicemesh.core" target="clean" />
       <delete dir="${dist.dir}" />
       <delete dir="${ivylib}" />
+      <delete dir="root" />
+      <delete file="apidocs.log" />
    </target>
 
-   <target name="deploy" depends="init">
+   <target name="deploy" depends="init" description="Downloads third party jars and compiles all of the projects in this repo. The resulting jar files are in the dist directory">
       <ant dir="com.servicemesh.core" target="deploy" />
       <ant dir="com.servicemesh.io" target="deploy" />
       <ant dir="com.servicemesh.agility.distributed.sync" target="deploy" />

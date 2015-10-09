@@ -89,7 +89,7 @@
 
    <target name="compile" description="Compile all Java source files" depends="init">
       <echo message="Compiling the async HTTP java source files..." />
-      <javac destdir="${bin}" debug="on">
+      <javac destdir="${bin}" debug="on" includeantruntime="false">
          <src path="${src}" />
          <classpath>
             <path refid="compile.classpath"/>
@@ -123,7 +123,7 @@
    <target name="unit_test_compile" depends="compile" unless="skipTests" description="Compile all JUnit source files">
      <echo message="Compiling the bundles/io java source files..." />
      <property name="build.sysclasspath" value="ignore"/>
-     <javac destdir="${unit.test.bin}" debug="on">
+     <javac destdir="${unit.test.bin}" debug="on" includeantruntime="false">
         <src path="${unit.test.src}" />
         <classpath>
            <path refid="unit.test.compile.classpath"/>
@@ -156,10 +156,10 @@
      </javadoc>
    </target>
 
-   <target name="deploy" depends="compile,javadoc,deploy_unit_test" description="Generate and deploy bundle">
+   <target name="deploy" depends="compile,deploy_unit_test" description="Generate and deploy bundle">
       <jar destfile="${dist}/${bundle.jar}" manifest="META-INF/MANIFEST.MF" basedir="${bin}">
-      	  <fileset dir="${lib}" includes="commons-lang-2.5.jar"/>
-          <fileset dir="${lib}" includes="guava-16.0.1.jar"/>
+      	  <fileset dir="${ivy.lib}" includes="commons-lang-2.5.jar"/>
+          <fileset dir="${ivy.lib}" includes="guava-16.0.1.jar"/>
           <fileset dir="${lib}" includes="httpasyncclient-4.1.jar"/>
           <fileset dir="${lib}" includes="httpclient-4.4.1.jar"/>
           <fileset dir="${lib}" includes="httpcore-4.4.1.jar"/>

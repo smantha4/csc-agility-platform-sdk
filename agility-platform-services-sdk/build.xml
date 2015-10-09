@@ -151,7 +151,7 @@
   <target name="compile" depends="schema" description="Compile all Java source files">
     <echo message="Compiling the bundles/sdk/service java source files..." />
     <mkdir dir="${classes}" />  
-    <javac destdir="${classes}" debug="on" fork="true">
+    <javac destdir="${classes}" debug="on" fork="true" includeantruntime="false">
       <src path="${src}" />
       <classpath>
         <path refid="compile.classpath"/>
@@ -237,7 +237,7 @@
 
   <target name="compile_unit_test" depends="groovyc" unless="skipTests">
     <mkdir dir="${unit.test.bin}" />
-  	<javac  destdir="${unit.test.bin}" debug="on">
+  	<javac  destdir="${unit.test.bin}" debug="on" includeantruntime="false">
     	<src path="${unit.test.src}" />
 	    <classpath>
 	    	<path refid="unit.test.compile.classpath"/>

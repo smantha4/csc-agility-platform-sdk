@@ -6,6 +6,7 @@
    <property name="bundle.jar" value="Messaging.jar" />
    <property name="ivy.lib" value="../../ivy-lib" />
    <property name="ivyexists" value="false"/>
+   <property name="common.lib" value="../../lib" />
    
    <available file="${ivy.lib}" type="dir" property="ivyexists" />
 	
@@ -28,8 +29,8 @@
                <include name="commons-beanutils-1.7.0.jar" />
                <include name="commons-logging-1.1.1.jar" />
             </fileset>
-            <fileset dir="lib">
-               <include name="*.jar"/>
+            <fileset dir="${common.lib}">
+               <include name="agility-athena-*.jar"/>
             </fileset>
          </classpath>
       </taskdef>
@@ -64,8 +65,8 @@
                <include name="commons-beanutils-1.7.0.jar" />
                <include name="commons-logging-1.1.1.jar" />
             </fileset>
-            <fileset dir="lib">
-               <include name="*.jar"/>
+            <fileset dir="${common.lib}">
+               <include name="agility-athena-*.jar"/>
             </fileset>
          </classpath>
 
