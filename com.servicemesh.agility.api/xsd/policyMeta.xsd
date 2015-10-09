@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+COPYRIGHT (C) 2008-2012 SERVICEMESH, INC.  ALL RIGHTS RESERVED.  CONFIDENTIAL AND PROPRIETARY. 
+ 
+ALL SOFTWARE, INFORMATION AND ANY OTHER RELATED COMMUNICATIONS (COLLECTIVELY, "WORKS") ARE CONFIDENTIAL AND PROPRIETARY 
+INFORMATION THAT ARE THE EXCLUSIVE PROPERTY OF SERVICEMESH.     ALL WORKS ARE PROVIDED UNDER THE APPLICABLE AGREEMENT OR 
+END USER LICENSE AGREEMENT IN EFFECT BETWEEN YOU AND SERVICEMESH.  UNLESS OTHERWISE SPECIFIED IN THE APPLICABLE AGREEMENT, 
+ALL WORKS ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, 
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.  ALL USE, DISCLOSURE AND/OR 
+REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIBITED.
+-->
+
+<xsd:schema targetNamespace="http://servicemesh.com/agility/api"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="qualified"
+   xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0" jaxb:extensionBindingPrefixes="xjc annox"
+   xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+   xmlns:annox="http://annox.dev.java.net" 
+   xmlns:a="http://annox.dev.java.net/com.servicemesh.agility.tools.annotation"
+   xmlns:jl="http://annox.dev.java.net/java.lang"
+   xmlns:jxml="http://annox.dev.java.net/javax.xml.bind.annotation"
+   xmlns:agility="http://servicemesh.com/agility/api">
+
+   <xsd:include schemaLocation="common.xsd" />
+   
+   <xsd:complexType name="PolicyMeta">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>PolicyMeta</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Policy meta data." 
+                           description = "" 
+                           externalDocLink = "" />               
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:sequence>
+         <xsd:element name="type" type="xsd:string">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Type designation of the Policy." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+
+        <xsd:element name="availableScopes" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+        	 <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField introducedIn="3.2" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+        </xsd:element>
+
+      </xsd:sequence>
+   </xsd:complexType>
+  
+   <xsd:complexType name="PolicyMetaModel">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>PolicyMetaModel</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Policy meta data Model." 
+                           description = "" 
+                           externalDocLink = "" />               
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:sequence>
+         <xsd:element name="policyMeta" type="agility:PolicyMeta" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="List of Policy meta data Items included in the Agility Meta Model." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+  
+   <xsd:complexType name="LifecyclePolicyMeta">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>LifecyclePolicyMeta</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Lifecycle Policy meta data." 
+                           description = "" 
+                           externalDocLink = "" />               
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:PolicyMeta">
+            <xsd:sequence>
+               <xsd:element name="supportedAssetType" type="agility:AssetTypeMeta" minOccurs="0" maxOccurs="unbounded">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="List of asset type meta data for support assets." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="WorkflowPolicyMeta">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>WorkflowPolicyMeta</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Workflow Policy meta data."
+                           description = ""
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:PolicyMeta" />
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <xsd:complexType name="ConfigurationPolicyMeta">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>ConfigurationPolicyMeta</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Configuration information for Policy meta data." 
+                           description = "" 
+                           externalDocLink = "" />               
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:PolicyMeta">
+            <xsd:sequence>
+               <xsd:element name="designType" type="agility:AssetTypeBrief" minOccurs="0" maxOccurs="unbounded">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="List of Asset Type Brief objects used by the configuration Policy editor UI." systemGenerated="true" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="resourceType" type="agility:AssetTypeBrief" minOccurs="0" maxOccurs="unbounded">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="List of Asset Type Brief objects used by the configuration policy editor UI." systemGenerated="true" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+    
+   <xsd:complexType name="DeploymentPolicyMeta">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>DeploymentPolicyMeta</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Deployment Policy meta data." 
+                           description = "" 
+                           externalDocLink = "" />               
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:PolicyMeta">
+            <xsd:sequence>
+               <xsd:element name="designType" type="agility:AssetTypeBrief" minOccurs="0" maxOccurs="unbounded">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="List of Asset Type Brief objects used by the configuration policy editor UI." systemGenerated="true" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="resourceType" type="agility:AssetTypeBrief" minOccurs="0" maxOccurs="unbounded">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="List of Asset Type Brief objects used by the configuration policy editor UI." systemGenerated="true" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+</xsd:schema>

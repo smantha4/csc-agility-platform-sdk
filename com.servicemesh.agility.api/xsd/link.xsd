@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+COPYRIGHT (C) 2008-2012 SERVICEMESH, INC.  ALL RIGHTS RESERVED.  CONFIDENTIAL AND PROPRIETARY. 
+ 
+ALL SOFTWARE, INFORMATION AND ANY OTHER RELATED COMMUNICATIONS (COLLECTIVELY, "WORKS") ARE CONFIDENTIAL AND PROPRIETARY 
+INFORMATION THAT ARE THE EXCLUSIVE PROPERTY OF SERVICEMESH.     ALL WORKS ARE PROVIDED UNDER THE APPLICABLE AGREEMENT OR 
+END USER LICENSE AGREEMENT IN EFFECT BETWEEN YOU AND SERVICEMESH.  UNLESS OTHERWISE SPECIFIED IN THE APPLICABLE AGREEMENT, 
+ALL WORKS ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, 
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.  ALL USE, DISCLOSURE AND/OR 
+REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIBITED.
+-->
+
+<xsd:schema targetNamespace="http://servicemesh.com/agility/api"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="qualified"
+   xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0" jaxb:extensionBindingPrefixes="xjc annox"
+   xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+   xmlns:annox="http://annox.dev.java.net" 
+   xmlns:a="http://annox.dev.java.net/com.servicemesh.agility.tools.annotation"
+   xmlns:jl="http://annox.dev.java.net/java.lang"
+   xmlns:jxml="http://annox.dev.java.net/javax.xml.bind.annotation"
+   xmlns:agility="http://servicemesh.com/agility/api">
+
+   <xsd:include schemaLocation="common.xsd" />
+
+   <xsd:complexType name="Baselink">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>Baselink</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Provides a reference to another object.  This is the base class for both Asset and Link, _
+               		so that they can be used interchangably.  The type field is omitted, since it is already used in various other JAXB classes _
+               		and we want to be backwards compatible."
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:sequence>
+
+         <xsd:element name="name" type="xsd:string" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Resource name limited to 255 characters." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="href" type="xsd:string" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="HTTP URI to resource." systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+
+      </xsd:sequence>
+   </xsd:complexType>
+  
+
+   <xsd:complexType name="Link">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>Link</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Provides a reference to another object." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+      <xsd:extension base="agility:Baselink">
+      <xsd:sequence>
+         <xsd:element name="id" type="xsd:int">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="{{id}}" systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+
+         <xsd:element name="rel" type="xsd:string">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Relationship to parent source." systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="type" type="xsd:string">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Object type designation." systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="position" type="xsd:int" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Relative ordering of link when contained in ordered list." systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="linkProperty" type="agility:NameValuePair" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="List of properties assigned to the link." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+      </xsd:sequence>
+      </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+  
+   <xsd:complexType name="LogicalLink">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>LogicalLink</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Provides a logical reference to another object." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:Link">
+            <xsd:sequence>
+               <xsd:element name="logicalId" type="xsd:string" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Identifier of the logical link." systemGenerated="true" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+  
+   <xsd:complexType name="VersionedItemLink">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>VersionedItemLink</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Provides a reference to an item and includes version information." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:Link">
+            <xsd:sequence>
+               <xsd:element name="slot" type="xsd:string" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Slot for the versioned asset." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="version" type="xsd:int" minOccurs="0" default="-1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Version number with the slot." systemGenerated="true" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="latest" type="xsd:boolean" minOccurs="0" default="false">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Used to indicate the head revision.  Default is false." systemGenerated="true" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="slotId" type="xsd:int" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Unique identifier for the item slot." systemGenerated="true" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="versionStatus" type="xsd:string" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Status value of the version." systemGenerated="true" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="lockType" type="xsd:int" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Type of lock assigned to the version." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="DescriptiveLink">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>DescriptiveLink</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Object reference with additional descriptive information." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:Link">
+            <xsd:sequence>
+               <xsd:element name="description" type="xsd:string" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Link description." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="displayName" type="xsd:string" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Name value to use for display purposes." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+    
+   <xsd:complexType name="ItemLink">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>ItemLink</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Reference to another item." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:Link">
+            <xsd:sequence>
+               <xsd:element name="parent" type="agility:Link" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Reference to parent item." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>       
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+  
+   <xsd:complexType name="Linklist">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>Linklist</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Collection of link objects." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      
+      <xsd:complexContent>
+         <xsd:extension base="agility:ServiceMeshList">
+		      <xsd:sequence>
+		         <xsd:element name="link" type="agility:Link" minOccurs="0" maxOccurs="unbounded">
+		            <xsd:annotation>
+		               <xsd:appinfo>
+		                  <annox:annotate target="field">
+		                     <a:ApiField comment="Collection of link objects." />
+		                  </annox:annotate>
+		               </xsd:appinfo>
+		            </xsd:annotation>
+		         </xsd:element>
+		      </xsd:sequence>
+		   </xsd:extension>
+		</xsd:complexContent>
+   </xsd:complexType>
+  
+</xsd:schema>

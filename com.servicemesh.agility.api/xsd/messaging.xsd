@@ -1,0 +1,1059 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+COPYRIGHT (C) 2008-2012 SERVICEMESH, INC.  ALL RIGHTS RESERVED.  CONFIDENTIAL AND PROPRIETARY. 
+ 
+ALL SOFTWARE, INFORMATION AND ANY OTHER RELATED COMMUNICATIONS (COLLECTIVELY, "WORKS") ARE CONFIDENTIAL AND PROPRIETARY 
+INFORMATION THAT ARE THE EXCLUSIVE PROPERTY OF SERVICEMESH.     ALL WORKS ARE PROVIDED UNDER THE APPLICABLE AGREEMENT OR 
+END USER LICENSE AGREEMENT IN EFFECT BETWEEN YOU AND SERVICEMESH.  UNLESS OTHERWISE SPECIFIED IN THE APPLICABLE AGREEMENT, 
+ALL WORKS ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, 
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.  ALL USE, DISCLOSURE AND/OR 
+REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIBITED.
+-->
+
+<xsd:schema targetNamespace="http://servicemesh.com/agility/api"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="qualified"
+   xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0" jaxb:extensionBindingPrefixes="xjc annox"
+   xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+   xmlns:annox="http://annox.dev.java.net" 
+   xmlns:a="http://annox.dev.java.net/com.servicemesh.agility.tools.annotation"
+   xmlns:jl="http://annox.dev.java.net/java.lang"
+   xmlns:jxml="http://annox.dev.java.net/javax.xml.bind.annotation"
+   xmlns:agility="http://servicemesh.com/agility/api"
+   xmlns:core="http://servicemesh.com/core/messaging">
+
+   <xsd:include schemaLocation="asset.xsd" />
+   <xsd:include schemaLocation="infrastructure.xsd" />
+   <xsd:include schemaLocation="instance.xsd" />
+   <xsd:include schemaLocation="storage.xsd" />
+   <xsd:include schemaLocation="property.xsd" />
+   <xsd:import namespace="http://servicemesh.com/core/messaging" schemaLocation="core.xsd"/>
+
+   <xsd:complexType name="ApiRequest">
+   <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>ApiRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used for Agility API service calls."
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="core:Request">
+            <xsd:sequence>
+               <xsd:element name="param" type="agility:Property" minOccurs="0" maxOccurs="unbounded">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="List of parameters needed by the API call." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="currentRequestIndex" type="xsd:int">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="This is used by consecutive calls from an async adapter.  This identifies the current call out of the max needed.  The client knows all async requests have been handled when current equals max." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="maxRequests" type="xsd:int">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="This is used by consecutive calls from an async adapter.  This identifies the total number of requests that will be made.  When current equals max, all requests have been handled." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="cloudId" type="xsd:int">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Identifier of the cloud making the call." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="GetRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>GetRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used by API service call to load an asset from the database when the ID is known."
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:ApiRequest">
+            <xsd:sequence>
+               <xsd:element name="type" type="xsd:string">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Type of asset that will be processed by the operation." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="id" type="xsd:int">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Identifier of the asset." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:element name="GetMultipleRequest" type="agility:GetMultipleRequest"/>
+   <xsd:complexType name="GetMultipleRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>GetMultipleRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = ""
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:ApiRequest">
+            <xsd:sequence>
+               <xsd:element name="link" type="agility:Link" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:element name="GetMultipleResponse" type="agility:GetMultipleResponse"/>
+   <xsd:complexType name="GetMultipleResponse">
+     <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>GetMultipleResponse</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = ""
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+     <xsd:complexContent>
+       <xsd:extension base="core:Response">
+         <xsd:sequence>
+           <xsd:element name="asset" type="agility:Asset" minOccurs="0" maxOccurs="unbounded"/>
+         </xsd:sequence>
+       </xsd:extension>
+     </xsd:complexContent>
+   </xsd:complexType>
+   
+   <xsd:element name="ListRequest" type="agility:ListRequest"/>
+   <xsd:complexType name="ListRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>ListRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used by the API service to load a list of assets."
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:ApiRequest">
+            <xsd:sequence>
+               <xsd:element name="type" type="xsd:string">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Type of asset that is to be processed." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="SearchRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>SearchRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to provide information to the Async API search service."
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:ApiRequest">
+            <xsd:sequence>
+               <xsd:element name="type" type="xsd:string">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Type of asset that is to be processed." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="CreateRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>CreateRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used by the API service to support the creation of an asset."
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:ApiRequest">
+            <xsd:sequence>
+               <xsd:element name="parent" type="agility:Asset" minOccurs="0">
+                   <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Asset that is to be assigned as the parent to the created asset." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="asset" type="agility:Asset">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Asset to be created." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="UpdateRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>UpdateRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used by the Agility API service to update an asset."
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:CreateRequest" />
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="DeleteRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>DeleteRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used by the Agility API service to delete an asset."
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:CreateRequest" />
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="ApiResponse">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>ApiResponse</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Response object used by the Agility API service."
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="core:Response">
+            <xsd:sequence>
+               <xsd:element name="asset" type="agility:Asset" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Asset to be processed." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="currentRequestIndex" type="xsd:int">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="This us used by async adapters to keep track of sequential calls.  This represents the current call of a max number.  This will be passed through from the request." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="maxRequests" type="xsd:int">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="This is used by async adapters to keep track of sequential calls.  This represents the total number of calls that will be made.  This will be passed through from the request." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="ConfigRequest">
+     <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>ConfigRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used by the Agility API service for configuration changes."
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="core:Request">
+            <xsd:sequence>
+               <xsd:element name="property" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Configuration property need for the operation." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="ConfigResponse">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>ConfigResponse</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Response object used by the Agility API service for configuration operations."
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="core:Response">
+            <xsd:sequence>
+               <xsd:element name="property" type="agility:Property" minOccurs="0" maxOccurs="unbounded">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Property that was processed by the operation." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <!--  Network address manipulation requests -->
+   
+   <xsd:simpleType name="AddressOperation" >
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>AddressOperation</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment="AddressOperation Enumeration" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:restriction base="xsd:string" >
+         <xsd:enumeration value="getAvailableAddresses" />
+         <xsd:enumeration value="reserveAddress" />
+         <xsd:enumeration value="unreserveAddress" />
+         <xsd:enumeration value="removeAddressIfAvailable" />
+         <xsd:enumeration value="allocateAddress" />
+         <xsd:enumeration value="releaseAddress" />
+         <xsd:enumeration value="acquireAddressIfAvailable" />
+      </xsd:restriction>
+   </xsd:simpleType>
+   
+   <xsd:complexType name="NetworkAddressRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>NetworkRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Message to request address operations on a network"
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:ApiRequest">
+            <xsd:sequence>
+               <xsd:element name="operation" type="agility:AddressOperation" minOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Network operation to be performed." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="network" type="agility:Network" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Network to which the operation will be applied." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="networkLink" type="agility:Link" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Link representation of the network." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="nic" type="agility:NetworkInterface" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Network interface associated with the network." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="address" type="agility:Address" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="IP address of the interface." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="instance" type="agility:Instance" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Instance associated with the network." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="addressToRelease" type="xsd:string" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="IP address that is to be released." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <xsd:complexType name="NetworkAddressResponse">
+     <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>NetworkAddressResponse</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Contains various elements in response to a network address operation"
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="core:Response">
+            <xsd:sequence>
+               <xsd:element name="address" type="agility:Address" minOccurs="0" maxOccurs="unbounded">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="IP address that was processed by the request." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            
+               <xsd:element name="nic" type="agility:NetworkInterface" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Network interface that was process by the request." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            
+               <xsd:element name="network" type="agility:Network" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Network that was processed by the request." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <xsd:complexType name="ExecuteScriptRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>ExecuteScriptRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Message to request a script execution on an Instance"
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:ApiRequest">
+            <xsd:sequence>
+               <xsd:element name="instance" type="agility:Instance" minOccurs="1" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Instance to which the script is to be applied." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="script" type="agility:Script" minOccurs="1" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Script that is to be executed." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <xsd:complexType name="ExecuteScriptResponse">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>ExecuteScriptResponse</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Contains the ScriptStatus results of the Script execution"
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="core:Response">
+            <xsd:sequence>
+               <xsd:element name="scriptStatus" type="agility:ScriptStatus" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Results of the script execution." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:element name="GetVariableRequest" type="agility:GetVariableRequest"/>
+      <xsd:complexType name="GetVariableRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>GetVariableRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Message to request script variables for an Asset"
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:ApiRequest">
+            <xsd:sequence>
+               <xsd:element name="variableSources" type="agility:Link" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element name="valueSources" type="agility:Link" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:element name="GetVariableResponse" type="agility:GetVariableResponse"/>
+      <xsd:complexType name="GetVariableResponse">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>GetVariableResponse</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Response to request for script variables for an Asset"
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:ApiResponse">
+            <xsd:sequence>
+               <xsd:element name="inputVariable" type="agility:InputVariable" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <xsd:element name="InstanceVariableRequest" type="agility:InstanceVariableRequest"/>
+      <xsd:complexType name="InstanceVariableRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>InstanceVariableRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Message to request variables for an Instance"
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:ApiRequest">
+            <xsd:sequence>
+               <xsd:element name="instanceId" type="xsd:int">
+               <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Unique Instance identifier." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:element name="InstanceVariableResponse" type="agility:InstanceVariableResponse"/>
+      <xsd:complexType name="InstanceVariableResponse">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>InstanceVariableResponse</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Response to request for variables for an Instance"
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:ApiResponse">
+            <xsd:sequence>
+               <xsd:element name="variables" type="agility:Variable" minOccurs="0" maxOccurs="unbounded">
+               <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="List of variables associated to an Instance." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>   
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:element name="CloudPropertyRequest" type="agility:CloudPropertyRequest"/>
+      <xsd:complexType name="CloudPropertyRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>CloudPropertyRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Message to request a property for a Cloud"
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:ApiRequest">
+            <xsd:sequence>
+               <xsd:element name="propertyName" type="xsd:string">
+               <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Unique Cloud Property name." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="defaultValue" type="xsd:boolean">
+               <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Default value for the Cloud Property." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:element name="CloudPropertyResponse" type="agility:CloudPropertyResponse"/>
+      <xsd:complexType name="CloudPropertyResponse">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>CloudPropertyResponse</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Response to request for Cloud property"
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:ApiResponse">
+            <xsd:sequence>
+               <xsd:element name="value" type="xsd:boolean">
+               <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Value for the requested Cloud property." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>   
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+
+   <xsd:element name="CredentialDecryptRequest" type="agility:CredentialDecryptRequest"/>
+      <xsd:complexType name="CredentialDecryptRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>CredentialDecryptRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Message to request decrypt the public/private key for a Credential"
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:ApiRequest">
+            <xsd:sequence>
+               <xsd:element name="credentialId" type="xsd:int">
+               <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Unique Credential Identifier." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <xsd:complexType name="IPAMValidationRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>IPAMValidationRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used by the Agility API service for IPAM validation."
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:ApiRequest">
+            <xsd:sequence>
+               <xsd:element name="serviceProvider" type="agility:ServiceProvider" minOccurs="0" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Service Provider that is being validated." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="IPAMValidationResponse">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>IPAMValidationResponse</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Response object used by the Agility API service for IPAM validation."
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:ApiResponse">
+            <xsd:sequence>
+               <xsd:element name="errorMessage" type="xsd:string" minOccurs="0" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Error Message from Validation Request.  Empty value means success" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <!--  Volume Mount/Unmount requests -->
+   
+   <xsd:simpleType name="VolumeOperation" >
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>VolumeOperation</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment="Volume Operation Enumeration" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:restriction base="xsd:string" >
+         <xsd:enumeration value="Mount" />
+         <xsd:enumeration value="Unmount" />
+      </xsd:restriction>
+   </xsd:simpleType>
+   
+   <xsd:complexType name="VolumeRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>VolumeRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Message to request volume mount/unmount on an Instance"
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:ApiRequest">
+            <xsd:sequence>
+               <xsd:element name="operation" type="agility:VolumeOperation" minOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Network operation to be performed." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="instance" type="agility:Instance" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Instance associated with the network." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="storage" type="agility:Link" minOccurs="0" maxOccurs="unbounded">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="List of volumes to mount/unmount" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <xsd:complexType name="VolumeResponse">
+     <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>VolumeResponse</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Contains response to a volume operation"
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="core:Response">
+            <xsd:sequence>
+            
+               <xsd:element name="errorMessage" type="xsd:string" minOccurs="0" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Error Message from Validation Request.  Empty value means success" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+</xsd:schema>

@@ -1,0 +1,1 @@
+s/public Boolean externalUser;/public Boolean externalUser = false;/g

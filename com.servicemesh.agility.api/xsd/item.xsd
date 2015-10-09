@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+COPYRIGHT (C) 2008-2012 SERVICEMESH, INC.  ALL RIGHTS RESERVED.  CONFIDENTIAL AND PROPRIETARY. 
+ 
+ALL SOFTWARE, INFORMATION AND ANY OTHER RELATED COMMUNICATIONS (COLLECTIVELY, "WORKS") ARE CONFIDENTIAL AND PROPRIETARY 
+INFORMATION THAT ARE THE EXCLUSIVE PROPERTY OF SERVICEMESH.     ALL WORKS ARE PROVIDED UNDER THE APPLICABLE AGREEMENT OR 
+END USER LICENSE AGREEMENT IN EFFECT BETWEEN YOU AND SERVICEMESH.  UNLESS OTHERWISE SPECIFIED IN THE APPLICABLE AGREEMENT, 
+ALL WORKS ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, 
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.  ALL USE, DISCLOSURE AND/OR 
+REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIBITED.
+-->
+
+<xsd:schema targetNamespace="http://servicemesh.com/agility/api"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="qualified"
+   xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0" jaxb:extensionBindingPrefixes="xjc annox"
+   xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+   xmlns:annox="http://annox.dev.java.net" 
+   xmlns:a="http://annox.dev.java.net/com.servicemesh.agility.tools.annotation"
+   xmlns:jl="http://annox.dev.java.net/java.lang"
+   xmlns:jxml="http://annox.dev.java.net/javax.xml.bind.annotation"
+   xmlns:agility="http://servicemesh.com/agility/api">
+
+   <xsd:include schemaLocation="link.xsd" />
+   <xsd:include schemaLocation="policyAssignment.xsd" />
+   <xsd:include schemaLocation="smList.xsd" />
+
+   <xsd:complexType name="Item">
+   
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>Item</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "A resource that contains parameters to identify the Domain, creator, creation time, last modified time, the parent Container, and Policy Assignments.  Template, Location, and Credential are examples of items." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="agility:Asset">
+            <xsd:sequence>
+               <xsd:element name="domain" type="agility:Link"  minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Reference to Domain asset" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="creator" type="agility:Link"  minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Reference to Item creator." systemGenerated="true" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="created" type="xsd:date"  minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Date the Item was created." systemGeneratred="true" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="lockType" type="xsd:int" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Type of lock." systemGenerated="true" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="lastModified" type="xsd:date"  minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Date the Item was last modified." systemGenerated="true" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="policyAssignment" type="agility:PolicyAssignment" minOccurs="0" maxOccurs="unbounded">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="List of Policies applied to the Item." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="parent" type="agility:Link"  minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Reference to the parent Item." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent> 
+   </xsd:complexType>
+
+   <xsd:complexType name="VersionedItem">
+   
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>VersionedItem</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "In addition to the information provided by the Item and Asset base types, VersionedItem also provides a Slot, version number, latest version flag, and publish comments.  Introduced in version 7.1." 
+                           description = "{{versionedItemDescription}}" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="agility:Item">
+            <xsd:sequence>
+               <xsd:element name="slot" type="xsd:string"  minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Item Slot." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="version" type="xsd:int" default="-1"  minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Version identification.  Defaults to -1." systemGenerated="true" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="latest" type="xsd:boolean" default="false"  minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="True if this is the latest version of the item.  Defaults to false" systemGenerated="true" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="publishComment" type="xsd:string"  minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Comment associated with this version." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="slotId" type="xsd:int"  minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Identifier of the Item Slot." systemGenerated="true" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="publisher" type="agility:Link"  minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Reference to the Publisher." systemGenerated="true" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="imagePath" type="xsd:string"  minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Fully qualified Directory to the Image." systemGenerated="true" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="versionStatus" type="xsd:string" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Status of the Versioned Item." systemGenerated="true" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="checkoutAllowed" type="xsd:boolean" default="false" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="True if this Item can be checked out for change."
+                           		introducedIn="3.2"
+                           		systemGenerated="true" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+
+               <xsd:element name="headAllowed" type="xsd:boolean" default="false" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="True if this Item can be set as 'Head'."
+                                 introducedIn="3.2"
+                                 systemGenerated="true" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent> 
+   </xsd:complexType>
+
+   <xsd:complexType name="CustomItem" abstract="false">
+   
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>CustomItem</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "The class extends the Item class and is for classification purposes, i.e. there are no new properties introduced." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="agility:Item" />
+      </xsd:complexContent> 
+   </xsd:complexType>
+    
+   <xsd:complexType name="CustomItemList">
+   
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>CustomItemList</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "List of custom Item assets." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="agility:ServiceMeshList">
+		      <xsd:sequence>
+		         <xsd:element name="customItem" type="agility:CustomItem" minOccurs="0" maxOccurs="unbounded">
+		            <xsd:annotation>
+		               <xsd:appinfo>
+		                  <annox:annotate target="field">
+		                     <a:ApiField comment="List of custom Item assets." />
+		                  </annox:annotate>
+		               </xsd:appinfo>
+		            </xsd:annotation>
+		         </xsd:element>
+		      </xsd:sequence>
+		   </xsd:extension>
+		</xsd:complexContent>
+   </xsd:complexType>
+
+</xsd:schema>

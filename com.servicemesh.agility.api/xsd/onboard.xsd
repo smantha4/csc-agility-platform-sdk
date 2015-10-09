@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+COPYRIGHT (C) 2008-2012 SERVICEMESH, INC.  ALL RIGHTS RESERVED.  CONFIDENTIAL AND PROPRIETARY. 
+ 
+ALL SOFTWARE, INFORMATION AND ANY OTHER RELATED COMMUNICATIONS (COLLECTIVELY, "WORKS") ARE CONFIDENTIAL AND PROPRIETARY 
+INFORMATION THAT ARE THE EXCLUSIVE PROPERTY OF SERVICEMESH.     ALL WORKS ARE PROVIDED UNDER THE APPLICABLE AGREEMENT OR 
+END USER LICENSE AGREEMENT IN EFFECT BETWEEN YOU AND SERVICEMESH.  UNLESS OTHERWISE SPECIFIED IN THE APPLICABLE AGREEMENT, 
+ALL WORKS ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, 
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.  ALL USE, DISCLOSURE AND/OR 
+REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIBITED.
+-->
+
+<xsd:schema targetNamespace="http://servicemesh.com/agility/api"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="qualified"
+   xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0" jaxb:extensionBindingPrefixes="xjc annox"
+   xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+   xmlns:annox="http://annox.dev.java.net" 
+   xmlns:a="http://annox.dev.java.net/com.servicemesh.agility.tools.annotation"
+   xmlns:jl="http://annox.dev.java.net/java.lang"
+   xmlns:jxml="http://annox.dev.java.net/javax.xml.bind.annotation"
+   xmlns:agility="http://servicemesh.com/agility/api">
+
+   <xsd:include schemaLocation="asset.xsd" />
+   <xsd:include schemaLocation="credential.xsd" />
+   
+   <xsd:complexType name="OnboardRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>OnboardRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "OnboardRequest object." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:sequence>
+         <xsd:element name="targetLocation" type="agility:Link" minOccurs="1">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Reference to the location." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="credential" type="agility:Credential" minOccurs="1">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Valid credential for the running instance(s)." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="mgmtProtocol" type="xsd:string" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Defines which connection protocol to use when connecting to an instance; valid values are 'ssh', 'winrm-https', 'winrm-http'." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="mgmtPort" type="xsd:int" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Defines which port to use when connecting to an instance; for example port 22 is used for ssh protocol." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="packages" type="agility:Link" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="List of references to packages to be added to onboarded instance(s)." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="assetProperties" type="agility:AssetProperty" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="List of references to properties." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="operatingSystem" type="xsd:string" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Operating system." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="variables" type="agility:AssetProperty" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="List of variables for the onboarded instances/templates." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="cloud" type="agility:Link" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Reference to cloud." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="instance" type="agility:Link" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="List of references to instance(s)." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="networkPolicy" type="agility:Link" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="List of references to firewall policies." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="reboot" type="xsd:boolean" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Defaults to 'false'; set to 'true' to reboot onboarded instance(s)." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+
+   <xsd:complexType name="OnboardMeta">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>OnboardMeta</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "OnboardMeta object." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:sequence>
+         <xsd:element name="type" type="xsd:string">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Name of meta data item; 'all' indicates all types." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="supportedInstanceField" type="agility:FieldMeta" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Supported instances for onboarding." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   
+   <xsd:complexType name="CloudMetaModel">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>CloudMetaModel</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "CloudMetaModel object." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:sequence>
+         <xsd:element name="onboardMeta" type="agility:OnboardMeta" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="List of onboarding meta data items." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   
+</xsd:schema>

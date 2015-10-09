@@ -1,0 +1,9 @@
+/\(import javax.xml.bind.annotation.XmlType;\)/a\
+import org.codehaus.jackson.annotate.JsonTypeInfo;
+/@XmlElement(name = "anyOrderItem")/a\
+    @JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="__type")
+/@XmlElement(name = "fixedOrderItem")/a\
+    @JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="__type")
+/@XmlElement(name = "manualOrderItem")/a\
+    @JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="__type")
+s/public boolean deep;/public boolean deep = true;/g    

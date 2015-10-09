@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+COPYRIGHT (C) 2008-2012 SERVICEMESH, INC.  ALL RIGHTS RESERVED.  CONFIDENTIAL AND PROPRIETARY. 
+ 
+ALL SOFTWARE, INFORMATION AND ANY OTHER RELATED COMMUNICATIONS (COLLECTIVELY, "WORKS") ARE CONFIDENTIAL AND PROPRIETARY 
+INFORMATION THAT ARE THE EXCLUSIVE PROPERTY OF SERVICEMESH.     ALL WORKS ARE PROVIDED UNDER THE APPLICABLE AGREEMENT OR 
+END USER LICENSE AGREEMENT IN EFFECT BETWEEN YOU AND SERVICEMESH.  UNLESS OTHERWISE SPECIFIED IN THE APPLICABLE AGREEMENT, 
+ALL WORKS ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, 
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.  ALL USE, DISCLOSURE AND/OR 
+REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIBITED.
+-->
+
+<xsd:schema targetNamespace="http://servicemesh.com/agility/api"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="qualified"
+   xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0" jaxb:extensionBindingPrefixes="xjc annox"
+   xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+   xmlns:annox="http://annox.dev.java.net" 
+   xmlns:a="http://annox.dev.java.net/com.servicemesh.agility.tools.annotation"
+   xmlns:jl="http://annox.dev.java.net/java.lang"
+   xmlns:jxml="http://annox.dev.java.net/javax.xml.bind.annotation"
+   xmlns:agility="http://servicemesh.com/agility/api">
+
+  <xsd:element name="Page" type="agility:Page"/>
+  <xsd:complexType name="Page">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>Page</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "A Page is used to load Dashboard content." 
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+    <xsd:complexContent>
+      <xsd:extension base="agility:Asset">
+        <xsd:sequence>
+           <xsd:element name="title" type="xsd:string">
+              <xsd:annotation>
+                 <xsd:appinfo>
+                    <annox:annotate target="field">
+                       <a:ApiField comment="Name of the Page." introducedIn = "3.2" />
+                    </annox:annotate>
+                 </xsd:appinfo>
+              </xsd:annotation>
+           </xsd:element>
+        
+           <xsd:element name="context" type="agility:PageContext">
+              <xsd:annotation>
+                 <xsd:appinfo>
+                    <annox:annotate target="field">
+                       <a:ApiField comment="Page Context asset on the Page." introducedIn = "3.2" />
+                    </annox:annotate>
+                 </xsd:appinfo>
+              </xsd:annotation>
+           </xsd:element>
+           
+           <xsd:element name="layout" type="agility:PageLayout">
+              <xsd:annotation>
+                 <xsd:appinfo>
+                    <annox:annotate target="field">
+                       <a:ApiField comment="Page Layout object that defines the layout of the Page." introducedIn = "3.2" />
+                    </annox:annotate>
+                 </xsd:appinfo>
+              </xsd:annotation>
+           </xsd:element>
+           
+           <xsd:element name="menuCategory" type="xsd:string">
+              <xsd:annotation>
+                 <xsd:appinfo>
+                    <annox:annotate target="field">
+                       <a:ApiField comment="The menu category for the Page." introducedIn = "3.2" />
+                    </annox:annotate>
+                 </xsd:appinfo>
+              </xsd:annotation>
+           </xsd:element>
+           
+           <xsd:element name="selection" type="agility:AssetProperty" minOccurs="0" maxOccurs="unbounded">
+              <xsd:annotation>
+                 <xsd:appinfo>
+                    <annox:annotate target="field">
+                       <a:ApiField comment="List of selected Asset Property objects" introducedIn = "3.2" />
+                    </annox:annotate>
+                 </xsd:appinfo>
+              </xsd:annotation>
+           </xsd:element>
+           
+           <xsd:element name="users" type="xsd:int" minOccurs="0" maxOccurs="unbounded">
+              <xsd:annotation>
+                 <xsd:appinfo>
+                    <annox:annotate target="field">
+                       <a:ApiField comment="List of Users" introducedIn = "3.2" />
+                    </annox:annotate>
+                 </xsd:appinfo>
+              </xsd:annotation>
+           </xsd:element>
+           
+           <xsd:element name="userGroups" type="xsd:int" minOccurs="0" maxOccurs="unbounded">
+              <xsd:annotation>
+                 <xsd:appinfo>
+                    <annox:annotate target="field">
+                       <a:ApiField comment="List of User Groups" introducedIn = "3.2" />
+                    </annox:annotate>
+                 </xsd:appinfo>
+              </xsd:annotation>
+           </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <!-- e.g. top_nav, left_nav, ... -->
+  <xsd:element name="PageLayout" type="agility:PageLayout"/>
+  <xsd:complexType name="PageLayout">
+     <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>PageLayout</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Page Layout object." 
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      
+     <xsd:sequence>
+        <xsd:element name="id" type="xsd:int">
+           <xsd:annotation>
+              <xsd:appinfo>
+                 <annox:annotate target="field">
+                    <a:ApiField comment="Page Layout id number." introducedIn = "3.2" />
+                 </annox:annotate>
+              </xsd:appinfo>
+           </xsd:annotation>
+        </xsd:element>
+        
+        <xsd:element name="name" type="xsd:string">
+           <xsd:annotation>
+              <xsd:appinfo>
+                 <annox:annotate target="field">
+                    <a:ApiField comment="Name of the Page Layout." introducedIn = "3.2" />
+                 </annox:annotate>
+              </xsd:appinfo>
+           </xsd:annotation>
+        </xsd:element>
+        
+        <xsd:element name="description" type="xsd:string">
+           <xsd:annotation>
+              <xsd:appinfo>
+                 <annox:annotate target="field">
+                    <a:ApiField comment="Description of the Page Layout." introducedIn = "3.2" />
+                 </annox:annotate>
+              </xsd:appinfo>
+           </xsd:annotation>
+        </xsd:element>
+        
+        <xsd:element name="path" type="xsd:string">
+           <xsd:annotation>
+              <xsd:appinfo>
+                 <annox:annotate target="field">
+                    <a:ApiField comment="Path to the Page" introducedIn = "3.2" />
+                 </annox:annotate>
+              </xsd:appinfo>
+           </xsd:annotation>
+        </xsd:element>
+        
+        <xsd:element name="groups" type="agility:PageLayoutGroup" minOccurs="0" maxOccurs="unbounded">
+           <xsd:annotation>
+              <xsd:appinfo>
+                 <annox:annotate target="field">
+                    <a:ApiField comment="List of Page Layout Groups that the Page Layout is associated with." introducedIn = "3.2" />
+                 </annox:annotate>
+              </xsd:appinfo>
+           </xsd:annotation>
+        </xsd:element>
+     </xsd:sequence>
+  </xsd:complexType>
+
+  <!-- e.g. top, left, center, right, bottom -->
+  <xsd:element name="PageLayoutGroup" type="agility:PageLayoutGroup"/>
+  <xsd:complexType name="PageLayoutGroup">
+     <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>PageLayoutGroup</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Page Layout Group object." 
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+  
+     <xsd:sequence>
+        <xsd:element name="id" type="xsd:int">
+           <xsd:annotation>
+              <xsd:appinfo>
+                 <annox:annotate target="field">
+                    <a:ApiField comment="Page Layout Group id number." introducedIn = "3.2" />
+                 </annox:annotate>
+              </xsd:appinfo>
+           </xsd:annotation>
+        </xsd:element>
+        
+        <xsd:element name="name" type="xsd:string">
+           <xsd:annotation>
+              <xsd:appinfo>
+                 <annox:annotate target="field">
+                    <a:ApiField comment="Name of the Page Layout Group " introducedIn = "3.2" />
+                 </annox:annotate>
+              </xsd:appinfo>
+           </xsd:annotation>
+        </xsd:element>
+        
+        <xsd:element name="description" type="xsd:string">
+           <xsd:annotation>
+              <xsd:appinfo>
+                 <annox:annotate target="field">
+                    <a:ApiField comment="Description of the Page Layout Group." introducedIn = "3.2" />
+                 </annox:annotate>
+              </xsd:appinfo>
+           </xsd:annotation>
+        </xsd:element>
+        
+        <xsd:element name="type" type="xsd:string">
+           <xsd:annotation>
+              <xsd:appinfo>
+                 <annox:annotate target="field">
+                    <a:ApiField comment="Type of the Page Layout Group." introducedIn = "3.2" />
+                 </annox:annotate>
+              </xsd:appinfo>
+           </xsd:annotation>
+        </xsd:element>
+        
+        <xsd:element name="gridClass" type="xsd:string">
+           <xsd:annotation>
+              <xsd:appinfo>
+                 <annox:annotate target="field">
+                    <a:ApiField comment="CSS Class to determine the grid width" introducedIn = "3.2" />
+                 </annox:annotate>
+              </xsd:appinfo>
+           </xsd:annotation>
+        </xsd:element>
+        
+        <xsd:element name="showHeader" type="xsd:boolean">
+           <xsd:annotation>
+              <xsd:appinfo>
+                 <annox:annotate target="field">
+                    <a:ApiField comment="True if Header is to be shown." introducedIn = "3.2" />
+                 </annox:annotate>
+              </xsd:appinfo>
+           </xsd:annotation>
+        </xsd:element>
+        
+        <xsd:element name="controls" type="agility:Control" minOccurs="0" maxOccurs="unbounded">
+           <xsd:annotation>
+              <xsd:appinfo>
+                 <annox:annotate target="field">
+                    <a:ApiField comment="List of Page Controls" introducedIn = "3.2" />
+                 </annox:annotate>
+              </xsd:appinfo>
+           </xsd:annotation>
+        </xsd:element>
+     </xsd:sequence>
+  </xsd:complexType>
+
+  <!-- e.g. cloud, repo, ... -->
+  <xsd:element name="PageContext" type="agility:PageContext"/>
+  <xsd:complexType name="PageContext">
+     <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>PageContext</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Page Context object." 
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+  
+     <xsd:sequence>
+        <xsd:element name="id" type="xsd:int">
+           <xsd:annotation>
+              <xsd:appinfo>
+                 <annox:annotate target="field">
+                    <a:ApiField comment="Page Context id number." introducedIn = "3.2" />
+                 </annox:annotate>
+              </xsd:appinfo>
+           </xsd:annotation>
+        </xsd:element>
+        
+        <xsd:element name="name" type="xsd:string">
+           <xsd:annotation>
+              <xsd:appinfo>
+                 <annox:annotate target="field">
+                    <a:ApiField comment="Name of the Page Context." introducedIn = "3.2" />
+                 </annox:annotate>
+              </xsd:appinfo>
+           </xsd:annotation>
+        </xsd:element>
+        
+        <xsd:element name="description" type="xsd:string">
+           <xsd:annotation>
+              <xsd:appinfo>
+                 <annox:annotate target="field">
+                    <a:ApiField comment="Description of the Page Context" introducedIn = "3.2" />
+                 </annox:annotate>
+              </xsd:appinfo>
+           </xsd:annotation>
+        </xsd:element>
+        
+        <xsd:element name="type" type="xsd:string">
+           <xsd:annotation>
+              <xsd:appinfo>
+                 <annox:annotate target="field">
+                    <a:ApiField comment="Type of the Page Context." introducedIn = "3.2" />
+                 </annox:annotate>
+              </xsd:appinfo>
+           </xsd:annotation>
+        </xsd:element>
+        
+        <xsd:element name="routes" type="agility:AssetProperty" minOccurs="0" maxOccurs="unbounded">
+           <xsd:annotation>
+              <xsd:appinfo>
+                 <annox:annotate target="field">
+                    <a:ApiField comment="List of Asset Properties of the Page Context" introducedIn = "3.2" />
+                 </annox:annotate>
+              </xsd:appinfo>
+           </xsd:annotation>
+        </xsd:element>
+        
+        <xsd:element name="pageLinks" type="agility:Link" minOccurs="0" maxOccurs="unbounded">
+           <xsd:annotation>
+              <xsd:appinfo>
+                 <annox:annotate target="field">
+                    <a:ApiField comment="List of references to Pages." introducedIn = "3.2" />
+                 </annox:annotate>
+              </xsd:appinfo>
+           </xsd:annotation>
+        </xsd:element>
+     </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:element name="Control" type="agility:Control"/>
+  <xsd:complexType name="Control">
+     <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>Control</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Control object." 
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+  
+     <xsd:sequence>
+        <xsd:element name="id" type="xsd:int">
+           <xsd:annotation>
+              <xsd:appinfo>
+                 <annox:annotate target="field">
+                    <a:ApiField comment="Control id number" introducedIn = "3.2" systemGenerated = "true" />
+                 </annox:annotate>
+              </xsd:appinfo>
+           </xsd:annotation>
+        </xsd:element>
+        
+        <xsd:element name="name" type="xsd:string">
+           <xsd:annotation>
+              <xsd:appinfo>
+                 <annox:annotate target="field">
+                    <a:ApiField comment="Name of the Control object." introducedIn = "3.2" />
+                 </annox:annotate>
+              </xsd:appinfo>
+           </xsd:annotation>
+        </xsd:element>
+        
+        <xsd:element name="description" type="xsd:string">
+           <xsd:annotation>
+              <xsd:appinfo>
+                 <annox:annotate target="field">
+                    <a:ApiField comment="Description of the Control object." introducedIn = "3.2" />
+                 </annox:annotate>
+              </xsd:appinfo>
+           </xsd:annotation>
+        </xsd:element>
+        
+        <xsd:element name="type" type="xsd:string">
+           <xsd:annotation>
+              <xsd:appinfo>
+                 <annox:annotate target="field">
+                    <a:ApiField comment="Type of the Control object." introducedIn = "3.2" />
+                 </annox:annotate>
+              </xsd:appinfo>
+           </xsd:annotation>
+        </xsd:element>
+        
+        <xsd:element name="allowedContexts" type="xsd:string">
+           <xsd:annotation>
+              <xsd:appinfo>
+                 <annox:annotate target="field">
+                    <a:ApiField comment="List of allowed Contexts in a String format." introducedIn = "3.2" />
+                 </annox:annotate>
+              </xsd:appinfo>
+           </xsd:annotation>
+        </xsd:element>
+        
+        <xsd:element name="path" type="xsd:string">
+           <xsd:annotation>
+              <xsd:appinfo>
+                 <annox:annotate target="field">
+                    <a:ApiField comment="Path to Control object." introducedIn = "3.2" />
+                 </annox:annotate>
+              </xsd:appinfo>
+           </xsd:annotation>
+        </xsd:element>
+        
+        <xsd:element name="properties" type="agility:AssetProperty" minOccurs="0" maxOccurs="unbounded">
+           <xsd:annotation>
+              <xsd:appinfo>
+                 <annox:annotate target="field">
+                    <a:ApiField comment="List of Asset Properties that apply to the Control object." introducedIn = "3.2" />
+                 </annox:annotate>
+              </xsd:appinfo>
+           </xsd:annotation>
+        </xsd:element>
+        
+        <xsd:element name="drillDownContext" type="agility:PageContext" minOccurs="0">
+           <xsd:annotation>
+              <xsd:appinfo>
+                 <annox:annotate target="field">
+                    <a:ApiField comment="The page context of the Control object." introducedIn = "3.2" />
+                 </annox:annotate>
+              </xsd:appinfo>
+           </xsd:annotation>
+        </xsd:element>
+     </xsd:sequence>
+  </xsd:complexType>
+
+</xsd:schema>

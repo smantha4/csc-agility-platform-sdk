@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- COPYRIGHT (C) 2008-2012 SERVICEMESH, INC. ALL RIGHTS RESERVED. CONFIDENTIAL 
+	AND PROPRIETARY. ALL SOFTWARE, INFORMATION AND ANY OTHER RELATED COMMUNICATIONS 
+	(COLLECTIVELY, "WORKS") ARE CONFIDENTIAL AND PROPRIETARY INFORMATION THAT 
+	ARE THE EXCLUSIVE PROPERTY OF SERVICEMESH. ALL WORKS ARE PROVIDED UNDER THE 
+	APPLICABLE AGREEMENT OR END USER LICENSE AGREEMENT IN EFFECT BETWEEN YOU 
+	AND SERVICEMESH. UNLESS OTHERWISE SPECIFIED IN THE APPLICABLE AGREEMENT, 
+	ALL WORKS ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND EITHER EXPRESSED 
+	OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY 
+	AND/OR FITNESS FOR A PARTICULAR PURPOSE. ALL USE, DISCLOSURE AND/OR REPRODUCTION 
+	OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIBITED. -->
+
+<xsd:schema targetNamespace="http://servicemesh.com/agility/api"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+	attributeFormDefault="qualified" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+	jaxb:version="2.0" jaxb:extensionBindingPrefixes="xjc annox"
+	xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns:annox="http://annox.dev.java.net"
+	xmlns:a="http://annox.dev.java.net/com.servicemesh.agility.tools.annotation"
+	xmlns:jl="http://annox.dev.java.net/java.lang" xmlns:jxml="http://annox.dev.java.net/javax.xml.bind.annotation"
+	xmlns:agility="http://servicemesh.com/agility/api">
+
+	<xsd:include schemaLocation="item.xsd" />
+	<xsd:include schemaLocation="credential.xsd" />
+	<xsd:include schemaLocation="resource.xsd" />
+
+	<xsd:complexType name="Template">
+
+		<xsd:annotation>
+			<xsd:appinfo>
+				<annox:annotate target="class">
+					<jxml:XmlRootElement>
+						<jxml:name>Template</jxml:name>
+					</jxml:XmlRootElement>
+					<a:ApiModel comment="{{templateComment}}" description="{{templateDescription}}"
+						externalDocLink="" />
+				</annox:annotate>
+			</xsd:appinfo>
+		</xsd:annotation>
+
+		<xsd:complexContent>
+			<xsd:extension base="agility:Item">
+				<xsd:sequence>
+					<xsd:element name="numInstances" type="xsd:int"
+						default="0">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField comment="Number of instances to start." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="topology" type="agility:Link"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField comment="Reference to topology object." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="cloud" type="agility:Link"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField comment="Reference to cloud object." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="factory" type="xsd:boolean"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField comment="True if member of factory." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="stack" type="agility:Link"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField comment="Reference to stack object." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="image" type="agility:Link"
+						minOccurs="0" maxOccurs="1">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField comment="Reference to image object." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="model" type="xsd:string" minOccurs="0">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField
+										comment="Name of machine model; CPU, disk, and memory are configured from this model." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="location" type="xsd:string"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField comment="Target running location of VMs." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="packages" type="agility:Link"
+						minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField comment="List of references to package objects." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="accessLists" type="agility:Link"
+						minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField comment="Deprecated as of Agility Platform 7.2." />
+									<jl:Deprecated value="true" />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>   <!-- deprecated -->
+
+					<xsd:element name="volumes" type="agility:Link"
+						minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField
+										comment="List of references to volume objects assigned to template." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="instances" type="agility:Link"
+						minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField comment="List of references to running instances." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="serviceBindings" type="agility:Link"
+						minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField comment="List of references to service bindings." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="credential" type="agility:Credential"
+						minOccurs="0" maxOccurs="1">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField comment="Reference to credential object." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="variables" type="agility:AssetProperty"
+						minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField comment="List of variables defined for the template." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="resources" type="agility:Resource"
+						minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField comment="List of resource objects." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="hostnamePrefix" type="xsd:string"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField comment="Optional host name prefix to use." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="accessUri" type="xsd:string"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField comment="Deprecated as of Agility Platform 9.2." />
+									<jl:Deprecated value="true" />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>  <!-- deprecated -->
+
+					<xsd:element name="onboarded" type="xsd:boolean"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField
+										comment="True if template is derived from an onboarded instance." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="srcConnections" type="agility:Link"
+						minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField
+										comment="List of references to connection objects where the template is the source endpoint (dependent node)." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="destConnections" type="agility:Link"
+						minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField
+										comment="List of references to connection objects where the template is the destination endpoint (dependency)." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="configurationResources" type="agility:Link"
+						minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField
+										comment="List of references to configuration resources assigned to the template." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="environment" type="agility:Link"
+						minOccurs="0" maxOccurs="1">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField
+										comment="Reference to the environment object that parents the template." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="project" type="agility:Link"
+						minOccurs="0" maxOccurs="1">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField
+										comment="Reference to the project object that parents the template." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="releaseDisks" type="xsd:boolean"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField comment="Disks to which the template is released." />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+					<xsd:element name="stats" type="agility:TemplateStats"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<annox:annotate target="field">
+									<a:ApiField comment="The instance stats counts for this template."
+										systemGenerated="true"
+										introducedIn = "3.2" />
+								</annox:annotate>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:element>
+
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+</xsd:schema>

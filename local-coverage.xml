@@ -1,0 +1,201 @@
+<project>
+
+  <!--
+  <property name="local.cobertura.dir" value="${externs.dir}/cobertura-1.9.4.1"/>
+  <property name="local.cobertura.jar" value="cobertura.jar"/>
+  -->
+  <property name="local.cobertura.dir" value="${externs.dir}/cobertura/cobertura-2.1.1"/>
+  <property name="local.cobertura.jar" value="cobertura-2.1.1.jar"/>
+  <property name="local.coverage.dir" value="${basedir}/coverage"/>
+  <property name="local.coverage.datafile.base" value="cobertura.ser"/>
+  <property name="local.coverage.datafile" value="${basedir}/${local.coverage.datafile.base}"/>
+  <property name="cobertura.ser" value="${local.coverage.datafile}"/>
+  <property name="local.coverage.report.dir" value="${local.coverage.dir}/report"/>
+  <property name="local.instrumented.dir" value="${basedir}/local_coverage_instrumented"/>
+
+  <condition property="junit.fork" value="no">
+    <not>
+      <isset property="junit.fork"/>
+    </not>
+  </condition>
+
+  <condition property="junit.forkmode" value="perBatch">
+    <not>
+      <isset property="junit.forkmode"/>
+    </not>
+  </condition>
+
+  <condition property="junit.batchtest.fork" value="yes">
+    <not>
+      <isset property="junit.batchtest.fork"/>
+    </not>
+  </condition>
+
+  <condition property="mysql-host" value="localhost">
+    <not>
+      <isset property="mysql-host"/>
+    </not>
+  </condition>
+
+  <condition property="mysql-port" value="3306">
+    <not>
+      <isset property="mysql-port"/>
+    </not>
+  </condition>
+
+  <condition property="rabbitmq-host" value="localhost">
+    <not>
+      <isset property="rabbitmq-host"/>
+    </not>
+  </condition>
+
+  <condition property="rabbitmq-port" value="5672">
+    <not>
+      <isset property="rabbitmq-port"/>
+    </not>
+  </condition>
+
+  <condition property="zookeeper-host" value="localhost">
+    <not>
+      <isset property="zookeeper-host"/>
+    </not>
+  </condition>
+
+  <condition property="zookeeper-port" value="2181">
+    <not>
+      <isset property="zookeeper-port"/>
+    </not>
+  </condition>
+
+  <condition property="karaf.home" value="../karaf">
+    <not>
+      <isset property="karaf.home"/>
+    </not>
+  </condition>
+
+  <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+    <classpath>
+      <pathelement location="${externs.dir}/ant-contrib-1.0b3/ant-contrib-1.0b3.jar" />
+     </classpath>
+  </taskdef>
+
+  <if>
+    <available file="${bin}/classes" type="dir"/>
+    <then>
+      <property name="local.coverage.bin.src" value="${bin}/classes"/>
+    </then>
+    <else>
+      <property name="local.coverage.bin.src" value="${bin}"/>
+    </else>
+  </if>
+
+  <if>
+    <not>
+      <isreference refid="spock.classpath"/>
+    </not>
+    <then>
+      <path id="spock.classpath">
+        <fileset dir="${externs.dir}/groovy/groovy-1.8.9">
+          <include name="groovy-all-1.8.9.jar"/>
+        </fileset>
+        <fileset dir="${externs.dir}/spock/spock-0.6">
+          <include name="spock-core-0.6-groovy-1.8.jar"/>
+        </fileset>
+        <fileset dir="${externs.dir}/asm/asm-3.2">
+          <include name="asm-3.2.jar"/>
+        </fileset>
+        <fileset dir="${externs.dir}/cglib/cglib-2.2.2">
+          <include name="cglib-nodep-2.2.2.jar"/>
+        </fileset>
+      </path>
+    </then>
+  </if>
+
+  <!-- Cobertura for runtime, reporting, etc. -->
+  <path id="local.cobertura.classpath">
+    <fileset dir="${local.cobertura.dir}">
+      <include name="${local.cobertura.jar}"/>
+    </fileset>
+  </path>
+
+  <!-- Cobertura including libs that are only needed for instrumentation. -->
+  <path id="local-cobertura-lib.classpath">
+    <fileset dir="${local.cobertura.dir}">
+      <include name="${local.cobertura.jar}"/>
+      <include name="lib/**/*.jar"/>
+    </fileset>
+  </path>
+
+  <path id="local.coverage.classpath">
+    <path refid="local.cobertura.classpath"/>
+    <pathelement location="${local.instrumented.dir}"/>
+    <path refid="spock.classpath"/>
+    <path refid="unit.test.classpath"/>
+  </path>
+
+  <target name="local-coverage-clean">
+    <delete dir="${local.coverage.dir}"/>
+    <delete dir="${local.instrumented.dir}"/>
+    <delete file="${local.coverage.datafile}"/>
+  </target>
+
+  <target name="local-coverage-init">
+    <mkdir dir="${local.instrumented.dir}"/>
+    <mkdir dir="${local.coverage.dir}"/>
+  </target>
+
+  <!-- Instrument class and jar files in place. -->
+  <target name="local-coverage-instrument" depends="local-coverage-init,compile">
+    <taskdef classpathref="local-cobertura-lib.classpath" resource="tasks.properties"/>
+    <cobertura-instrument todir="${local.instrumented.dir}" datafile="${local.coverage.datafile}">
+      <auxClasspath>
+        <path refid="compile.classpath"/>
+      </auxClasspath>
+      <fileset dir="${local.coverage.bin.src}">
+        <include name="com/servicemesh/**/*.class"/>
+        <include name="vm/**/*.class"/>
+        <exclude name="**/*Test.class"/>
+      </fileset>
+    </cobertura-instrument>
+  </target>
+
+  <target name="local-coverage" depends="local-coverage-instrument,unit_test_compile">
+    <taskdef classpathref="local-cobertura-lib.classpath" resource="tasks.properties"/>
+    <junit fork="${junit.fork}" forkmode="${junit.forkmode}" haltonfailure="yes" printsummary="true">
+      <classpath refid="local.coverage.classpath"/>
+      <jvmarg value="-noverify"/>
+      <jvmarg value="-XX:MaxPermSize=4096m"/>
+      <formatter type="xml"/>
+      <env key="MYSQL_PORT_3306_TCP_ADDR" value="${mysql-host}"/> 
+      <env key="MYSQL_PORT_3306_TCP_PORT" value="${mysql-port}"/> 
+      <env key="RABBITMQ_PORT_5672_TCP_ADDR" value="${rabbitmq-host}"/> 
+      <env key="RABBITMQ_PORT_5672_TCP_PORT" value="${rabbitmq-port}"/> 
+      <env key="ZOOKEEPER_PORT_2181_TCP_ADDR" value="${zookeeper-host}"/> 
+      <env key="ZOOKEEPER_PORT_2181_TCP_PORT" value="${zookeeper-port}"/> 
+      <sysproperty key="net.sourceforge.cobertura.datafile" value="${local.coverage.datafile}"/>
+      <sysproperty key="karaf.home" value="${karaf.home}"/>
+      <batchtest fork="${junit.batchtest.fork}" todir="${unit.test.reports}">
+        <fileset dir="${unit.test.src}">
+          <include name="**/*Test*.java"/>
+          <exclude name="**/AllTests.java"/>
+          <exclude name="**/TestHelpers.java"/>
+        </fileset>
+      </batchtest>
+      <batchtest fork="${junit.batchtest.fork}" todir="${unit.test.reports}">
+        <fileset dir="${unit.test.bin}">
+          <custom classname="org.spockframework.buildsupport.ant.SpecClassFileSelector" classpathref="spock.classpath"/>
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+
+  <target name="local-coverage-report" depends="local-coverage-clean,local-coverage">
+    <junitreport todir="${unit.test.reports}">
+      <fileset dir="${unit.test.reports}">
+        <include name="*.xml"/>
+      </fileset>
+      <report format="frames" todir="${unit.test.reports}/html"/>
+    </junitreport>
+    <cobertura-report format="html" destdir="${local.coverage.report.dir}" srcdir="${src}" datafile="${local.coverage.datafile}"/>
+  </target>
+</project>

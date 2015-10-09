@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+COPYRIGHT (C) 2008-2012 SERVICEMESH, INC.  ALL RIGHTS RESERVED.  CONFIDENTIAL AND PROPRIETARY. 
+ 
+ALL SOFTWARE, INFORMATION AND ANY OTHER RELATED COMMUNICATIONS (COLLECTIVELY, "WORKS") ARE CONFIDENTIAL AND PROPRIETARY 
+INFORMATION THAT ARE THE EXCLUSIVE PROPERTY OF SERVICEMESH.     ALL WORKS ARE PROVIDED UNDER THE APPLICABLE AGREEMENT OR 
+END USER LICENSE AGREEMENT IN EFFECT BETWEEN YOU AND SERVICEMESH.  UNLESS OTHERWISE SPECIFIED IN THE APPLICABLE AGREEMENT, 
+ALL WORKS ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, 
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.  ALL USE, DISCLOSURE AND/OR 
+REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIBITED.
+-->
+
+<xsd:schema targetNamespace="http://servicemesh.com/agility/api"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="qualified"
+   xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0" jaxb:extensionBindingPrefixes="xjc annox"
+   xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+   xmlns:annox="http://annox.dev.java.net" 
+   xmlns:a="http://annox.dev.java.net/com.servicemesh.agility.tools.annotation"
+   xmlns:jl="http://annox.dev.java.net/java.lang"
+   xmlns:jxml="http://annox.dev.java.net/javax.xml.bind.annotation"
+   xmlns:agility="http://servicemesh.com/agility/api">
+
+   <xsd:include schemaLocation="asset.xsd" />
+
+   <xsd:complexType name="AttachmentLocation">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>AttachmentLocation</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Storage Location of the Attachment." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:sequence>
+         <xsd:element name="path" type="xsd:string" minOccurs="1" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Path for Script Location." required="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="repository" type="agility:Link" minOccurs="1" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Reference to the Repository asset where the Attachment is stored." required="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+  
+   <xsd:complexType name="Attachment">   
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>Attachment</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "These are the bits, executables, and/or binaries used to install a service or copied to an instance." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:Asset">
+            <xsd:sequence>
+               <xsd:element name="size" type="xsd:long" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Size of Attachment in bytes." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="content" type="xsd:base64Binary" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Content of the Attachment." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="attachmentLocation" type="agility:AttachmentLocation" minOccurs="0" maxOccurs="unbounded">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Storage Location of the Attachment." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+</xsd:schema>

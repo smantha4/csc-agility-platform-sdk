@@ -1,0 +1,1 @@
+s/public Integer syncIntervalSeconds;/public Integer syncIntervalSeconds = 3600;/g

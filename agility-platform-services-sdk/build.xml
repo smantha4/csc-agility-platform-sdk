@@ -1,0 +1,307 @@
+<?xml version="1.0" standalone="yes"?>
+<project name="com.servicemesh.agility.sdk.service" basedir="." default="help" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+  <property name="bundle.version" value="1.0.0" />
+  <property environment="env" />
+  <property name="src" value="src" />
+  <property name="bin" value="bin" />
+  <property name="lib" value="lib" />
+  <property name="dist" value="../dist" />
+  <property name="ivy.lib" value="../ivy-lib" />
+  <property name="common.lib" value="../lib" />
+  <property name="bundle.jar" value = "com.servicemesh.agility.sdk.service-${bundle.version}.jar" />
+  <property name="classes" value="${bin}/classes" />
+  <property name="bundle.instrumented.jar" value = "com.servicemesh.agility.sdk.service-${bundle.version}.jar" />
+  <property name="instrumented" value="${bin}/instrumented" />
+   <import file="../coverage.xml" />
+   <set-coverage-properties repo-base-dir="../"/>
+
+  <property name="unit.test.bin" value="test/unit/bin" />
+  <property name="unit.test.reports" value="test/unit/reports" />
+  <property name="unit.test.src" value="test/unit/src" />
+  <property name="ivyexists" value="false"/>
+  
+  <available file="${ivy.lib}" type="dir" property="ivyexists" />
+  
+  <target name="xjc" if="ivyexists">
+     <taskdef name="xjc" classname="org.jvnet.jaxb2_commons.xjc.XJC2Task">
+        <classpath>
+           <fileset dir="${common.lib}" includes="agility-athena-*.jar"/>
+           <fileset dir="${ivy.lib}" >
+              <include name="junit-4.11.jar"/>
+              <include name="jaxb-impl-2.2.5-2.jar" />
+              <include name="jaxb-xjc-2.2.5-2.jar" />
+              <include name="jaxb-api-2.2.5.jar" />
+              <include name="jaxb2-basics-0.6.4.jar" />
+              <include name="jaxb2-basics-annotate-0.6.4.jar" />
+              <include name="jaxb2-basics-ant-0.6.4.jar" />
+              <include name="jaxb2-basics-runtime-0.6.4.jar" />
+              <include name="jaxb2-basics-tools-0.6.4.jar" />
+              <include name="javaparser-1.0.9.jar" />
+              <include name="annox-0.5.1.jar" />
+              <include name="commons-beanutils-1.7.0.jar" />
+              <include name="commons-logging-1.1.1.jar" />
+              <include name="commons-lang-2.5.jar"/>
+           </fileset>
+        </classpath>
+     </taskdef>
+  </target>
+
+  <target name="init">
+    <mkdir dir="${bin}" />
+    <mkdir dir="docs" />
+    <mkdir dir="${unit.test.reports}" />
+  </target>
+
+  <target name="coverage-init">
+    <initialize-coverage/>
+  </target>
+
+  <path id="compile.classpath">
+    <fileset dir="${common.lib}" includes="agility-athena-*.jar"/>
+    <fileset dir="${dist}" includes="com.servicemesh.agility.api-3.1.0.jar"/>
+    <fileset dir="${dist}" includes="com.servicemesh.core-1.0.0.jar"/>
+    <fileset dir="${ivy.lib}">
+       <include name="log4j-1.2.17.jar"/>
+       <include name="org.apache.felix.configadmin-1.8.4.jar" />
+       <include name="org.apache.felix.fileinstall-3.5.0.jar" />
+       <include name="org.apache.felix.framework-4.2.1.jar" />
+       <include name="jaxb-impl-2.2.5-2.jar" />
+       <include name="jaxb-xjc-2.2.5-2.jar" />
+       <include name="jaxb-api-2.2.5.jar" />
+    </fileset>
+    <fileset dir="${dist}" includes="com.servicemesh.io-1.0.0.jar"/>
+  </path>
+
+  <path id="unit.test.compile.classpath">
+    <path refid="compile.classpath"/>
+    <pathelement location="${classes}"/>
+    <fileset dir="${ivy.lib}">
+       <include name="mockito-all-1.10.19.jar" />
+       <include name="junit-4.11.jar" />
+       <include name="commons-cli-1.2.jar" />
+       <include name="groovy-1.8.9.jar" />
+       <include name="groovy-all-1.8.9.jar" />
+       <include name="spock-core-0.6-groovy-1.8.jar" />
+       <include name="asm-3.2.jar" />
+       <include name="cglib-nodep-2.2.2.jar" />
+    </fileset>
+    <fileset dir="${common.lib}" includes="powermock-mockito-1.6.3-full.jar"/>
+    <path refid="coverage.classpath"/>
+  </path>
+
+  <path id="spock.classpath">
+     <fileset dir="${ivy.lib}">
+        <include name="cglib-nodep-2.2.2.jar" />
+        <include name="slf4j-api-1.7.5.jar" />
+        <include name="log4j-1.2.17.jar" />
+        <include name="groovy-all-1.8.9.jar" />
+        <include name="spock-core-0.6-groovy-1.8.jar" />
+        <include name="asm-3.2.jar" />
+     </fileset>
+  </path>
+
+  <path id="unit.test.classpath">
+    <pathelement location="${unit.test.bin}"/>
+    <path refid="unit.test.compile.classpath"/>
+    <fileset dir="${ivy.lib}">
+       <include name="javassist-3.18.2-GA.jar" />
+    </fileset>
+    <pathelement location="${classes}"/>
+    <path refid="coverage-lib.classpath"/>
+  </path>
+
+   <target name="groovyc" if="ivyexists" >
+      <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="spock.classpath" />
+   </target>
+   
+  <!-- ============= build ============ -->
+
+  <target name="schema" depends="init,xjc">
+    <xjc destdir="src" extension="true">
+         <arg line="-Xannotate"/>
+    	
+      	<schema dir="xsd">
+      	   <include name="*.xsd"/>
+      	</schema>
+    	
+    	<depends dir="xsd">
+    	    <include name="*.xsd"/>
+    	</depends>
+      	      	
+         <produces dir="${src}/com/servicemesh/agility/sdk/service/msgs" includes="*.java" />
+
+         <classpath>
+            <fileset dir="${common.lib}">
+               <include name="agility-athena-*.jar"/>
+            </fileset>
+            <fileset dir="${ivy.lib}" >
+               <include name="jaxb-impl-2.2.5-2.jar" />
+               <include name="jaxb-xjc-2.2.5-2.jar" />
+               <include name="jaxb-api-2.2.5.jar" />
+            </fileset>
+         </classpath>
+    </xjc>
+  	
+    <delete dir="${src}/com/servicemesh/agility/api"/>
+    <delete dir="${src}/com/servicemesh/core"/>
+  	
+  </target>
+
+  <target name="compile" depends="schema" description="Compile all Java source files">
+    <echo message="Compiling the bundles/sdk/service java source files..." />
+    <mkdir dir="${classes}" />  
+    <javac destdir="${classes}" debug="on" fork="true" includeantruntime="false">
+      <src path="${src}" />
+      <classpath>
+        <path refid="compile.classpath"/>
+      </classpath>
+    </javac>
+  </target>
+
+
+  <target name="deploy" depends="compile,deploy_unit_test" description="Generate and deploy bundle">
+    <delete dir="${instrumented}" quiet="true"/>
+    <mkdir dir="${bin}/META-INF"/>
+    <copy todir="${bin}/META-INF">
+      <fileset dir="META-INF" includes="**/*"/>
+    </copy>
+    <jar destfile="${dist}/${bundle.jar}"
+         manifest="META-INF/MANIFEST.MF"
+         filesetmanifest="skip"
+         basedir="${classes}">
+    </jar>
+  </target>
+
+  <target name='javadoc' >
+    <javadoc
+        destdir="../../root/WebContent/javadoc/sdk/services"
+        author="false"
+        version="true"
+        use="true"
+        Public="true"
+        windowtitle="Agility Platform Services SDK">
+
+      <classpath>
+        <pathelement path="${classes}"/>
+        <path refid="compile.classpath"/>
+      </classpath>
+
+      <fileset dir="${src}/com/servicemesh">
+        <include name="**/*.java"/>
+        <exclude name="**/AsyncTracker.java"/>
+        <exclude name="**/ServiceRegistry.java"/>
+      </fileset>
+
+      <doctitle><![CDATA[<h1>Agility Platform Services SDK</h1>]]></doctitle>
+      <bottom><![CDATA[<i>Copyright &#169; 2013-Present Computer Sciences Corporation</i>]]></bottom>
+      <link href="../../core"/>
+      <link href="../../scripting"/>
+      <link offline="true"
+            href="http://docs.oracle.com/javase/7/docs/api"
+            packagelistLoc="../../root"/>
+    </javadoc>
+  </target>
+
+  <!-- =========== instrument/coverage ========= -->
+	
+  <target name="instrument" depends="compile,coverage-init">
+    <mkdir dir="${instrumented}"/>
+    <cobertura-instrument todir="${instrumented}" datafile="${platform.coverage}/${coverage.datafile.base}">
+      <ignore regex="org.apache.log4j.*" />
+      <fileset dir="${classes}">
+        <include name="**/*.class"/>
+      </fileset>
+    </cobertura-instrument>
+  </target>
+	
+  <target name="deploy-coverage" depends="instrument" description="Generate and deploy bundle">
+    <delete file="${platform.deploy}/${bundle.jar}" quiet="true" />
+    <delete file="${test.lib}/${bundle.jar}" quiet="true" />
+    <mkdir dir="${bin}/META-INF"/>
+    <copy todir="${bin}/META-INF">
+      <fileset dir="META-INF" includes="**/*"/>
+    </copy>
+    <jar destfile="${platform.deploy}/${bundle.instrumented.jar}"
+   	 manifest="META-INF/MANIFEST.MF"
+   	 filesetmanifest="skip">
+      <fileset dir="META-INF" includes="**/*"/>
+      <fileset dir="${classes}" includes="**/*.class"/>
+      <fileset dir="${instrumented}" includes="**/*.class"/>
+      <fileset dir="${coverage.tool.dir}" includes="${coverage.tool.jar}"/>
+    </jar>
+    <copy file="${platform.deploy}/${bundle.instrumented.jar}" todir="${test.lib}" />
+  </target>
+
+  <!-- ============= unit test ============ -->
+
+  <target name="compile_unit_test" depends="groovyc" unless="skipTests">
+    <mkdir dir="${unit.test.bin}" />
+  	<javac  destdir="${unit.test.bin}" debug="on" includeantruntime="false">
+    	<src path="${unit.test.src}" />
+	    <classpath>
+	    	<path refid="unit.test.compile.classpath"/>
+	    </classpath>
+  	</javac>
+    <groovyc verbose="true"
+            srcdir="${unit.test.src}"
+            destdir="${unit.test.bin}"
+            classpathref="unit.test.compile.classpath" />
+  </target>
+
+  <target name="unit_test_compile" depends="compile_unit_test"/>
+
+  <target name="deploy_unit_test" unless="coverage_requested"
+          description="Run junit tests with deploy if no coverage requested">
+     <antcall target="unit_test"/>
+  </target>
+
+  <target name="unit_test" depends="unit_test_compile" unless="skipTests">
+    <junit fork="yes" printsummary="true" showoutput="true" haltonerror="true" haltonfailure="true" >
+      <!-- <formatter type="plain" usefile="false" /> -->
+      <formatter type="xml" />
+      <sysproperty key="${coverage.sysproperty.datafile}" value="${coverage.datafile}"/>
+
+      <jvmarg value="-noverify" />
+      <classpath refid="spock.classpath" />
+      <classpath refid="unit.test.classpath" />
+
+      <batchtest fork="yes" todir="${unit.test.reports}">
+        <fileset dir="${unit.test.bin}">
+          <custom classname="org.spockframework.buildsupport.ant.SpecClassFileSelector" classpathref="spock.classpath" />
+        </fileset>
+      </batchtest>
+    </junit>
+  	<junit fork="no" haltonfailure="yes" printsummary="true">
+  	         <classpath refid="unit.test.classpath" />
+  	         <formatter type="xml"/>
+  	         <jvmarg value="-noverify" />
+                 <sysproperty key="${coverage.sysproperty.datafile}"
+                              value="${coverage.datafile}"/>
+  	         <batchtest fork="yes" todir="${unit.test.reports}">
+  	            <fileset dir="${unit.test.src}">
+  	               <include name="**/*Test*.java"/>
+  	            </fileset>
+  	        </batchtest>
+  	      </junit>
+  </target>
+	
+  <!-- ============= cleanup ============ -->
+
+  <target name="clean" description="Deletes all generated artifacts." >
+    <delete dir="${bin}" />
+    <delete failonerror="false" dir="${unit.test.bin}" />
+    <echo message="Deleting auto-generated Java files from ${src}/com/servicemesh/agility/sdk/service/msgs" level="info" />
+    <delete dir="${src}/com/servicemesh/agility/sdk/service/msgs" />
+    <delete dir="${unit.test.reports}"/>
+    <delete file="${dist}/${bundle.jar}"/>
+  </target>
+
+  <target name="help" description="Help">
+    <echo message="ServiceMesh Services SDK:"/>
+    <echo message="deploy - Compiles the ServiceMesh Services SDK and creates the jar file."/>
+  </target>
+
+  <!--import file="../local-coverage.xml"/-->
+
+</project>

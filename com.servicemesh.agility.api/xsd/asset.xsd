@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+COPYRIGHT (C) 2008-2012 SERVICEMESH, INC.  ALL RIGHTS RESERVED.  CONFIDENTIAL AND PROPRIETARY. 
+ 
+ALL SOFTWARE, INFORMATION AND ANY OTHER RELATED COMMUNICATIONS (COLLECTIVELY, "WORKS") ARE CONFIDENTIAL AND PROPRIETARY 
+INFORMATION THAT ARE THE EXCLUSIVE PROPERTY OF SERVICEMESH.     ALL WORKS ARE PROVIDED UNDER THE APPLICABLE AGREEMENT OR 
+END USER LICENSE AGREEMENT IN EFFECT BETWEEN YOU AND SERVICEMESH.  UNLESS OTHERWISE SPECIFIED IN THE APPLICABLE AGREEMENT, 
+ALL WORKS ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, 
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.  ALL USE, DISCLOSURE AND/OR 
+REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIBITED.
+-->
+
+<xsd:schema targetNamespace="http://servicemesh.com/agility/api"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="qualified"
+   xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0" jaxb:extensionBindingPrefixes="xjc annox"
+   xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+   xmlns:annox="http://annox.dev.java.net" 
+   xmlns:a="http://annox.dev.java.net/com.servicemesh.agility.tools.annotation"
+   xmlns:jl="http://annox.dev.java.net/java.lang"
+   xmlns:jxml="http://annox.dev.java.net/javax.xml.bind.annotation"
+   xmlns:agility="http://servicemesh.com/agility/api">
+
+   <xsd:include schemaLocation="enumerations.xsd" />
+   <xsd:include schemaLocation="assetProperty.xsd" />
+   <xsd:include schemaLocation="smList.xsd" />
+   <xsd:include schemaLocation="link.xsd" />
+
+   <!-- special directives for import -->
+   <xsd:complexType name="ImportDirectives">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>ImportDirectives</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Directives or commands used for import." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:sequence>
+         <xsd:element name="onNotFound" type="agility:LookupFailCode">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Action to take on missing assets." systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+
+   <xsd:complexType name="Asset">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>Asset</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "{{asset}}" 
+                           description = "{{assetDescription}}" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+      <xsd:extension base="agility:Baselink">
+      <xsd:sequence>
+         <xsd:element name="id" type="xsd:int" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="{{id}}" systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+      
+         <xsd:element name="tags" type="xsd:string" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Resource tags." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="description" type="xsd:string" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Resource description." />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="uuid" type="xsd:string" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Unique identifier." systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="assetType" type="agility:Link" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="{{assetType}}" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="assetProperties" type="agility:AssetProperty" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="{{assetProps}}" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="importMode" type="agility:ImportMode" default="CreateOrUpdate" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="{{importMode}}" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="importDirectives" type="agility:ImportDirectives" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="{{importDir}}" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="top" type="xsd:boolean" default="false">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="True if this asset is a top asset." systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="Asset" type="agility:Asset" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="{{asset}}" />
+                     <a:DoNotMock value="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="Assetlist" type="agility:Assetlist" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="List of Assetlist objects." />
+                     <a:DoNotMock value="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="assetPath" type="xsd:string"  minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="{{assetPath}}" systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="detailedAssetPath" type="xsd:string"  minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="{{detailedAssetPath}}" introducedIn="3.0" systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="usedByAssets" type="agility:Link" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Links to assets using this asset." systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="applicationType" type="xsd:string" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Application type for the asset." introducedIn="3.0" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="lifecycleState" type="xsd:string" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Deployment lifecycle status (Release Manager)." systemGenerated="true" introducedIn="3.0" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="lifecycleVersion" type="xsd:int" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Deployment lifecycle version (Release Manager)." systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="removable" type="xsd:boolean" minOccurs="0" default="true">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Asset is removable (true | false); defaults to true." introducedIn="3.0" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="lifecycleLastComment" type="xsd:string" minOccurs="0">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Most recent comment for the asset related to a lifecycle state change." introducedIn="3.0" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
+         <xsd:element name="foreignAssetProperties" type="agility:ForeignAssetProperty" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="List of foreign asset properties for this asset." introducedIn="3.1" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+
+      </xsd:sequence>
+      </xsd:extension>
+      </xsd:complexContent>
+
+   </xsd:complexType>
+   
+   <xsd:complexType name="Assetlist">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>Assetlist</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "{{assetlist}}" 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      
+      <xsd:complexContent>
+         <xsd:extension base="agility:ServiceMeshList">
+		      <xsd:sequence>
+		         <xsd:element name="Asset" type="agility:Asset" minOccurs="0" maxOccurs="unbounded">
+		            <xsd:annotation>
+		               <xsd:appinfo>
+		                  <annox:annotate target="field">
+		                     <a:ApiField comment="List of asset objects." />
+		                  </annox:annotate>
+		               </xsd:appinfo>
+		            </xsd:annotation>
+		         </xsd:element>
+		      </xsd:sequence>
+		
+		      <xsd:attribute name="name" type="xsd:string" use="optional">
+		         <xsd:annotation>
+		            <xsd:appinfo>
+		               <annox:annotate target="field">
+		                  <a:ApiField comment="An attribute value representing the name of list." />
+		               </annox:annotate>
+		            </xsd:appinfo>
+		         </xsd:annotation>
+		      </xsd:attribute>
+		
+		      <xsd:attribute name="offset" type="xsd:int" use="optional">
+		         <xsd:annotation>
+		            <xsd:appinfo>
+		               <annox:annotate target="field">
+		                  <a:ApiField comment="An attribute value indicating the offset into the total list which the first asset in this Assetlist represents." />
+		               </annox:annotate>
+		            </xsd:appinfo>
+		         </xsd:annotation>
+		      </xsd:attribute>
+		
+		      <xsd:attribute name="limit" type="xsd:int" use="optional">
+		         <xsd:annotation>
+		            <xsd:appinfo>
+		               <annox:annotate target="field">
+		                  <a:ApiField comment="An attribute value representing the maximum number of assets which could appear in this page of assets." />
+		               </annox:annotate>
+		            </xsd:appinfo>
+		         </xsd:annotation>
+		      </xsd:attribute>
+		
+		      <xsd:attribute name="totalCount" type="xsd:int" use="optional">
+		         <xsd:annotation>
+		            <xsd:appinfo>
+		               <annox:annotate target="field">
+		                  <a:ApiField comment="An attribute value representing the total number of assets which could be returned, regardless of page size." systemGenerated="true" />
+		               </annox:annotate>
+		            </xsd:appinfo>
+		         </xsd:annotation>
+		      </xsd:attribute>
+		      
+		   </xsd:extension>
+		</xsd:complexContent>
+   </xsd:complexType>
+     
+</xsd:schema>

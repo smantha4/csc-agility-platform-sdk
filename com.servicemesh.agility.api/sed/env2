@@ -1,0 +1,2 @@
+/@XmlElement(name = "private"/a\
+    @JsonProperty("private")\

@@ -1,0 +1,47 @@
+<?xml version="1.0" standalone="yes"?>
+<project name="agility-platform-sdk" basedir="."
+default="help" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+<!-- =====================================================================
+ Definitions
+ ================================================================= -->
+<!-- standard properties -->
+   <property name="dist.dir" value="dist"/>
+   <property name="ivylib" value="ivy-lib" />
+   
+   <target name="help">
+      <java classname="org.apache.tools.ant.Main">
+         <arg value="-projecthelp"/>
+      </java>
+   </target>
+
+   <target name="init" description="Downloads third party jar files needed by the projects in this repo.">
+      <mkdir dir="${dist.dir}" />
+      <mkdir dir="${ivylib}" />
+      <ivy:settings file="ivysettings.xml" />
+      <ivy:resolve file="ivy.xml"/>
+      <ivy:retrieve pattern="${ivylib}/[module]-[revision].[ext]"/>
+   </target>
+
+   <target name="clean" description="Deletes all generated artifacts.">
+      <ant dir="agility-platform-services-sdk" target="clean" />
+      <ant dir="agility-platform-async-cloud-sdk" target="clean" />
+      <ant dir="com.servicemesh.agility.api" target="clean" />
+      <ant dir="com.servicemesh.agility.distributed.sync" target="clean" />
+      <ant dir="com.servicemesh.io" target="clean" />
+      <ant dir="com.servicemesh.core" target="clean" />
+      <delete dir="${dist.dir}" />
+      <delete dir="${ivylib}" />
+      <delete dir="root" />
+      <delete file="apidocs.log" />
+   </target>
+
+   <target name="deploy" depends="init" description="Downloads third party jars and compiles all of the projects in this repo. The resulting jar files are in the dist directory">
+      <ant dir="com.servicemesh.core" target="deploy" />
+      <ant dir="com.servicemesh.io" target="deploy" />
+      <ant dir="com.servicemesh.agility.distributed.sync" target="deploy" />
+      <ant dir="com.servicemesh.agility.api" target="deploy" />
+      <ant dir="agility-platform-async-cloud-sdk" target="deploy" />
+      <ant dir="agility-platform-services-sdk" target="deploy" />
+   </target>
+</project>
