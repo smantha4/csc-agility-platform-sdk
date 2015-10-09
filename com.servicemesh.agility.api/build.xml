@@ -5,35 +5,39 @@
    <property environment="env" />
    <property name="src" value="src" />
    <property name="bin" value="bin" />
-   <property name="lib" value="lib" />
    <property name="dist" value="../dist" />
    <property name="ivy.lib" value="../ivy-lib" />
-   <property name="test.lib" value="../../test/lib" />
+   <property name="common.lib" value="../lib" />
    <property name="bundle.jar" value = "com.servicemesh.agility.api-${bundle.version}.jar" />
    <property name="classes" value="${bin}/classes" />
+   <property name="ivyexists" value="false"/>
 
-   <taskdef name="xjc" classname="org.jvnet.jaxb2_commons.xjc.XJC2Task">
+   <available file="${ivy.lib}" type="dir" property="ivyexists" />
+
+   <target name="xjc" if="ivyexists">
+      <taskdef name="xjc" classname="org.jvnet.jaxb2_commons.xjc.XJC2Task">
    	  <!-- XJC2 Task classpath -->
-      <classpath>
-         <fileset dir="${lib}" includes="agility-athena-*.jar"/>
-         <fileset dir="${ivy.lib}" >
-            <include name="junit-4.11.jar"/>
-            <include name="jaxb-impl-2.2.5-2.jar" />
-            <include name="jaxb-xjc-2.2.5-2.jar" />
-            <include name="jaxb-api-2.2.5.jar" />
-            <include name="jaxb2-basics-0.6.4.jar" />
-            <include name="jaxb2-basics-annotate-0.6.4.jar" />
-            <include name="jaxb2-basics-ant-0.6.4.jar" />
-            <include name="jaxb2-basics-runtime-0.6.4.jar" />
-            <include name="jaxb2-basics-tools-0.6.4.jar" />
-            <include name="javaparser-1.0.9.jar" />
-            <include name="annox-0.5.1.jar" />
-            <include name="commons-beanutils-1.7.0.jar" />
-            <include name="commons-logging-1.1.1.jar" />
-            <include name="commons-lang-2.5.jar"/>
-         </fileset>
-      </classpath>
-   </taskdef>
+        <classpath>
+           <fileset dir="${common.lib}" includes="agility-athena-*.jar"/>
+           <fileset dir="${ivy.lib}" >
+              <include name="junit-4.11.jar"/>
+              <include name="jaxb-impl-2.2.5-2.jar" />
+              <include name="jaxb-xjc-2.2.5-2.jar" />
+              <include name="jaxb-api-2.2.5.jar" />
+              <include name="jaxb2-basics-0.6.4.jar" />
+              <include name="jaxb2-basics-annotate-0.6.4.jar" />
+              <include name="jaxb2-basics-ant-0.6.4.jar" />
+              <include name="jaxb2-basics-runtime-0.6.4.jar" />
+              <include name="jaxb2-basics-tools-0.6.4.jar" />
+              <include name="javaparser-1.0.9.jar" />
+              <include name="annox-0.5.1.jar" />
+              <include name="commons-beanutils-1.7.0.jar" />
+              <include name="commons-logging-1.1.1.jar" />
+              <include name="commons-lang-2.5.jar"/>
+           </fileset>
+        </classpath>
+      </taskdef>
+   </target>
 
    <target name="init">
       <mkdir dir="${bin}" />
@@ -42,7 +46,7 @@
    </target>
 
    <path id="compile.classpath">
-      <fileset dir="${lib}" includes="agility-athena-*.jar"/>
+      <fileset dir="${common.lib}" includes="agility-athena-*.jar"/>
       <fileset dir="${ivy.lib}" >
          <include name="jaxb-impl-2.2.5-2.jar" />
          <include name="jaxb-xjc-2.2.5-2.jar" />
@@ -50,13 +54,10 @@
          <include name="jackson-core-asl-1.7.3.jar" />
          <include name="jackson-mapper-asl-1.7.3.jar" />
       </fileset>
-      <!--fileset dir="${platform.webinf}/lib" includes="*.jar"/-->
       <fileset dir="${dist}" includes="com.servicemesh.core-1.0.0.jar"/>
-      <!--fileset dir="${platform.bundles}" includes="*.jar" excludes="com.servicemesh.agility.api-*"/>
-      <fileset dir="${system.bundles}" includes="**/*.jar"/-->
    </path>
 
-   <target name="schema" depends="init">
+   <target name="schema" depends="init,xjc">
    	
     <uptodate property="hack.not.required" targetfile="${src}/com/servicemesh/agility/api/Topology.java">
        <srcfiles dir="src" includes="*"/>
@@ -82,7 +83,7 @@
     	
          <!-- Plugins -->
          <classpath>
-            <fileset dir="lib">
+            <fileset dir="${common.lib}">
                <include name="agility-athena-*.jar"/>
             </fileset>
             <fileset dir="${ivy.lib}" >

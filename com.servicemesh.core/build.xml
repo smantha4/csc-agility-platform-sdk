@@ -4,6 +4,7 @@
   <property name="bundle.jar" value="com.servicemesh.core-${bundle.version}.jar"/>
   <property name="dist" value="../dist"/>
   <property name="ivy.lib" value="../ivy-lib"/>
+  <property name="common.lib" value="../lib" />
 
   <macrodef name="iterate">
     <attribute name="target"/>
@@ -55,6 +56,9 @@
        <zipfileset includes="**/*.class" src="${build.dir}/lib/Messaging.jar"/>
        <fileset dir="ThirdParty">
           <include name="**/*.jar"/>
+       </fileset>
+       <fileset dir="${common.lib}" >
+          <include name="agility-athena-1.0.4-bin.jar"/>
        </fileset>
        <fileset dir="${ivy.lib}" >
           <include name="log4j-1.2.17.jar"/>

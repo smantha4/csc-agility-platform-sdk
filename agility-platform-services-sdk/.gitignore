@@ -1,0 +1,10 @@
+bin
+dist
+docs
+test/unit/bin
+test/unit/reports
+src/com/servicemesh/agility/sdk/service/msgs
+/bin/
+/coverage
+/instrumented
+/local_coverage_instrumented

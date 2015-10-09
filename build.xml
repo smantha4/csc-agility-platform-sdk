@@ -18,6 +18,8 @@ default="help" xmlns:ivy="antlib:org.apache.ivy.ant">
    </target>
 
    <target name="clean" description="Deletes all generated artifacts.">
+      <ant dir="agility-platform-services-sdk" target="clean" />
+      <ant dir="agility-platform-async-cloud-sdk" target="clean" />
       <ant dir="com.servicemesh.agility.api" target="clean" />
       <ant dir="com.servicemesh.agility.distributed.sync" target="clean" />
       <ant dir="com.servicemesh.io" target="clean" />
@@ -31,5 +33,7 @@ default="help" xmlns:ivy="antlib:org.apache.ivy.ant">
       <ant dir="com.servicemesh.io" target="deploy" />
       <ant dir="com.servicemesh.agility.distributed.sync" target="deploy" />
       <ant dir="com.servicemesh.agility.api" target="deploy" />
+      <ant dir="agility-platform-async-cloud-sdk" target="deploy" />
+      <ant dir="agility-platform-services-sdk" target="deploy" />
    </target>
 </project>

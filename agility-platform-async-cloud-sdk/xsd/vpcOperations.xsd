@@ -1,0 +1,874 @@
+<!--
+COPYRIGHT (C) 2008-2013 SERVICEMESH, INC.  ALL RIGHTS RESERVED.  CONFIDENTIAL AND PROPRIETARY. 
+ 
+ALL SOFTWARE, INFORMATION AND ANY OTHER RELATED COMMUNICATIONS (COLLECTIVELY, "WORKS") ARE CONFIDENTIAL AND PROPRIETARY INFORMATION THAT ARE THE EXCLUSIVE PROPERTY OF SERVICEMESH.     ALL WORKS ARE PROVIDED UNDER THE APPLICABLE AGREEMENT OR END USER LICENSE AGREEMENT IN EFFECT BETWEEN YOU AND SERVICEMESH.  UNLESS OTHERWISE SPECIFIED IN THE APPLICABLE AGREEMENT, ALL WORKS ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.  ALL USE, DISCLOSURE AND/OR REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIBITED.
+-->
+<xsd:schema targetNamespace="http://servicemesh.com/agility/sdk/cloud" 
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="qualified"
+   xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0" jaxb:extensionBindingPrefixes="xjc annox"
+   xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+   xmlns:annox="http://annox.dev.java.net" 
+   xmlns:a="http://annox.dev.java.net/com.servicemesh.agility.tools.annotation"
+   xmlns:jl="http://annox.dev.java.net/java.lang"
+   xmlns:jxml="http://annox.dev.java.net/javax.xml.bind.annotation"
+   xmlns:agility="http://servicemesh.com/agility/api"
+   xmlns:core="http://servicemesh.com/core/messaging"
+   xmlns:cloud="http://servicemesh.com/agility/sdk/cloud">
+   
+   <xsd:include schemaLocation="general.xsd" />
+   <xsd:import namespace="http://servicemesh.com/agility/api" schemaLocation="agilityReferences.xsd"/>
+   <xsd:import namespace="http://servicemesh.com/core/messaging" schemaLocation="coreReferences.xsd"/>
+   
+ <!--  VPC operations - see IVPC -->  
+   
+   <xsd:complexType name="VPCRequest" abstract="true">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>VPCRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Top level request object used for VPC operations." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="cloud:CloudRequest">
+            <xsd:sequence>
+
+                <xsd:element name="vpc" type="agility:VPC" minOccurs="1" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="VPC to be created." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <xsd:complexType name="VPCCreateRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>VPCCreateRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to create a VPC" 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="cloud:VPCRequest">
+            <xsd:sequence>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+      
+   <xsd:complexType name="VPCDeleteRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>VPCDeleteRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to delete a VPC" 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="cloud:VPCRequest">
+            <xsd:sequence>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <xsd:complexType name="SubnetAddRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>SubnetAddRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to create a VPC subnet" 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="cloud:VPCRequest">
+            <xsd:sequence>
+
+				<xsd:element name="subnet" type="agility:Subnet" minOccurs="1" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Subnet object to be added." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <xsd:complexType name="SubnetChangeRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>SubnetChangeRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to change a VPC subnet" 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="cloud:VPCRequest">
+            <xsd:sequence>
+
+				<xsd:element name="subnet" type="agility:Subnet" minOccurs="1" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Subnet to be updated." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <xsd:complexType name="SubnetDeleteRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>SubnetDeleteRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to delete one or more VPC subnets." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="cloud:VPCRequest">
+            <xsd:sequence>
+
+				<xsd:element name="subnet" type="agility:Subnet" minOccurs="1" maxOccurs="unbounded">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Subnet to be deleted." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="VPCSubnetsDeleteRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>VPCSubnetsDeleteRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to delete all subnets for a VPC." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="cloud:VPCRequest">
+            <xsd:sequence>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <xsd:complexType name="DHCPOptionsCreateRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>DHCPOptionsCreateRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to create DHCP Options" 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="cloud:CloudRequest">
+            <xsd:sequence>
+
+               <xsd:element name="dhcpOptions" type="agility:DhcpOptions" minOccurs="1" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="DHCP Options to be created." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <xsd:complexType name="DHCPOptionsDeleteRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>DHCPOptionsDeleteRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to delete DHCP Options" 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      
+      <xsd:complexContent>
+         <xsd:extension base="cloud:CloudRequest">
+            <xsd:sequence>
+
+               <xsd:element name="dhcpOptions" type="agility:DhcpOptions" minOccurs="1" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="DHCP Option set to be deleted." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <xsd:complexType name="DHCPOptionsAssociateRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>DHCPOptionsAssociateRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to associate DHCP Options with a VPC" 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="cloud:VPCRequest">
+            <xsd:sequence>
+
+               <xsd:element name="dhcpOptions" type="agility:DhcpOptions" minOccurs="1" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="DHCP Option set to be associated with the VPC." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+              
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <xsd:complexType name="VPNGatewayConnectionCreateRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>VPNGatewayConnectionCreateRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to create a VPC gateway which includes a VPN Gateway, Customer Gateway, and VPN Connection." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="cloud:CloudRequest">
+            <xsd:sequence>
+
+				<xsd:element name="vpc" type="agility:VPC" minOccurs="1" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Model of Amazon EC2 VPC object." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <xsd:complexType name="VPNGatewayConnectionDeleteRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>GatewayDeleteRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to Delete a VPC gateway which includes a VPN Gateway, Customer Gateway, and VPN Connection." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="cloud:CloudRequest">
+            <xsd:sequence>
+
+                <xsd:element name="vpc" type="agility:VPC" minOccurs="1" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Model of Amazon EC2 VPC object." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <xsd:complexType name="VPNGatewayAttachRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>VPNGatewayAttachRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to attach a VPC to a VPN gateway." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="cloud:CloudRequest">
+            <xsd:sequence>
+
+                <xsd:element name="vpc" type="agility:VPC" minOccurs="1" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Model of Amazon EC2 VPC object." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <xsd:complexType name="VPNGatewayDetachRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>VPNGatewayDetachRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to Detach a VPC from a VPN Gateway." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="cloud:CloudRequest">
+            <xsd:sequence>
+
+                <xsd:element name="vpc" type="agility:VPC" minOccurs="1" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Model of Amazon EC2 VPC object." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <xsd:complexType name="VPNConnectionDeleteRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>VPNConnectionDeleteRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to Delete a VPN Connection." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="cloud:CloudRequest">
+            <xsd:sequence>
+
+                <xsd:element name="vpc" type="agility:VPC" minOccurs="1" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Model of Amazon EC2 VPC object." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <xsd:complexType name="VPNGatewayDeleteRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>VPNGatewayDeleteRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to Delete a VPN Gateway" 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="cloud:CloudRequest">
+            <xsd:sequence>
+
+                <xsd:element name="vpc" type="agility:VPC" minOccurs="1" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Model of Amazon EC2 VPC object." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+  <xsd:complexType name="CustomerGatewayDeleteRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>CustomerGatewayDeleteRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to Delete a Customer Gateway" 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="cloud:CloudRequest">
+            <xsd:sequence>
+
+                <xsd:element name="vpc" type="agility:VPC" minOccurs="1" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Model of Amazon EC2 VPC object." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <xsd:complexType name="VPNConnectionStateRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>VPNConnectionStateRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to get the state of the VPN Connection" 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="cloud:CloudRequest">
+            <xsd:sequence>
+               
+               <xsd:element name="vpnConnectionId" type="xsd:string" minOccurs="1" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="VPN Connection ID" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <xsd:complexType name="VPCResponse">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>VPCResponse</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Response object returned by VPC requests." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="cloud:CloudResponse">
+            <xsd:sequence>
+            
+               <xsd:element name="vpc" type="agility:VPC" minOccurs="0" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Agility VPC object." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            
+               <xsd:element name="dhcpOptions" type="agility:DhcpOptions" minOccurs="0" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="DHCP options set." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            
+               <xsd:element name="subnet" type="agility:Subnet" minOccurs="0" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Agility subnet object." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <xsd:complexType name="VPNConnectionStateResponse">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>VPNConnectionStateResponse</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Response object returned by VPN Connection state request" 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="cloud:CloudResponse">
+            <xsd:sequence>
+            
+               <xsd:element name="vpnConnectionId" type="xsd:string" minOccurs="1" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="VPN Connection ID" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="connectionState" type="xsd:string" minOccurs="1" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="VPN Connection State" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <xsd:complexType name="VPNGatewayStateRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>VPNGatewayStateRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to get the state of the VPN Gateway" 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="cloud:CloudRequest">
+            <xsd:sequence>
+               
+               <xsd:element name="vpnGatewayId" type="xsd:string" minOccurs="1" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="VPN Gateway ID" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <xsd:complexType name="VPNGatewayStateResponse">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>VPNGatewayStateResponse</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Response object returned by VPN Gateway state request" 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="cloud:CloudResponse">
+            <xsd:sequence>
+            
+               <xsd:element name="vpnGatewayId" type="xsd:string" minOccurs="1" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="VPN Gateway ID" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="connectionState" type="xsd:string" minOccurs="1" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="VPN Gateway State" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <xsd:complexType name="RunningInstancesStopRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>RunningInstancesStopRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to stop all running instances in a VPC." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="cloud:VPCRequest">
+            <xsd:sequence>
+               <xsd:element name="instance" type="agility:Instance" minOccurs="0" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Instance object containing the ID of the instance to be stopped." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="InternetGatewayDetachRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>InternetGatewayDetachRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to detach a VPC from Internet Gateways." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="cloud:VPCRequest">
+            <xsd:sequence>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <xsd:complexType name="VPNGatewayAttachmentsRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>VPNGatewayAttachmentsRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to retrieve the attachments for a VPN Gateway" 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="cloud:VPCRequest">
+            <xsd:sequence>
+               <xsd:element name="vpnGatewayId" type="xsd:string" minOccurs="0" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="VPN Gateway ID" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <xsd:complexType name="VPNGatewayAttachmentsResponse">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>VPNGatewayAttachmentsResponse</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Response object returned by VPN Gateway Attachments Request" 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="cloud:CloudResponse">
+            <xsd:sequence>
+            
+               <xsd:element name="attachment" type="agility:AttachmentType" minOccurs="0" maxOccurs="unbounded">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="VPN Gateway Attachment" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+</xsd:schema>

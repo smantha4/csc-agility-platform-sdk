@@ -6,21 +6,6 @@
       <dependency org="commons-lang" name="commons-lang" rev="2.5">
           <artifact name="commons-lang" type="jar" ext="jar" />
       </dependency>
-      <!--dependency org="com.google.guava" name="guava" rev="16.0.1">
-          <artifact name="guava" type="jar" ext="jar" />
-      </dependency>
-      <dependency org="org.apache.httpcomponents" name="httpasyncclient" rev="4.1">
-          <artifact name="httpasyncclient" type="jar" ext="jar" />
-      </dependency>
-      <dependency org="org.apache.httpcomponents" name="httpclient" rev="4.4.1">
-          <artifact name="httpclient" type="jar" ext="jar" />
-      </dependency>
-      <dependency org="org.apache.httpcomponents" name="httpcore" rev="4.4.1">
-          <artifact name="httpcore" type="jar" ext="jar" />
-      </dependency>
-      <dependency org="org.apache.httpcomponents" name="httpcore-nio" rev="4.4.1">
-          <artifact name="httpcore-nio" type="jar" ext="jar" />
-      </dependency-->
       <dependency org="org.mortbay.jetty" name="javax.servlet" rev="5.1.12">
           <artifact name="javax.servlet" type="jar" ext="jar" />
       </dependency>
@@ -54,7 +39,7 @@
       <dependency org="junit" name="junit" rev="4.11">
          <artifact name="junit" type="jar" ext="jar" />
       </dependency>
-      <dependency org="org.mockito" name="mockito-all" rev="1.9.5-rc1">
+      <dependency org="org.mockito" name="mockito-all" rev="1.10.19">
          <artifact name="mockito-all" type="jar" ext="jar" />
       </dependency>
       <dependency org="com.github.tomakehurst" name="wiremock" rev="1.43">
@@ -81,18 +66,12 @@
       <dependency org="org.skyscreamer" name="jsonassert" rev="1.2.1">
          <artifact name="jsonassert" type="jar" ext="jar" />
       </dependency>
-      <!--dependency org="org.powermock" name="powermock-mockito-release-full" rev="1.5" e:tag="-full">
-         <artifact name="powermock-mockito-release-full" type="jar" ext="jar" />
-      </dependency-->
       <dependency org="org.javassist" name="javassist" rev="3.18.2-GA">
          <artifact name="javassist" type="jar" ext="jar" />
       </dependency>
       <dependency org="cglib" name="cglib-nodep" rev="2.2.2">
          <artifact name="cglib-nodep" type="jar" ext="jar" />
       </dependency>
-      <!--dependency org="org.littleshoot" name="littleproxy" rev="1.0.0-beta7">
-         <artifact name="littleproxy" type="jar" ext="jar" />
-      </dependency-->
       <dependency org="org.slf4j" name="slf4j-log4j12" rev="1.7.5">
          <artifact name="slf4j-log4j12" type="jar" ext="jar" />
       </dependency>
@@ -133,6 +112,9 @@
          <artifact name="annox" type="jar" ext="jar" />
       </dependency>
       <dependency org="org.ow2.asm" name="asm" rev="5.0.1">
+         <artifact name="asm" type="jar" ext="jar" />
+      </dependency>
+      <dependency org="asm" name="asm" rev="3.2">
          <artifact name="asm" type="jar" ext="jar" />
       </dependency>
       <dependency org="org.ow2.asm" name="asm-commons" rev="5.0.1">
@@ -191,6 +173,9 @@
       </dependency>
       <dependency org="org.codehaus.jackson" name="jackson-mapper-asl" rev="1.7.3">
          <artifact name="jackson-mapper-asl" type="jar" ext="jar" />
+      </dependency>
+      <dependency org="com.google.guava" name="guava" rev="16.0.1">
+         <artifact name="guava" type="jar" ext="jar" />
       </dependency>
   </dependencies>
 </ivy-module>

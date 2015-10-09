@@ -17,6 +17,9 @@
    <property name="unit.test.reports" value="test/unit/reports" />
    <property name="unit.test.src" value="test/unit/src" />
    <property name="bundle.version" value="1.0.0"/>
+   <property name="ivyexists" value="false"/>
+   
+   <available file="${ivy.lib}" type="dir" property="ivyexists" />
 
    <target name="init">
       <mkdir dir="${bin}" />
@@ -45,13 +48,13 @@
      <path refid="compile.classpath"/>
      <pathelement location="${bin}"/>
      <fileset dir="${ivy.lib}">
-        <include name="mockito-all-1.9.5-rc1.jar" />
+        <include name="mockito-all-1.10.19.jar" />
         <include name="junit-4.11.jar" />
         <include name="commons-cli-1.2.jar" />
         <include name="groovy-1.8.9.jar" />
         <include name="groovy-all-1.8.9.jar" />
         <include name="spock-core-0.6-groovy-1.8.jar" />
-        <include name="asm-5.0.1.jar" />
+        <include name="asm-3.2.jar" />
         <include name="cglib-nodep-2.2.2.jar" />
      </fileset>
      <path refid="coverage.classpath"/>
@@ -64,10 +67,8 @@
          <include name="slf4j-jcl-1.7.5.jar" />
          <include name="groovy-all-1.8.9.jar" />
          <include name="spock-core-0.6-groovy-1.8.jar" />
-         <include name="asm-5.0.1.jar" />
+         <include name="asm-3.2.jar" />
       </fileset>
-     <!--fileset dir="${platform.bundles}" includes="com.springsource.slf4j.api-1.5.10.jar"/>
-     <fileset dir="${platform.bundles}" includes="com.springsource.slf4j.jcl-1.5.10.jar"/-->
    </path>
 
    <path id="unit.test.classpath">
@@ -81,19 +82,21 @@
         <include name="org.apache.felix.fileinstall-3.5.0.jar" />
         <include name="org.apache.felix.framework-4.2.1.jar" />
         <include name="cglib-nodep-2.2.2.jar" />
-        <include name="mockito-all-1.9.5-rc1.jar"/>
+        <include name="mockito-all-1.10.19.jar"/>
         <include name="commons-logging-1.1.1.jar" />
         <include name="commons-cli-1.2.jar" />
         <include name="groovy-1.8.9.jar" />
         <include name="groovy-all-1.8.9.jar" />
         <include name="spock-core-0.6-groovy-1.8.jar" />
-        <include name="asm-5.0.1.jar" />
+        <include name="asm-3.2.jar" />
      </fileset>
      <pathelement location="${bin}"/>
      <path refid="coverage-lib.classpath"/>
    </path>
 
-   <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="spock.classpath" />
+   <target name="groovyc" if="ivyexists" >
+      <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="spock.classpath" />
+   </target>
 
    <!-- ============= build ============ -->
 
@@ -180,7 +183,7 @@
 
   <!-- ============= unit test ============ -->
 
-  <target name="unit_test_compile" unless="skipTests">
+  <target name="unit_test_compile" depends="groovyc" unless="skipTests">
     <echo message="Compiling the test source files..."/>
     <groovyc verbose="true"
             srcdir="${unit.test.src}"

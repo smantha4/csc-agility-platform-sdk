@@ -5,32 +5,37 @@
 
    <property name="bundle.jar" value="Messaging.jar" />
    <property name="ivy.lib" value="../../ivy-lib" />
+   <property name="ivyexists" value="false"/>
+   
+   <available file="${ivy.lib}" type="dir" property="ivyexists" />
 	
-   <taskdef name="xjc" classname="org.jvnet.jaxb2_commons.xjc.XJC2Task">
-      <classpath>
-         <fileset dir="${ivy.lib}" >
-            <include name="commons-lang-2.5.jar"/>
-            <include name="junit-4.11.jar"/>
-            <include name="jaxb-impl-2.2.5-2.jar" />
-            <include name="jaxb-xjc-2.2.5-2.jar" />
-            <include name="jaxb-api-2.2.5.jar" />
-            <include name="jaxb2-basics-0.6.4.jar" />
-            <include name="jaxb2-basics-annotate-0.6.4.jar" />
-            <include name="jaxb2-basics-ant-0.6.4.jar" />
-            <include name="jaxb2-basics-runtime-0.6.4.jar" />
-            <include name="jaxb2-basics-tools-0.6.4.jar" />
-            <include name="javaparser-1.0.9.jar" />
-            <include name="annox-0.5.1.jar" />
-            <include name="commons-beanutils-1.7.0.jar" />
-            <include name="commons-logging-1.1.1.jar" />
-         </fileset>
-         <fileset dir="lib">
-            <include name="*.jar"/>
-         </fileset>
-      </classpath>
-   </taskdef>
+   <target name="xjc" if="ivyexists">
+      <taskdef name="xjc" classname="org.jvnet.jaxb2_commons.xjc.XJC2Task">
+         <classpath>
+            <fileset dir="${ivy.lib}" >
+               <include name="commons-lang-2.5.jar"/>
+               <include name="junit-4.11.jar"/>
+               <include name="jaxb-impl-2.2.5-2.jar" />
+               <include name="jaxb-xjc-2.2.5-2.jar" />
+               <include name="jaxb-api-2.2.5.jar" />
+               <include name="jaxb2-basics-0.6.4.jar" />
+               <include name="jaxb2-basics-annotate-0.6.4.jar" />
+               <include name="jaxb2-basics-ant-0.6.4.jar" />
+               <include name="jaxb2-basics-runtime-0.6.4.jar" />
+               <include name="jaxb2-basics-tools-0.6.4.jar" />
+               <include name="javaparser-1.0.9.jar" />
+               <include name="annox-0.5.1.jar" />
+               <include name="commons-beanutils-1.7.0.jar" />
+               <include name="commons-logging-1.1.1.jar" />
+            </fileset>
+            <fileset dir="lib">
+               <include name="*.jar"/>
+            </fileset>
+         </classpath>
+      </taskdef>
+   </target>
 
-   <target name="generate" depends="init">
+   <target name="generate" depends="init,xjc">
       <mkdir dir="${gen.dir}"/>
    	
       <xjc destdir="${gen.dir}" extension="true">

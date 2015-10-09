@@ -8,6 +8,7 @@
    <property name="lib" value="lib" />
    <property name="dist" value="../dist" />
    <property name="ivy.lib" value="../ivy-lib" />
+   <property name="common.lib" value="../lib" />
    <property name="root" value="../../" />
    <property name="karaf" value="${root}karaf" />
    <property name="platform.bundles" value="${karaf}/bundles" />
@@ -46,6 +47,8 @@
          <include name="slf4j-api-1.7.5.jar" />
          <include name="log4j-1.2.17.jar"/>
          <include name="commons-logging-1.1.1.jar" />
+         <include name="commons-lang-2.5.jar" />
+         <include name="guava-16.0.1.jar" />
       </fileset>
       <fileset dir="${dist}">
          <include name="com.servicemesh.core-*.jar"/>
@@ -58,7 +61,7 @@
       <fileset dir="${ivy.lib}">
          <include name="junit-4.11.jar"/>
          <include name="wiremock-1.43.jar"/>
-         <include name="mockito-all-1.9.5-rc1.jar"/>
+         <include name="mockito-all-1.10.19.jar"/>
          <include name="jackson-annotations-2.3.1.jar"/>
          <include name="jackson-core-2.3.1.jar"/>
          <include name="jackson-databind-2.3.1.jar"/>
@@ -69,6 +72,9 @@
          <include name="sshd-core-0.13.0.jar" />
          <include name="cglib-nodep-2.2.2.jar" />
          <include name="javassist-3.18.2-GA.jar" />
+      </fileset>
+      <fileset dir="${common.lib}" >
+         <include name="powermock-mockito-1.6.3-full.jar"/>
       </fileset>
       <fileset dir="${unit.test.lib}" includes="*.jar"/>
    </path>
@@ -110,6 +116,8 @@
             </fileset>
         </batchtest>
       </junit>
+      <delete dir="${lib}/bin" />
+      <delete dir="${common.lib}/bin" />
    </target>
 
    <target name="unit_test_compile" depends="compile" unless="skipTests" description="Compile all JUnit source files">
@@ -171,7 +179,9 @@
    <target name="clean" description="Deletes all generated artifacts.">
       <delete dir="${bin}" />
       <delete dir="${unit.test.bin}" />
-      <delete file="${unit.test.reports}" />
+      <delete dir="${unit.test.reports}" />
+      <delete dir="${lib}/bin" />
+      <delete dir="${common.lib}/bin" />
    </target>
 
    <target name="help" description="Help">

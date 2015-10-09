@@ -14,6 +14,7 @@
   <property name="thirdParty.dir" value="../ThirdParty"/>
   <property name="pkg.root.dir" value="com/servicemesh/core"/>
   <property name="ivy.lib" value="../../ivy-lib"/>
+  <property name="common.lib" value="../../lib" />
 
   <target name="init">
     <mkdir dir="${jar.dir}"/>
@@ -25,6 +26,9 @@
       </fileset>
       <fileset dir="${thirdParty.dir}">
         <include name="**/*.jar"/>
+      </fileset>
+      <fileset dir="${common.lib}" >
+         <include name="agility-athena-1.0.4-bin.jar"/>
       </fileset>
       <fileset dir="${ivy.lib}" >
          <include name="log4j-1.2.17.jar"/>
