@@ -9,11 +9,6 @@
    <property name="dist" value="../dist" />
    <property name="ivy.lib" value="../ivy-lib" />
    <property name="common.lib" value="../lib" />
-   <property name="root" value="../../" />
-   <property name="karaf" value="${root}karaf" />
-   <property name="platform.bundles" value="${karaf}/bundles" />
-   <property name="platform.system" value="${karaf}/system" />
-   <property name="externs.dir" value="${root}externs" />
    <property name="unit.test.src" value="test/unit/src" />
    <property name="unit.test.resources" value="test/unit/resources"/>
    <property name="unit.test.bin" value="test/unit/bin" />
@@ -95,6 +90,11 @@
             <path refid="compile.classpath"/>
          </classpath>
       </javac>
+      <concat destfile="${bin}/LICENSE">
+         <header>${ant.project.name}
+         </header>
+         <fileset dir="../" includes="LICENSE" />
+      </concat>
    </target>
 
    <target name="deploy_unit_test" unless="coverage_requested"
