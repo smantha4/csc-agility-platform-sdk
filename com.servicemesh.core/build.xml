@@ -44,13 +44,14 @@
   <target name="clean">
     <iterate target="clean"/>
     <delete file="${dist}/${bundle.jar}"/>
+    <delete file="${build.dir}/LICENSE" />
   </target>
 
   <target name="deploy" depends="jar">
      <concat destfile="${build.dir}/LICENSE" append="true">
         <header>${ant.project.name}
         </header>
-        <file name="../LICENSE" />
+        <fileset dir="../" includes="LICENSE" />
      </concat>
     <jar destfile="${dist}/${bundle.jar}"
          manifest="META-INF/MANIFEST.MF"
