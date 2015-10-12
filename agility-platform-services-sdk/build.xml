@@ -157,6 +157,11 @@
         <path refid="compile.classpath"/>
       </classpath>
     </javac>
+    <concat destfile="${bin}/LICENSE" append="true">
+       <header>${ant.project.name}
+       </header>
+       <fileset dir="../" includes="LICENSE" />
+    </concat>
   </target>
 
 
@@ -170,6 +175,7 @@
          manifest="META-INF/MANIFEST.MF"
          filesetmanifest="skip"
          basedir="${classes}">
+         <fileset dir="${bin}" includes="LICENSE" />
     </jar>
   </target>
 

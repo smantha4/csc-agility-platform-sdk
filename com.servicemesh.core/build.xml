@@ -47,6 +47,11 @@
   </target>
 
   <target name="deploy" depends="jar">
+     <concat destfile="${build.dir}/LICENSE" append="true">
+        <header>${ant.project.name}
+        </header>
+        <file name="../LICENSE" />
+     </concat>
     <jar destfile="${dist}/${bundle.jar}"
          manifest="META-INF/MANIFEST.MF"
          filesetmanifest="skip">
@@ -54,6 +59,7 @@
        <zipfileset includes="**/*.class" src="${build.dir}/lib/Reactor.jar"/>
        <zipfileset includes="**/*.class" src="${build.dir}/lib/Async.jar"/>
        <zipfileset includes="**/*.class" src="${build.dir}/lib/Messaging.jar"/>
+       <fileset dir="${build.dir}" includes="LICENSE" />
        <fileset dir="ThirdParty">
           <include name="**/*.jar"/>
        </fileset>

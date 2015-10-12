@@ -108,6 +108,11 @@
             <path refid="compile.classpath"/>
          </classpath>
       </javac>
+      <concat destfile="${bin}/LICENSE" append="true">
+         <header>${ant.project.name}
+         </header>
+         <fileset dir="../" includes="LICENSE" />
+      </concat>
    </target>
 
    <target name="deploy" depends="compile,deploy_unit_test" description="Generate and deploy bundle">
