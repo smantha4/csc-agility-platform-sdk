@@ -5,6 +5,8 @@
   <property name="dist" value="../dist"/>
   <property name="ivy.lib" value="../ivy-lib"/>
   <property name="common.lib" value="../lib" />
+  <property name="javadoc.dir" value="../javadoc" />
+  <property name="javadoc.jar" value="../dist/com.servicemesh.core-${bundle.version}-doc.jar" />
 
   <macrodef name="iterate">
     <attribute name="target"/>
@@ -45,14 +47,19 @@
     <iterate target="clean"/>
     <delete file="${dist}/${bundle.jar}"/>
     <delete file="${build.dir}/LICENSE" />
+    <delete dir="${javadoc.dir}/core" />
+    <delete file="${javadoc.jar}" />
   </target>
-
-  <target name="deploy" depends="jar">
+  
+  <target name="license">
      <concat destfile="${build.dir}/LICENSE">
         <header>${ant.project.name}
         </header>
         <fileset dir="../" includes="LICENSE" />
      </concat>
+   </target>
+
+  <target name="deploy" depends="license,jar">
     <jar destfile="${dist}/${bundle.jar}"
          manifest="META-INF/MANIFEST.MF"
          filesetmanifest="skip">
@@ -81,8 +88,8 @@
     </jar>
   </target>
 
-  <target name="javadoc" depends="generate">
-    <javadoc destdir="../root/WebContent/javadoc/core"
+  <target name="javadoc" depends="generate,license">
+    <javadoc destdir="${javadoc.dir}/core"
              author="false"
              version="true"
              use="true"
@@ -115,9 +122,14 @@
       <doctitle><![CDATA[<h1>Agility Platform Core SDK</h1>]]></doctitle>
       <bottom><![CDATA[<i>Copyright &#169; 2013-Present Computer Sciences Corporation</i>]]></bottom>
       <link offline="true"
-            href="http://docs.oracle.com/javase/7/docs/api"
+            href="http://docs.oracle.com/javase/8/docs/api"
             packagelistLoc="../root"/>
     </javadoc>
+    
+    <jar destfile="${javadoc.jar}" basedir="${javadoc.dir}/core" >
+       <fileset dir="${javadoc.dir}/core" includes="*"/>
+       <fileset dir="${build.dir}" includes="LICENSE"/>
+    </jar>
   </target>
 
   <target name="pure">

@@ -13,6 +13,8 @@
   <property name="classes" value="${bin}/classes" />
   <property name="bundle.instrumented.jar" value = "com.servicemesh.agility.sdk.service-${bundle.version}.jar" />
   <property name="instrumented" value="${bin}/instrumented" />
+  <property name="javadoc.dir" value="../javadoc" />
+  <property name="javadoc.jar" value="../dist/com.servicemesh.agility.sdk.service-${bundle.version}-doc.jar" />
    <import file="../coverage.xml" />
    <set-coverage-properties repo-base-dir="../"/>
 
@@ -148,7 +150,7 @@
   	
   </target>
 
-  <target name="compile" depends="schema" description="Compile all Java source files">
+  <target name="compile" depends="schema,license" description="Compile all Java source files">
     <echo message="Compiling the bundles/sdk/service java source files..." />
     <mkdir dir="${classes}" />  
     <javac destdir="${classes}" debug="on" fork="true" includeantruntime="false">
@@ -157,11 +159,14 @@
         <path refid="compile.classpath"/>
       </classpath>
     </javac>
-    <concat destfile="${bin}/LICENSE">
-       <header>${ant.project.name}
-       </header>
-       <fileset dir="../" includes="LICENSE" />
-    </concat>
+  </target>
+  
+  <target name="license">
+     <concat destfile="${bin}/LICENSE">
+        <header>${ant.project.name}
+        </header>
+        <fileset dir="../" includes="LICENSE" />
+     </concat>
   </target>
 
 
@@ -179,9 +184,9 @@
     </jar>
   </target>
 
-  <target name='javadoc' >
+<target name='javadoc' depends="license">
     <javadoc
-        destdir="../../root/WebContent/javadoc/sdk/services"
+        destdir="${javadoc.dir}/sdk/services"
         author="false"
         version="true"
         use="true"
@@ -204,9 +209,14 @@
       <link href="../../core"/>
       <link href="../../scripting"/>
       <link offline="true"
-            href="http://docs.oracle.com/javase/7/docs/api"
+            href="http://docs.oracle.com/javase/8/docs/api"
             packagelistLoc="../../root"/>
     </javadoc>
+    
+    <jar destfile="${javadoc.jar}" basedir="${javadoc.dir}/sdk/services" >
+       <fileset dir="${javadoc.dir}/sdk/services" includes="*"/>
+       <fileset dir="${bin}" includes="LICENSE"/>
+    </jar>
   </target>
 
   <!-- =========== instrument/coverage ========= -->
@@ -301,6 +311,8 @@
     <delete dir="${src}/com/servicemesh/agility/sdk/service/msgs" />
     <delete dir="${unit.test.reports}"/>
     <delete file="${dist}/${bundle.jar}"/>
+    <delete dir="${javadoc.dir}/sdk/services" />
+    <delete file="${javadoc.jar}" />
   </target>
 
   <target name="help" description="Help">

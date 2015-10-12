@@ -56,7 +56,7 @@ public interface IServiceInstance {
 	 * Put service instance into degraded state
 	 * @param instance
 	 * @param degradeReason
-	 * @throws Excepiton
+	 * @throws Exception
 	 */
 	public void degrade(ServiceInstance instance, String degradeReason) throws Exception;
 	

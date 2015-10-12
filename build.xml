@@ -32,7 +32,7 @@ default="help" xmlns:ivy="antlib:org.apache.ivy.ant">
       <ant dir="com.servicemesh.core" target="clean" />
       <delete dir="${dist.dir}" />
       <delete dir="${ivylib}" />
-      <delete dir="root" />
+      <delete dir="javadoc" />
       <delete file="apidocs.log" />
    </target>
 
@@ -43,5 +43,14 @@ default="help" xmlns:ivy="antlib:org.apache.ivy.ant">
       <ant dir="com.servicemesh.agility.api" target="deploy" />
       <ant dir="agility-platform-async-cloud-sdk" target="deploy" />
       <ant dir="agility-platform-services-sdk" target="deploy" />
+   </target>
+   
+   <target name="javadoc" depends="init" description="Runs the javadoc target on all the projects in this repo and puts the resulting files in the javadoc directory. Also produces jar files with the javadocs for each project in the dist directory.">
+      <ant dir="com.servicemesh.core" target="javadoc" />
+      <ant dir="com.servicemesh.io" target="javadoc" />
+      <ant dir="com.servicemesh.agility.distributed.sync" target="javadoc" />
+      <ant dir="com.servicemesh.agility.api" target="javadoc" />
+      <ant dir="agility-platform-async-cloud-sdk" target="javadoc" />
+      <ant dir="agility-platform-services-sdk" target="javadoc" />
    </target>
 </project>

@@ -11,6 +11,8 @@
    <property name="bundle.jar" value = "com.servicemesh.agility.api-${bundle.version}.jar" />
    <property name="classes" value="${bin}/classes" />
    <property name="ivyexists" value="false"/>
+   <property name="javadoc.dir" value="../javadoc" />
+   <property name="javadoc.jar" value="../dist/com.servicemesh.agility.api-${bundle.version}-doc.jar" />
 
    <available file="${ivy.lib}" type="dir" property="ivyexists" />
 
@@ -225,7 +227,7 @@
       </delete>
    </target>
 		
-   <target name="compile" depends="sedfix" description="Compile all Java source files">
+   <target name="compile" depends="sedfix,license" description="Compile all Java source files">
       <echo message="Compiling the bundles/api java source files..." />
    	 <mkdir dir="${classes}" />  
    	 <javac destdir="${classes}" debug="on" fork="true" includeantruntime="false">
@@ -234,11 +236,14 @@
             <path refid="compile.classpath"/>
          </classpath>
       </javac>
-       <concat destfile="${bin}/LICENSE">
-          <header>${ant.project.name}
-          </header>
-          <fileset dir="../" includes="LICENSE" />
-       </concat>
+   </target>
+   
+   <target name="license">
+      <concat destfile="${bin}/LICENSE">
+         <header>${ant.project.name}
+         </header>
+         <fileset dir="../" includes="LICENSE" />
+      </concat>
    </target>
 
    <target name="deploy" depends="compile" description="Generate and deploy bundle">
@@ -255,9 +260,9 @@
       </jar>
    </target>
 
-   <target name='javadoc' >
+   <target name='javadoc' depends="license">
     <javadoc
-           destdir="../root/WebContent/javadoc/scripting"
+           destdir="${javadoc.dir}/scripting"
            author="false"
            version="true"
            use="true"
@@ -269,15 +274,19 @@
         </classpath>
 
         <fileset dir="${src}/com/servicemesh/agility/api" includes="*.java"/>
-        <fileset dir="../api.script/src/com/servicemesh/agility/api/script" includes="*.java"/>
         <fileset dir="${src}/com/servicemesh/agility/api/service" includes="*.java"/>
 
       <doctitle><![CDATA[<h1>Agility Platform Scripting APIs</h1>]]></doctitle>
       <bottom><![CDATA[<i>Copyright &#169; 2013-Present Computer Sciences Corporation</i>]]></bottom>
       <link offline="true"
-            href="http://docs.oracle.com/javase/7/docs/api"
+            href="http://docs.oracle.com/javase/8/docs/api"
             packagelistLoc="../root"/>
     </javadoc>
+    
+    <jar destfile="${javadoc.jar}" basedir="${javadoc.dir}/scripting" >
+       <fileset dir="${javadoc.dir}/scripting" includes="*"/>
+       <fileset dir="${bin}" includes="LICENSE"/>
+    </jar>
    </target>
 
    <target name="clean" description="Deletes all generated artifacts." depends="init">
@@ -287,6 +296,8 @@
           <fileset dir="${src}/com/servicemesh/agility/api" includes="*.java" />
       </delete>
       <delete file="${dist}/${bundle.jar}"/>
+      <delete dir="${javadoc.dir}/scripting" />
+      <delete file="${javadoc.jar}" />
    </target>
 
    <target name="help" description="Help">

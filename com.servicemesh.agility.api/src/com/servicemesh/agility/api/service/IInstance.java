@@ -268,7 +268,7 @@ public interface IInstance {
  	 */ 
     public void removeNetworkServices(Task task, Instance instance) throws Exception;
     /**
- 	 * Remove association between Instance & Storage
+ 	 * Remove association between Instance and Storage
  	 * @param task The parent task
  	 * @param instance   The target instance
  	 */ 
