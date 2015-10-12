@@ -33,7 +33,7 @@ import com.servicemesh.core.reactor.WorkHandler;
 
 /**
  * 
- * A promise to produce a result of type <T> at some point in the future.
+ * A promise to produce a result of type &lt;T&gt; at some point in the future.
  * Enables a functional approach to transforming/completing work as intermediate
  * results complete.
  * 

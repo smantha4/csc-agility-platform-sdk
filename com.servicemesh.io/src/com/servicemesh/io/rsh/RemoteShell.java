@@ -28,7 +28,7 @@ import com.mindbright.nio.NetworkConnection;
 
 
 /**
- * Potential common base class for SSH & WinRM
+ * Potential common base class for SSH and WinRM
  *
  */
 public abstract class RemoteShell

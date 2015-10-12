@@ -10,6 +10,7 @@
    <property name="bundle.instrumented.jar" value="${bundle.jar}"/>
    <property name="version" value = "v1_0" />
    <property name="instrumented" value="${bin}/instrumented" />
+   <property name="javadoc.dir" value="../javadoc" />
    <import file="../coverage.xml" />
    <set-coverage-properties repo-base-dir="../"/>
 
@@ -125,7 +126,7 @@
    </target>
 
    <target name='javadoc' >
-      <javadoc destdir="../root/WebContent/javadoc/distributed/sync"
+      <javadoc destdir="${javadoc.dir}/distributed/sync"
                author="false"
                version="true"
                use="true"
@@ -151,7 +152,7 @@
           <bottom><![CDATA[<i>Copyright &#169; 2013-Present Computer Sciences Corporation</i>]]></bottom>
           <link href="../../core"/>
           <link offline="true"
-            href="http://docs.oracle.com/javase/7/docs/api"
+            href="http://docs.oracle.com/javase/8/docs/api"
             packagelistLoc="../../root"/>
       </javadoc>
    </target>
@@ -234,6 +235,7 @@
       <delete file="${dist}/${bundle.jar}"/>
       <delete dir="${unit.test.bin}" />
       <delete dir="${unit.test.reports}" />
+      <delete dir="${javadoc.dir}/distributed" />
    </target>
 
    <target name="help" description="Help">

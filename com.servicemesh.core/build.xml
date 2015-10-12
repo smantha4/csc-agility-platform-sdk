@@ -5,6 +5,7 @@
   <property name="dist" value="../dist"/>
   <property name="ivy.lib" value="../ivy-lib"/>
   <property name="common.lib" value="../lib" />
+  <property name="javadoc.dir" value="../javadoc" />
 
   <macrodef name="iterate">
     <attribute name="target"/>
@@ -45,6 +46,7 @@
     <iterate target="clean"/>
     <delete file="${dist}/${bundle.jar}"/>
     <delete file="${build.dir}/LICENSE" />
+    <delete dir="${javadoc.dir}/core" />
   </target>
 
   <target name="deploy" depends="jar">
@@ -82,7 +84,7 @@
   </target>
 
   <target name="javadoc" depends="generate">
-    <javadoc destdir="../root/WebContent/javadoc/core"
+    <javadoc destdir="${javadoc.dir}/core"
              author="false"
              version="true"
              use="true"
@@ -115,7 +117,7 @@
       <doctitle><![CDATA[<h1>Agility Platform Core SDK</h1>]]></doctitle>
       <bottom><![CDATA[<i>Copyright &#169; 2013-Present Computer Sciences Corporation</i>]]></bottom>
       <link offline="true"
-            href="http://docs.oracle.com/javase/7/docs/api"
+            href="http://docs.oracle.com/javase/8/docs/api"
             packagelistLoc="../root"/>
     </javadoc>
   </target>

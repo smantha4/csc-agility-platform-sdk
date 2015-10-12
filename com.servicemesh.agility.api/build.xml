@@ -11,6 +11,7 @@
    <property name="bundle.jar" value = "com.servicemesh.agility.api-${bundle.version}.jar" />
    <property name="classes" value="${bin}/classes" />
    <property name="ivyexists" value="false"/>
+   <property name="javadoc.dir" value="../javadoc" />
 
    <available file="${ivy.lib}" type="dir" property="ivyexists" />
 
@@ -257,7 +258,7 @@
 
    <target name='javadoc' >
     <javadoc
-           destdir="../root/WebContent/javadoc/scripting"
+           destdir="${javadoc.dir}/scripting"
            author="false"
            version="true"
            use="true"
@@ -269,13 +270,12 @@
         </classpath>
 
         <fileset dir="${src}/com/servicemesh/agility/api" includes="*.java"/>
-        <fileset dir="../api.script/src/com/servicemesh/agility/api/script" includes="*.java"/>
         <fileset dir="${src}/com/servicemesh/agility/api/service" includes="*.java"/>
 
       <doctitle><![CDATA[<h1>Agility Platform Scripting APIs</h1>]]></doctitle>
       <bottom><![CDATA[<i>Copyright &#169; 2013-Present Computer Sciences Corporation</i>]]></bottom>
       <link offline="true"
-            href="http://docs.oracle.com/javase/7/docs/api"
+            href="http://docs.oracle.com/javase/8/docs/api"
             packagelistLoc="../root"/>
     </javadoc>
    </target>
@@ -287,6 +287,7 @@
           <fileset dir="${src}/com/servicemesh/agility/api" includes="*.java" />
       </delete>
       <delete file="${dist}/${bundle.jar}"/>
+      <delete dir="${javadoc.dir}/scripting" />
    </target>
 
    <target name="help" description="Help">
