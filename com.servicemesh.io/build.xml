@@ -18,6 +18,7 @@
    <property name="bundle.jar" value = "com.servicemesh.io-${bundle.version}.jar" />
    <property name="classes" value="${bin}/classes"/>
    <property name="javadoc.dir" value="../javadoc" />
+   <property name="javadoc.jar" value="../dist/com.servicemesh.io-${bundle.version}-doc.jar" />
    <import file="../coverage.xml" />
    <set-coverage-properties repo-base-dir="../"/>
 
@@ -83,7 +84,7 @@
       <path refid="coverage.classpath"/>
    </path>
 
-   <target name="compile" description="Compile all Java source files" depends="init">
+   <target name="compile" description="Compile all Java source files" depends="init,license">
       <echo message="Compiling the async HTTP java source files..." />
       <javac destdir="${bin}" debug="on" includeantruntime="false">
          <src path="${src}" />
@@ -91,6 +92,9 @@
             <path refid="compile.classpath"/>
          </classpath>
       </javac>
+   </target>
+   
+   <target name="license">
       <concat destfile="${bin}/LICENSE">
          <header>${ant.project.name}
          </header>
@@ -133,7 +137,7 @@
      <copy file="${unit.test.resources}/junitkeystore.jks" tofile="${unit.test.bin}/resources/junitkeystore.jks"/>
    </target>
 
-   <target name='javadoc'>
+   <target name='javadoc' depends="license">
      <javadoc
          destdir="${javadoc.dir}/io"
          author="false"
@@ -155,6 +159,11 @@
              href="http://docs.oracle.com/javase/8/docs/api"
              packagelistLoc="../root"/>
      </javadoc>
+     
+     <jar destfile="${javadoc.jar}" basedir="${javadoc.dir}/io" >
+        <fileset dir="${javadoc.dir}/io" includes="*"/>
+        <fileset dir="${bin}" includes="LICENSE"/>
+     </jar>
    </target>
 
    <target name="deploy" depends="compile,deploy_unit_test" description="Generate and deploy bundle">
@@ -184,6 +193,8 @@
       <delete dir="${lib}/bin" />
       <delete dir="${common.lib}/bin" />
       <delete dir="${javadoc.dir}/io" />
+      <delete file="${javadoc.jar}" />
+      <delete file="${dist}/${bundle.jar}" />
    </target>
 
    <target name="help" description="Help">

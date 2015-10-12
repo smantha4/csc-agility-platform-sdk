@@ -8,3 +8,4 @@ src/com/servicemesh/agility/sdk/service/msgs
 /coverage
 /instrumented
 /local_coverage_instrumented
+apidocs.log

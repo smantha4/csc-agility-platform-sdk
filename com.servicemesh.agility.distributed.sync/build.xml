@@ -11,6 +11,7 @@
    <property name="version" value = "v1_0" />
    <property name="instrumented" value="${bin}/instrumented" />
    <property name="javadoc.dir" value="../javadoc" />
+     <property name="javadoc.jar" value="../dist/com.servicemesh.agility.distributed.sync-1.0.0-doc.jar" />
    <import file="../coverage.xml" />
    <set-coverage-properties repo-base-dir="../"/>
 
@@ -101,7 +102,7 @@
 
    <!-- ============= build ============ -->
 
-   <target name="compile" description="Compile all Java source files" depends="init">
+   <target name="compile" description="Compile all Java source files" depends="init,license">
       <echo message="Compiling the bundles/distributed/sync java source files..." />
       <javac destdir="${bin}" debug="on" fork="true" includeantruntime="false">
          <src path="${src}" />
@@ -109,12 +110,16 @@
             <path refid="compile.classpath"/>
          </classpath>
       </javac>
+   </target>
+   
+   <target name="license">
       <concat destfile="${bin}/LICENSE">
          <header>${ant.project.name}
          </header>
          <fileset dir="../" includes="LICENSE" />
       </concat>
    </target>
+
 
    <target name="deploy" depends="compile,deploy_unit_test" description="Generate and deploy bundle">
       <jar destfile="${dist}/${bundle.jar}"
@@ -125,7 +130,7 @@
       </jar>
    </target>
 
-   <target name='javadoc' >
+   <target name='javadoc' depends="license" >
       <javadoc destdir="${javadoc.dir}/distributed/sync"
                author="false"
                version="true"
@@ -155,6 +160,11 @@
             href="http://docs.oracle.com/javase/8/docs/api"
             packagelistLoc="../../root"/>
       </javadoc>
+      
+      <jar destfile="${javadoc.jar}" basedir="${javadoc.dir}/distributed/sync" >
+         <fileset dir="${javadoc.dir}/distributed/sync" includes="*"/>
+         <fileset dir="${bin}" includes="LICENSE"/>
+      </jar>
    </target>
 	
   <!-- =========== instrument/coverage ========= -->
@@ -236,6 +246,7 @@
       <delete dir="${unit.test.bin}" />
       <delete dir="${unit.test.reports}" />
       <delete dir="${javadoc.dir}/distributed" />
+      <delete file="${javadoc.jar}" />
    </target>
 
    <target name="help" description="Help">

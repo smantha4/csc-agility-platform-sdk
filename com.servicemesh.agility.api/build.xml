@@ -12,6 +12,7 @@
    <property name="classes" value="${bin}/classes" />
    <property name="ivyexists" value="false"/>
    <property name="javadoc.dir" value="../javadoc" />
+   <property name="javadoc.jar" value="../dist/com.servicemesh.agility.api-${bundle.version}-doc.jar" />
 
    <available file="${ivy.lib}" type="dir" property="ivyexists" />
 
@@ -226,7 +227,7 @@
       </delete>
    </target>
 		
-   <target name="compile" depends="sedfix" description="Compile all Java source files">
+   <target name="compile" depends="sedfix,license" description="Compile all Java source files">
       <echo message="Compiling the bundles/api java source files..." />
    	 <mkdir dir="${classes}" />  
    	 <javac destdir="${classes}" debug="on" fork="true" includeantruntime="false">
@@ -235,11 +236,14 @@
             <path refid="compile.classpath"/>
          </classpath>
       </javac>
-       <concat destfile="${bin}/LICENSE">
-          <header>${ant.project.name}
-          </header>
-          <fileset dir="../" includes="LICENSE" />
-       </concat>
+   </target>
+   
+   <target name="license">
+      <concat destfile="${bin}/LICENSE">
+         <header>${ant.project.name}
+         </header>
+         <fileset dir="../" includes="LICENSE" />
+      </concat>
    </target>
 
    <target name="deploy" depends="compile" description="Generate and deploy bundle">
@@ -256,7 +260,7 @@
       </jar>
    </target>
 
-   <target name='javadoc' >
+   <target name='javadoc' depends="license">
     <javadoc
            destdir="${javadoc.dir}/scripting"
            author="false"
@@ -278,6 +282,11 @@
             href="http://docs.oracle.com/javase/8/docs/api"
             packagelistLoc="../root"/>
     </javadoc>
+    
+    <jar destfile="${javadoc.jar}" basedir="${javadoc.dir}/scripting" >
+       <fileset dir="${javadoc.dir}/scripting" includes="*"/>
+       <fileset dir="${bin}" includes="LICENSE"/>
+    </jar>
    </target>
 
    <target name="clean" description="Deletes all generated artifacts." depends="init">
@@ -288,6 +297,7 @@
       </delete>
       <delete file="${dist}/${bundle.jar}"/>
       <delete dir="${javadoc.dir}/scripting" />
+      <delete file="${javadoc.jar}" />
    </target>
 
    <target name="help" description="Help">
