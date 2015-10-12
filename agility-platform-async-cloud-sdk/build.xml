@@ -173,7 +173,7 @@
         <path refid="compile.classpath"/>
       </classpath>
     </javac>
-    <concat destfile="${bin}/LICENSE" append="true">
+    <concat destfile="${bin}/LICENSE">
        <header>${ant.project.name}
        </header>
        <fileset dir="../" includes="LICENSE" />

@@ -48,7 +48,7 @@
   </target>
 
   <target name="deploy" depends="jar">
-     <concat destfile="${build.dir}/LICENSE" append="true">
+     <concat destfile="${build.dir}/LICENSE">
         <header>${ant.project.name}
         </header>
         <fileset dir="../" includes="LICENSE" />
