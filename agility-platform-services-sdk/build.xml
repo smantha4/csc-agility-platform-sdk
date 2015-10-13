@@ -15,8 +15,15 @@
   <property name="instrumented" value="${bin}/instrumented" />
   <property name="javadoc.dir" value="../javadoc" />
   <property name="javadoc.jar" value="../dist/com.servicemesh.agility.sdk.service-${bundle.version}-doc.jar" />
-   <import file="../coverage.xml" />
-   <set-coverage-properties repo-base-dir="../"/>
+
+<!-- Coverage properties -->
+<property name="coverage.dir" value="../coverage/sdk/service"/>
+<property name="coverage.datafile.base" value="cobertura.ser"/>
+<property name="coverage.datafile"
+value="${coverage.dir}/${coverage.datafile.base}"/>
+<property name="coverage.report.dir" value="${coverage.dir}/report"/>
+<property name="coverage.debug" value="false"/>
+<property name="coverage.format" value="xml"/>
 
   <property name="unit.test.bin" value="test/unit/bin" />
   <property name="unit.test.reports" value="test/unit/reports" />
@@ -89,7 +96,7 @@
        <include name="cglib-nodep-2.2.2.jar" />
     </fileset>
     <fileset dir="${common.lib}" includes="powermock-mockito-1.6.3-full.jar"/>
-    <path refid="coverage.classpath"/>
+    <path refid="cobertura.classpath"/>
   </path>
 
   <path id="spock.classpath">
@@ -110,7 +117,32 @@
        <include name="javassist-3.18.2-GA.jar" />
     </fileset>
     <pathelement location="${classes}"/>
-    <path refid="coverage-lib.classpath"/>
+    <path refid="cobertura.classpath"/>
+  </path>
+  
+  <path id="cobertura.classpath">
+     <fileset dir="${common.lib}">
+        <include name="cobertura*.jar"/>
+     </fileset>
+     <fileset dir="${ivy.lib}">
+        <include name="asm-5*.jar"/>
+        <include name="asm-analysis*.jar"/>
+        <include name="asm-commons*.jar"/>
+        <include name="asm-tree*.jar"/>
+        <include name="asm-util*.jar"/>
+        <include name="commons-lang3-*.jar"/>
+        <include name="commons-logging-*.jar"/>
+        <include name="log4j-*.jar"/>
+        <include name="oro-*.jar"/>
+        <include name="slf4j-api*.jar"/>
+        <include name="slf4j-log*.jar"/>
+     </fileset>
+  </path>
+  
+  <path id="groovy.classpath">
+     <fileset dir="${ivy.lib}">
+        <include name="groovy-all-*.jar"/>
+     </fileset>
   </path>
 
    <target name="groovyc" if="ivyexists" >
@@ -219,35 +251,51 @@
     </jar>
   </target>
 
-  <!-- =========== instrument/coverage ========= -->
-	
-  <target name="instrument" depends="compile,coverage-init">
-    <mkdir dir="${instrumented}"/>
-    <cobertura-instrument todir="${instrumented}" datafile="${platform.coverage}/${coverage.datafile.base}">
-      <ignore regex="org.apache.log4j.*" />
-      <fileset dir="${classes}">
-        <include name="**/*.class"/>
+<!-- =====================================================================
+ Coverage
+ ================================================================= -->
+<target name="init_coverage" description="Initializes coverage tool">
+   <mkdir dir="${coverage.dir}"/>
+   <taskdef classpathref="cobertura.classpath" resource="tasks.properties"/>
+   <taskdef name="groovy" classpathref="groovy.classpath"
+   classname="org.codehaus.groovy.ant.Groovy"/>
+</target>
+
+<target name="instrument_coverage" depends="init_coverage"
+   description="Instrument source code for coverage measurement">
+   <echo message="Instrumenting to ${coverage.datafile}"/>
+   <cobertura-instrument datafile="${coverage.datafile}">
+      <fileset dir="${bin}">
+         <include name="**/*.class"/>
       </fileset>
-    </cobertura-instrument>
-  </target>
-	
-  <target name="deploy-coverage" depends="instrument" description="Generate and deploy bundle">
-    <delete file="${platform.deploy}/${bundle.jar}" quiet="true" />
-    <delete file="${test.lib}/${bundle.jar}" quiet="true" />
-    <mkdir dir="${bin}/META-INF"/>
-    <copy todir="${bin}/META-INF">
-      <fileset dir="META-INF" includes="**/*"/>
-    </copy>
-    <jar destfile="${platform.deploy}/${bundle.instrumented.jar}"
-   	 manifest="META-INF/MANIFEST.MF"
-   	 filesetmanifest="skip">
-      <fileset dir="META-INF" includes="**/*"/>
-      <fileset dir="${classes}" includes="**/*.class"/>
-      <fileset dir="${instrumented}" includes="**/*.class"/>
-      <fileset dir="${coverage.tool.dir}" includes="${coverage.tool.jar}"/>
-    </jar>
-    <copy file="${platform.deploy}/${bundle.instrumented.jar}" todir="${test.lib}" />
-  </target>
+   </cobertura-instrument>
+</target>
+
+<target name="do-coverage-report" depends="instrument_coverage,unit_test">
+   <groovy><![CDATA[
+      def topSrcDir = new File(properties.'basedir')
+      ant.'cobertura-report'(format:properties.'coverage.format',
+                             datafile:properties.'coverage.datafile',
+                             destdir:properties.'coverage.report.dir') {
+         topSrcDir.eachDirRecurse { dir ->
+            if (dir.name == 'src') {
+               if (properties.'coverage.debug' == 'true') {
+                  println "$dir";
+               }
+               fileset(dir:dir) {
+                  include(name:'**/*.java')
+               }
+            }
+         }
+      }
+   ]]></groovy>
+</target>
+
+<target name="coverage-report" description="Generate coverage report">
+   <antcall target="do-coverage-report">
+      <param name="coverage.format" value="${coverage.format}"/>
+   </antcall>
+</target>
 
   <!-- ============= unit test ============ -->
 
@@ -276,7 +324,7 @@
     <junit fork="yes" printsummary="true" showoutput="true" haltonerror="true" haltonfailure="true" >
       <!-- <formatter type="plain" usefile="false" /> -->
       <formatter type="xml" />
-      <sysproperty key="${coverage.sysproperty.datafile}" value="${coverage.datafile}"/>
+      <sysproperty key="net.sourceforge.cobertura.datafile" value="${coverage.datafile}"/>
 
       <jvmarg value="-noverify" />
       <classpath refid="spock.classpath" />
@@ -313,13 +361,12 @@
     <delete file="${dist}/${bundle.jar}"/>
     <delete dir="${javadoc.dir}/sdk/services" />
     <delete file="${javadoc.jar}" />
+    <delete dir="${coverage.dir}" />
   </target>
 
   <target name="help" description="Help">
     <echo message="ServiceMesh Services SDK:"/>
     <echo message="deploy - Compiles the ServiceMesh Services SDK and creates the jar file."/>
   </target>
-
-  <!--import file="../local-coverage.xml"/-->
 
 </project>

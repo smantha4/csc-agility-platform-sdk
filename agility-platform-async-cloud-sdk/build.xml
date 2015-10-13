@@ -14,8 +14,6 @@
   <property name="instrumented" value="${bin}/instrumented" />
   <property name="javadoc.dir" value="../javadoc" />
   <property name="javadoc.jar" value="../dist/com.servicemesh.agility.sdk.cloud-${bundle.version}-doc.jar" />
-  <import file="../coverage.xml" />
-  <set-coverage-properties repo-base-dir="../"/>
 
   <property name="test.src" value="test/src" />
   <property name="test.bin" value="test/bin" />
@@ -279,7 +277,7 @@
     <junit fork="yes" printsummary="true" showoutput="true" haltonerror="false" haltonfailure="false" >
       <!-- <formatter type="plain" usefile="false" /> -->
       <formatter type="xml" />
-      <sysproperty key="${coverage.sysproperty.datafile}" value="${coverage.datafile}"/>
+      <sysproperty key="net.sourceforge.cobertura.datafile" value="${coverage.datafile}"/>
 
       <classpath refid="spock.classpath" />
       <classpath refid="unit.test.classpath" />
@@ -307,7 +305,5 @@
     <echo message="ServiceMesh Cloud SDK:"/>
     <echo message="deploy - Compiles the ServiceMesh Cloud SDK and creates the jar file."/>
   </target>
-
-  <!--import file="../local-coverage.xml"/-->
 
 </project>
