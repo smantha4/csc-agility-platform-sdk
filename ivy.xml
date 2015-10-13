@@ -177,6 +177,9 @@
       <dependency org="com.google.guava" name="guava" rev="16.0.1">
          <artifact name="guava" type="jar" ext="jar" />
       </dependency>
+      <dependency org="org.eclipse" name="org.eclipse.osgi" rev="3.8.0.v20120529-1548">
+         <artifact name="org.eclipse.osgi" type="jar" ext="jar" />
+      </dependency>
   </dependencies>
 </ivy-module>
 
