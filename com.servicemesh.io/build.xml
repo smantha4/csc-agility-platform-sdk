@@ -19,8 +19,15 @@
    <property name="classes" value="${bin}/classes"/>
    <property name="javadoc.dir" value="../javadoc" />
    <property name="javadoc.jar" value="../dist/com.servicemesh.io-${bundle.version}-doc.jar" />
-   <import file="../coverage.xml" />
-   <set-coverage-properties repo-base-dir="../"/>
+   
+   <!-- Coverage properties -->
+   <property name="coverage.dir" value="../coverage/io"/>
+   <property name="coverage.datafile.base" value="cobertura.ser"/>
+   <property name="coverage.datafile"
+   value="${coverage.dir}/${coverage.datafile.base}"/>
+   <property name="coverage.report.dir" value="${coverage.dir}/report"/>
+   <property name="coverage.debug" value="false"/>
+   <property name="coverage.format" value="xml"/>
 
    <target name="init">
       <mkdir dir="${bin}" />
@@ -81,7 +88,32 @@
       <pathelement location="${unit.test.bin}/resources"/>
       <pathelement location="${unit.test.lib}"/>
       <path refid="unit.test.compile.classpath"/>
-      <path refid="coverage.classpath"/>
+      <path refid="cobertura.classpath"/>
+   </path>
+   
+   <path id="cobertura.classpath">
+      <fileset dir="${common.lib}">
+         <include name="cobertura*.jar"/>
+      </fileset>
+      <fileset dir="${ivy.lib}">
+         <include name="asm-5*.jar"/>
+         <include name="asm-analysis*.jar"/>
+         <include name="asm-commons*.jar"/>
+         <include name="asm-tree*.jar"/>
+         <include name="asm-util*.jar"/>
+         <include name="commons-lang3-*.jar"/>
+         <include name="commons-logging-*.jar"/>
+         <include name="log4j-*.jar"/>
+         <include name="oro-*.jar"/>
+         <include name="slf4j-api*.jar"/>
+         <include name="slf4j-log*.jar"/>
+      </fileset>
+   </path>
+   
+   <path id="groovy.classpath">
+      <fileset dir="${ivy.lib}">
+         <include name="groovy-all-*.jar"/>
+      </fileset>
    </path>
 
    <target name="compile" description="Compile all Java source files" depends="init,license">
@@ -112,7 +144,7 @@
          <classpath refid="unit.test.classpath" />
          <jvmarg value="-noverify"/>
          <formatter type="xml"/>
-         <sysproperty key="${coverage.sysproperty.datafile}" value="${coverage.datafile}"/>
+         <sysproperty key="net.sourceforge.cobertura.datafile" value="${coverage.datafile}"/>
          <batchtest fork="yes" todir="${unit.test.reports}">
             <fileset dir="${unit.test.src}">
                <include name="**/*Test*.java"/>
@@ -184,8 +216,53 @@
           <fileset dir="${lib}" includes="mindterm.jar"/>
       </jar>
    </target>
+   
+   <!-- =====================================================================
+    Coverage
+    ================================================================= -->
+   <target name="init_coverage" description="Initializes coverage tool">
+      <mkdir dir="${coverage.dir}"/>
+      <taskdef classpathref="cobertura.classpath" resource="tasks.properties"/>
+      <taskdef name="groovy" classpathref="groovy.classpath"
+      classname="org.codehaus.groovy.ant.Groovy"/>
+   </target>
+   
+   <target name="instrument_coverage" depends="init_coverage"
+      description="Instrument source code for coverage measurement">
+      <echo message="Instrumenting to ${coverage.datafile}"/>
+      <cobertura-instrument datafile="${coverage.datafile}">
+         <fileset dir="${bin}">
+            <include name="**/*.class"/>
+         </fileset>
+      </cobertura-instrument>
+   </target>
+   
+   <target name="do-coverage-report" depends="instrument_coverage,unit_test">
+      <groovy><![CDATA[
+         def topSrcDir = new File(properties.'basedir')
+         ant.'cobertura-report'(format:properties.'coverage.format',
+                                datafile:properties.'coverage.datafile',
+                                destdir:properties.'coverage.report.dir') {
+            topSrcDir.eachDirRecurse { dir ->
+               if (dir.name == 'src') {
+                  if (properties.'coverage.debug' == 'true') {
+                     println "$dir";
+                  }
+                  fileset(dir:dir) {
+                     include(name:'**/*.java')
+                  }
+               }
+            }
+         }
+      ]]></groovy>
+   </target>
+   
+   <target name="coverage-report" description="Generate coverage report">
+      <antcall target="do-coverage-report">
+         <param name="coverage.format" value="${coverage.format}"/>
+      </antcall>
+   </target>
 
-    <!-- depends="local-coverage-clean" -->
    <target name="clean" description="Deletes all generated artifacts.">
       <delete dir="${bin}" />
       <delete dir="${unit.test.bin}" />
@@ -195,6 +272,7 @@
       <delete dir="${javadoc.dir}/io" />
       <delete file="${javadoc.jar}" />
       <delete file="${dist}/${bundle.jar}" />
+      <delete dir="${coverage.dir}" />
    </target>
 
    <target name="help" description="Help">
@@ -202,5 +280,4 @@
       <echo message="deploy - Compiles the ServiceMesh Async HTTP Service and creates the jar file."/>
    </target>
 
-   <!-- import file="../local-coverage.xml"/ -->
 </project>

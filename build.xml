@@ -34,6 +34,7 @@ default="help" xmlns:ivy="antlib:org.apache.ivy.ant">
       <delete dir="${ivylib}" />
       <delete dir="javadoc" />
       <delete file="apidocs.log" />
+      <delete dir="coverage" />
    </target>
 
    <target name="deploy" depends="init" description="Downloads third party jars and compiles all of the projects in this repo. The resulting jar files are in the dist directory">
