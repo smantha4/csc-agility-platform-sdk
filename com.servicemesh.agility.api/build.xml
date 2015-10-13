@@ -110,10 +110,30 @@
 	   <arg value='-c'/>
 	   <arg value="sed -f sed/sedscript4 -itmp ${src}/com/servicemesh/agility/api/*.java"/>
       </exec> 
-      <exec executable="/bin/sh">
-         <arg value='-c'/>
-         <arg value="sed -f sed/sedscript5 -itmp ${src}/com/servicemesh/agility/api/Asset.java"/>
-      </exec>
+    <exec executable="/bin/sh">
+       <arg value='-c'/>
+       <arg value="sed -f sed/sedscript5 -itmp ${src}/com/servicemesh/agility/api/Template.java"/>
+    </exec>
+    <exec executable="/bin/sh">
+       <arg value='-c'/>
+       <arg value="sed -f sed/template -itmp ${src}/com/servicemesh/agility/api/Template.java"/>
+    </exec>
+    <exec executable="/bin/sh">
+       <arg value='-c'/>
+       <arg value="sed -f sed/sedscript5 -itmp ${src}/com/servicemesh/agility/api/PolicyAssignment.java"/>
+    </exec>
+    <exec executable="/bin/sh">
+       <arg value='-c'/>
+       <arg value="sed -f sed/policyAssign -itmp ${src}/com/servicemesh/agility/api/PolicyAssignment.java"/>
+    </exec>
+    <exec executable="/bin/sh">
+       <arg value='-c'/>
+       <arg value="sed -f sed/sedscript5 -itmp ${src}/com/servicemesh/agility/api/Asset.java"/>
+    </exec>
+    <exec executable="/bin/sh">
+       <arg value='-c'/>
+       <arg value="sed -f sed/assetlist2 -itmp ${src}/com/servicemesh/agility/api/Asset.java"/>
+    </exec>
     <exec executable="/bin/sh">
        <arg value='-c'/>
        <arg value="sed -f sed/assetlist -itmp ${src}/com/servicemesh/agility/api/Assetlist.java"/>
