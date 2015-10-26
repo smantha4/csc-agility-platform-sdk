@@ -19,5 +19,8 @@ public interface Importable
 			String login, 
 			Asset parent, 
 			Map<String, Envelope> envelopeMap,
-			Context context) throws Exception;
+			Context context,
+			Boolean create,
+			Boolean update,
+			String host) throws Exception;
 }
