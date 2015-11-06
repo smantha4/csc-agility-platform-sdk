@@ -453,6 +453,8 @@ REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIB
          <xsd:enumeration value="unreserveAddress" />
          <xsd:enumeration value="removeAddressIfAvailable" />
          <xsd:enumeration value="allocateAddress" />
+         <xsd:enumeration value="assignAddress" />
+         <xsd:enumeration value="removeAddress" />
          <xsd:enumeration value="releaseAddress" />
          <xsd:enumeration value="acquireAddressIfAvailable" />
       </xsd:restriction>
