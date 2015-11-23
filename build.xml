@@ -13,6 +13,17 @@ default="help" xmlns:ivy="antlib:org.apache.ivy.ant">
       <java classname="org.apache.tools.ant.Main">
          <arg value="-projecthelp"/>
       </java>
+      <antcall target="eclipse-info"/>
+   </target>
+   
+   <target name="eclipse-info" description="Prints the paths to set the eclipse classpath variables to.">
+      <property name="ivy.path" location="${ivylib}" />
+      <property name="common.path" location="lib" />
+      <property name="dist.path" location="${dist.dir}" />
+      <echo>"To edit these projects in Eclipse, define the following Eclipse classpath variables."</echo>
+      <echo>"IVY-LIB=${ivy.path}"</echo>
+      <echo>"COMMON-LIB=${common.path}"</echo>
+      <echo>"DIST=${dist.path}"</echo>
    </target>
 
    <target name="init" description="Downloads third party jar files needed by the projects in this repo.">
@@ -44,6 +55,7 @@ default="help" xmlns:ivy="antlib:org.apache.ivy.ant">
       <ant dir="com.servicemesh.agility.api" target="deploy" />
       <ant dir="agility-platform-async-cloud-sdk" target="deploy" />
       <ant dir="agility-platform-services-sdk" target="deploy" />
+      <antcall target="eclipse-info"/>
    </target>
    
    <target name="javadoc" depends="init" description="Runs the javadoc target on all the projects in this repo and puts the resulting files in the javadoc directory. Also produces jar files with the javadocs for each project in the dist directory.">

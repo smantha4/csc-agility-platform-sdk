@@ -173,7 +173,16 @@
           <fileset dir="${bin}" includes="**/*.class"/>
           <zipfileset src="${ivy.lib}/java-uuid-generator-3.0.0.jar" includes="**/*.class"/>
       </jar>
+   	<antcall target="eclipse-info"/>
    </target>
+	
+	<target name="eclipse-info" description="Prints the paths to set the eclipse classpath variables to.">
+			<property name="ivy.path" location="${ivy.lib}" />
+			<property name="dist.path" location="${dist}" />
+			<echo>"To edit this project in Eclipse, define the following Eclipse classpath variables."</echo>
+			<echo>"IVY-LIB=${ivy.path}"</echo>
+			<echo>"DIST=${dist.path}"</echo>
+	</target>
 
    <target name='javadoc' depends="license" >
       <javadoc destdir="${javadoc.dir}/distributed/sync"
@@ -313,6 +322,8 @@
 
    <target name="help" description="Help">
       <echo message="deploy - Compiles and creates the jar file."/>
+   	  <echo message="clean - Deletes artifacts generated during deploy."/>
+   	<antcall target="eclipse-info"/>
    </target>
 
 </project>
