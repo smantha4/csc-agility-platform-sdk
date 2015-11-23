@@ -316,7 +316,7 @@
 	
   <!-- ============= cleanup ============ -->
 
-  <target name="clean" description="Deletes all generated artifacts." depends="init">
+  <target name="clean" description="Deletes all generated artifacts.">
     <delete dir="${bin}" />
     <echo message="Deleting auto-generated Java files from ${src}/com/servicemesh/agility/sdk/cloud/msgs" level="info" />
     <delete dir="${src}/com/servicemesh/agility/sdk/cloud/msgs" />
