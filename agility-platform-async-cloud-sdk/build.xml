@@ -14,6 +14,8 @@
   <property name="instrumented" value="${bin}/instrumented" />
   <property name="javadoc.dir" value="../javadoc" />
   <property name="javadoc.jar" value="../dist/com.servicemesh.agility.sdk.cloud-${bundle.version}-doc.jar" />
+  <property name="io.jar" value="${dist}/com.servicemesh.io-1.0.0.jar" />
+  <property name="api.jar" value="${dist}/com.servicemesh.agility.api-3.1.0.jar" />
 
   <property name="test.src" value="test/src" />
   <property name="test.bin" value="test/bin" />
@@ -51,11 +53,33 @@
       </taskdef>
    </target>
 
-  <target name="init">
+  <target name="init" depends="io,api">
     <mkdir dir="${bin}" />
     <mkdir dir="docs" />
     <mkdir dir="${unit.test.reports}" />
   </target>
+	
+	<target name="io-check">
+			<condition property="io.exists">
+				<available file="${io.jar}" type="file" />
+			</condition>
+	</target>
+			
+	<target name="io" depends="io-check" unless="io.exists">
+		<echo>"${io.jar} doesn't exist. Building com.servicemesh.io"</echo>
+		<ant dir="../com.servicemesh.io" target="deploy" inheritAll="false" />
+	</target>
+	
+	<target name="api-check">
+			<condition property="api.exists">
+				<available file="${api.jar}" type="file" />
+			</condition>
+	</target>
+			
+	<target name="api" depends="api-check" unless="api.exists">
+		<echo>"${api.jar} doesn't exist. Building com.servicemesh.agility.api"</echo>
+		<ant dir="../com.servicemesh.agility.api" target="deploy" inheritAll="false" />
+	</target>
 
   <target name="coverage-init">
     <initialize-coverage/>

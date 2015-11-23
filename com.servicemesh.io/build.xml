@@ -19,6 +19,7 @@
    <property name="classes" value="${bin}/classes"/>
    <property name="javadoc.dir" value="../javadoc" />
    <property name="javadoc.jar" value="../dist/com.servicemesh.io-${bundle.version}-doc.jar" />
+   <property name="core.jar" value="${dist}/com.servicemesh.core-1.0.0.jar" />
    
    <!-- Coverage properties -->
    <property name="coverage.dir" value="../coverage/io"/>
@@ -29,13 +30,24 @@
    <property name="coverage.debug" value="false"/>
    <property name="coverage.format" value="xml"/>
 
-   <target name="init">
+   <target name="init" depends="core">
       <mkdir dir="${bin}" />
       <mkdir dir="${unit.test.bin}" />
       <mkdir dir="${unit.test.bin}/resources"/>
       <mkdir dir="${unit.test.reports}" />
       <mkdir dir="${dist}" />
    </target>
+	
+	<target name="core-check">
+			<condition property="core.exists">
+				<available file="${core.jar}" type="file" />
+			</condition>
+	</target>
+	
+	<target name="core" depends="core-check" unless="core.exists">
+			<echo>"${core.jar} doesn't exist. Building com.servicemesh.core"</echo>
+		<ant dir="../com.servicemesh.core" target="deploy" inheritAll="false" />
+	</target>
 
    <path id="compile.classpath">
       <fileset dir="${lib}" includes="*.jar"/>

@@ -12,7 +12,8 @@
    <property name="version" value = "v1_0" />
    <property name="instrumented" value="${bin}/instrumented" />
    <property name="javadoc.dir" value="../javadoc" />
-     <property name="javadoc.jar" value="../dist/com.servicemesh.agility.distributed.sync-1.0.0-doc.jar" />
+   <property name="javadoc.jar" value="../dist/com.servicemesh.agility.distributed.sync-1.0.0-doc.jar" />
+   <property name="core.jar" value="${dist}/com.servicemesh.core-1.0.0.jar" />
 
    <property name="unit.test.bin" value="test/unit/bin" />
    <property name="unit.test.reports" value="test/unit/reports" />
@@ -31,11 +32,22 @@
    
    <available file="${ivy.lib}" type="dir" property="ivyexists" />
 
-   <target name="init">
+   <target name="init" depends="core">
       <mkdir dir="${bin}" />
       <mkdir dir="${unit.test.bin}" />
       <mkdir dir="${unit.test.reports}" />
    </target>
+	
+	<target name="core-check">
+			<condition property="core.exists">
+				<available file="${core.jar}" type="file" />
+			</condition>
+	</target>
+		
+	<target name="core" depends="core-check" unless="core.exists">
+		<echo>"${core.jar} doesn't exist. Building com.servicemesh.core"</echo>
+		<ant dir="../com.servicemesh.core" target="deploy" inheritAll="false" />
+	</target>
 
    <target name="coverage-init">
      <initialize-coverage/>

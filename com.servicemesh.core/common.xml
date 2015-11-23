@@ -16,7 +16,19 @@
   <property name="ivy.lib" value="../../ivy-lib"/>
   <property name="common.lib" value="../../lib" />
 
-  <target name="init">
+  
+	<target name="ivy-check">
+		<condition property="ivylib.exists">
+			<available file="${ivy.lib}" type="dir" />
+		</condition>
+	</target>
+	
+	<target name="init-ivy" depends="ivy-check" unless="ivylib.exists">
+		<echo>"Ivy lib directory is missing. Calling init from the top level build file."</echo>
+		<ant dir="../.." target="init" />
+	</target>
+	
+	<target name="init" depends="init-ivy">
     <mkdir dir="${jar.dir}"/>
     <path id="classpath">
       <pathelement location="${classes.dir}"/>
