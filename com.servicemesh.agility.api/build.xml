@@ -13,6 +13,7 @@
    <property name="ivyexists" value="false"/>
    <property name="javadoc.dir" value="../javadoc" />
    <property name="javadoc.jar" value="../dist/com.servicemesh.agility.api-${bundle.version}-doc.jar" />
+   <property name="core.jar" value="${dist}/com.servicemesh.core-1.0.0.jar" />
 
    <available file="${ivy.lib}" type="dir" property="ivyexists" />
 
@@ -41,11 +42,22 @@
       </taskdef>
    </target>
 
-   <target name="init">
+   <target name="init" depends="core">
       <mkdir dir="${bin}" />
       <mkdir dir="docs" />
       <mkdir dir="${src}/com/servicemesh/agility/api" />
    </target>
+	
+	<target name="core-check">
+			<condition property="core.exists">
+				<available file="${core.jar}" type="file" />
+			</condition>
+	</target>
+	
+	<target name="core" depends="core-check" unless="core.exists">
+			<echo>"${core.jar} doesn't exist. Building com.servicemesh.core"</echo>
+		<ant dir="../com.servicemesh.core" target="deploy" inheritAll="false" />
+	</target>
 
    <path id="compile.classpath">
       <fileset dir="${common.lib}" includes="agility-athena-*.jar"/>
@@ -309,7 +321,7 @@
     </jar>
    </target>
 
-   <target name="clean" description="Deletes all generated artifacts." depends="init">
+   <target name="clean" description="Deletes all generated artifacts.">
       <delete dir="${bin}" />
       <echo message="Deleting auto-generated Java files from ${src}/com/servicemesh/agility/api" level="info" />
       <delete>
