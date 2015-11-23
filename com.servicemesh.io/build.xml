@@ -227,7 +227,18 @@
           <fileset dir="${ivy.lib}" includes="jaxb2-basics-tools-0.6.4.jar"/>
           <fileset dir="${lib}" includes="mindterm.jar"/>
       </jar>
+   	<antcall target="eclipse-info"/>
    </target>
+	
+	<target name="eclipse-info" description="Prints the paths to set the eclipse classpath variables to.">
+		<property name="ivy.path" location="${ivy.lib}" />
+		<property name="common.path" location="${common.lib}" />
+		<property name="dist.path" location="${dist}" />
+		<echo>"To edit this project in Eclipse, define the following Eclipse classpath variables."</echo>
+		<echo>"IVY-LIB=${ivy.path}"</echo>
+		<echo>"COMMON-LIB=${common.path}"</echo>
+		<echo>"DIST=${dist.path}"</echo>
+	</target>
    
    <!-- =====================================================================
     Coverage
@@ -290,6 +301,8 @@
    <target name="help" description="Help">
       <echo message="ServiceMesh Asynchronous HTTP Service:"/>
       <echo message="deploy - Compiles the ServiceMesh Async HTTP Service and creates the jar file."/>
+   	  <echo message="clean - Deletes any artifacts generated during deploy." />
+   	<antcall target="eclipse-info"/>
    </target>
 
 </project>

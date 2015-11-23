@@ -1,4 +1,4 @@
-<project name="com.servicemesh.core" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="com.servicemesh.core" default="help" xmlns:ivy="antlib:org.apache.ivy.ant">
   <property name="bundle.version" value="1.0.0"/>
   <property name="build.dir" value="Build"/>
   <property name="bundle.jar" value="com.servicemesh.core-${bundle.version}.jar"/>
@@ -86,7 +86,17 @@
           <include name="logback-core-1.0.13.jar" />
        </fileset>
     </jar>
+  	<antcall target="eclipse-info"/>
   </target>
+	
+	<target name="eclipse-info" description="Prints the paths to set the eclipse classpath variables to.">
+		<property name="ivy.path" location="${ivy.lib}" />
+		<property name="common.path" location="${common.lib}" />
+		<echo>"To edit this project in Eclipse, define the following Eclipse classpath variables."</echo>
+		<echo>"IVY-LIB=${ivy.path}"</echo>
+		<echo>"COMMON-LIB=${common.path}"</echo>
+	</target>
+
 
   <target name="javadoc" depends="generate,license">
     <javadoc destdir="${javadoc.dir}/core"
@@ -135,5 +145,11 @@
   <target name="pure">
     <delete dir="Build"/>
   </target>
+
+	<target name="help" description="Help">
+	  <echo message="deploy - Compiles the com.servicemesh.core and creates the jar file."/>
+	  <echo message="clean - Deletes any artifacts generated during deploy."/>
+	  <antcall target="eclipse-info"/>
+	</target>
 
 </project>
