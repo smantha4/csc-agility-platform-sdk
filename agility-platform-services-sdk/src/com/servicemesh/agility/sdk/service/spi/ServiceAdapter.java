@@ -24,6 +24,8 @@ import com.servicemesh.agility.api.ProxyUsage;
 import com.servicemesh.agility.api.ServiceProviderType;
 import com.servicemesh.agility.api.UpdateRequest;
 import com.servicemesh.agility.sdk.service.impl.AsyncTracker;
+import com.servicemesh.agility.sdk.service.msgs.AvailableAddressesRequest;
+import com.servicemesh.agility.sdk.service.msgs.AvailableAddressesResponse;
 import com.servicemesh.agility.sdk.service.msgs.ConnectionPostCreateRequest;
 import com.servicemesh.agility.sdk.service.msgs.ConnectionPostDeleteRequest;
 import com.servicemesh.agility.sdk.service.msgs.ConnectionPostUpdateRequest;
@@ -58,6 +60,10 @@ import com.servicemesh.agility.sdk.service.msgs.PropertyTypeValueRequest;
 import com.servicemesh.agility.sdk.service.msgs.PropertyTypeValueResponse;
 import com.servicemesh.agility.sdk.service.msgs.RegistrationRequest;
 import com.servicemesh.agility.sdk.service.msgs.RegistrationResponse;
+import com.servicemesh.agility.sdk.service.msgs.ReleaseAddressRequest;
+import com.servicemesh.agility.sdk.service.msgs.ReleaseAddressResponse;
+import com.servicemesh.agility.sdk.service.msgs.ReserveAddressRequest;
+import com.servicemesh.agility.sdk.service.msgs.ReserveAddressResponse;
 import com.servicemesh.agility.sdk.service.msgs.ServiceInstanceProvisionRequest;
 import com.servicemesh.agility.sdk.service.msgs.ServiceInstanceReconfigureRequest;
 import com.servicemesh.agility.sdk.service.msgs.ServiceInstanceReleaseRequest;
@@ -86,6 +92,8 @@ import com.servicemesh.agility.sdk.service.msgs.ServiceProviderResponse;
 import com.servicemesh.agility.sdk.service.msgs.ServiceProviderStartRequest;
 import com.servicemesh.agility.sdk.service.msgs.ServiceProviderStopRequest;
 import com.servicemesh.agility.sdk.service.msgs.ServiceProviderSyncRequest;
+import com.servicemesh.agility.sdk.service.msgs.UnreserveAddressRequest;
+import com.servicemesh.agility.sdk.service.msgs.UnreserveAddressResponse;
 import com.servicemesh.agility.sdk.service.operations.AssetOperations;
 import com.servicemesh.core.async.AsyncService;
 import com.servicemesh.core.async.Callback;
@@ -186,6 +194,13 @@ public abstract class ServiceAdapter implements BundleActivator {
 	 * service provider.
 	 */
 	public IConnection getConnectionOperations() { return null; }
+	
+	/**
+	 * 
+	 * @return An optional interface to manage addresses
+	 */
+	public IAddressManagement getAddressManagementOperations() { return null; }
+	
 
 	/**
 	 * @return
@@ -1624,6 +1639,109 @@ public abstract class ServiceAdapter implements BundleActivator {
 				}
 			}
 		});
+		
+		//
+		// IAddressManagement operations
+		//
+		
+		register(AvailableAddressesRequest.class, new Function<AvailableAddressesRequest, Promise<AvailableAddressesResponse>>()
+		{
+			@Override
+			public Promise<AvailableAddressesResponse> invoke(AvailableAddressesRequest request) {
+				try
+				{
+					IAddressManagement operations = getAddressManagementOperations();
+					if (operations != null)
+						return operations.getAvailableAddresses(request);
+					else
+					{
+						AvailableAddressesResponse response = new AvailableAddressesResponse();
+						response.setStatus(Status.COMPLETE);
+						return Promise.pure(response);
+					}
+				}
+				catch(Throwable t)
+				{
+					return Promise.pure(t);
+				}
+			}
+			
+		});
+		
+		register(ReserveAddressRequest.class, new Function<ReserveAddressRequest, Promise<ReserveAddressResponse>>()
+		{
+			@Override
+			public Promise<ReserveAddressResponse> invoke(ReserveAddressRequest request) {
+				try
+				{
+					IAddressManagement operations = getAddressManagementOperations();
+					if (operations != null)
+						return operations.reserveAddress(request);
+					else
+					{
+						ReserveAddressResponse response = new ReserveAddressResponse();
+						response.setStatus(Status.COMPLETE);
+						return Promise.pure(response);
+					}
+				}
+				catch(Throwable t)
+				{
+					return Promise.pure(t);
+				}
+			}
+			
+		});
+		
+		register(UnreserveAddressRequest.class, new Function<UnreserveAddressRequest, Promise<UnreserveAddressResponse>>()
+		{
+			@Override
+			public Promise<UnreserveAddressResponse> invoke(UnreserveAddressRequest request) {
+				try
+				{
+					IAddressManagement operations = getAddressManagementOperations();
+					if (operations != null)
+						return operations.unreserveAddress(request);
+					else
+					{
+						UnreserveAddressResponse response = new UnreserveAddressResponse();
+						response.setStatus(Status.COMPLETE);
+						return Promise.pure(response);
+					}
+				}
+				catch(Throwable t)
+				{
+					return Promise.pure(t);
+				}
+			}
+			
+		});
+
+		
+		register(ReleaseAddressRequest.class, new Function<ReleaseAddressRequest, Promise<ReleaseAddressResponse>>()
+		{
+			@Override
+			public Promise<ReleaseAddressResponse> invoke(ReleaseAddressRequest request) {
+				try
+				{
+					IAddressManagement operations = getAddressManagementOperations();
+					if (operations != null)
+						return operations.releaseAddress(request);
+					else
+					{
+						ReleaseAddressResponse response = new ReleaseAddressResponse();
+						response.setStatus(Status.COMPLETE);
+						return Promise.pure(response);
+					}
+				}
+				catch(Throwable t)
+				{
+					return Promise.pure(t);
+				}
+			}
+			
+		});
+
+
 		
 		//
 		// IConnection operations

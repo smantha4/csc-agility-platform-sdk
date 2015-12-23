@@ -447,6 +447,15 @@ public class PromiseFactoryTest
     }
 
     @Test
+    public void testWorkerLambda()
+        throws Throwable
+    {
+        final Promise<Integer> promise = Promise.promise(WorkReactor.getDefaultWorkReactor(),() -> 111);
+
+        Assert.assertEquals(Integer.valueOf(111), promise.get(1, TimeUnit.SECONDS));
+    }
+
+    @Test
     public void testWorkerFailure()
         throws Throwable
     {
@@ -477,6 +486,15 @@ public class PromiseFactoryTest
                 return 222;
             }
         });
+
+        Assert.assertEquals(Integer.valueOf(222), promise.get(2, TimeUnit.SECONDS));
+    }
+
+    @Test
+    public void testDelayedLambda()
+        throws Throwable
+    {
+        final Promise<Integer> promise = Promise.delayed(TimerReactor.getDefaultTimerReactor(), 250, () -> 222);
 
         Assert.assertEquals(Integer.valueOf(222), promise.get(2, TimeUnit.SECONDS));
     }

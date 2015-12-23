@@ -36,13 +36,21 @@ public interface INetwork {
 	public List<AddressRange> getAddressRanges(Network object) throws Exception;
 
 	/**
-	 * Return the list of available addresses for static assignment on this network.
+	 * Return the list of available addresses (using an IPAM provider if available) for static assignment on this network.
 	 * @param object An instance of type Network
 	 * @return Collection of addresses
 	 * @throws Exception
 	 */
 	public List<Address> getAvailableAddresses(Network object) throws Exception;
-	
+
+	/**
+	 * Return the list of available addresses (natively managed) for static assignment on this network.
+	 * @param object An instance of type Network
+	 * @return Collection of addresses
+	 * @throws Exception
+	 */
+	public List<Address> getAvailableAddressesNative(Network object) throws Exception;
+
 	/**
 	 * Returns ports owned by network 
 	 * @param networkId network id

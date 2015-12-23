@@ -3,6 +3,7 @@ package com.servicemesh.agility.sdk.cloud.spi;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 import org.apache.log4j.Logger;
 import org.osgi.framework.BundleActivator;
@@ -43,18 +44,29 @@ public abstract class CloudAdapter implements BundleActivator {
 	
     protected AsyncService _service;
 	protected ServiceTracker _asyncTracker;
+	protected ExecutorService _executor;
     protected BundleContext _context;
 	
 	public CloudAdapter(Reactor reactor) {
+		this(reactor,null);
+	}
+
+	public CloudAdapter(Reactor reactor, ExecutorService executor) {
 		_service = new AsyncService(reactor);
+		_executor = executor;
 		register();
 	}
 
 	public CloudAdapter(AsyncService service) {
+		this(service,null);
+	}
+
+	public CloudAdapter(AsyncService service, ExecutorService executor) {
 		_service = service;
+		_executor = executor;
 		register();
 	}
-	
+
 	public abstract String getCloudType();
 	public abstract String getAdapterName();
 	public abstract String getAdapterVersion();
@@ -443,33 +455,74 @@ public abstract class CloudAdapter implements BundleActivator {
 	
 	private <REQ extends Request, RSP extends Response> void register(Class<REQ> reqClass, final Dispatch<REQ,RSP> handler)
 	{
-		_service.registerRequest(reqClass, new RequestHandler<REQ>() {
-			ICancellable _cancellable;
+		if(_executor != null)
+		{
+			_service.registerRequest(reqClass, new RequestHandler<REQ>() {
+				ICancellable _cancellable;
+		
+				@Override
+				public void onRequest(final REQ request) 
+				{
+					_executor.submit(new Runnable() {
+						@Override
+						public void run() {
 	
-			@Override
-			public void onRequest(final REQ request) {
+							_cancellable = handler.execute(request, new ResponseHandler<RSP>() {
+								
+								@Override
+								public boolean onResponse(RSP response) {
+									_service.sendResponse(request,response);
+									return false;
+								}
+				
+								@Override
+								public void onError(Request request, Throwable t) {
+									_service.onError(request,t);
+								}
+				            	
+				            });
+						}
+					});
+				}
+		
+				@Override
+				public void onCancel(long reqId) {
+					if(_cancellable != null)
+						_cancellable.cancel();
+				}
+			});
+		}
+		else
+		{
+			_service.registerRequest(reqClass, new RequestHandler<REQ>() {
+				ICancellable _cancellable;
+		
+				@Override
+				public void onRequest(final REQ request) 
+				{
 					_cancellable = handler.execute(request, new ResponseHandler<RSP>() {
-			
-					@Override
-					public boolean onResponse(RSP response) {
-						_service.sendResponse(request,response);
-						return false;
-					}
-	
-					@Override
-					public void onError(Request request, Throwable t) {
-						_service.onError(request,t);
-					}
-	            	
-	            });
-			}
-	
-			@Override
-			public void onCancel(long reqId) {
-				if(_cancellable != null)
-					_cancellable.cancel();
-			}
-		});		
+						
+						@Override
+						public boolean onResponse(RSP response) {
+							_service.sendResponse(request,response);
+							return false;
+						}
+		
+						@Override
+						public void onError(Request request, Throwable t) {
+							_service.onError(request,t);
+						}
+		            	
+		            });
+				}
+		
+				@Override
+				public void onCancel(long reqId) {
+					if(_cancellable != null)
+						_cancellable.cancel();
+				}
+			});
+		}
 	}
 	
 	private void register()
@@ -482,7 +535,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 				@Override
 				public ICancellable execute(CredentialCreateRequest request, ResponseHandler<CredentialResponse> handler) {
-			        return getCredentialOperations().create(request, handler);
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
+					try
+					{
+						ICredential iops = getCredentialOperations();
+						Thread.currentThread().setContextClassLoader(iops.getClass().getClassLoader());
+				        return iops.create(request, handler);
+					}
+					finally
+					{
+						Thread.currentThread().setContextClassLoader(cl);
+					}
 				}
 		});
 
@@ -490,7 +553,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 				@Override
 				public ICancellable execute(CredentialDeleteRequest request, ResponseHandler<CredentialResponse> handler) {
-			        return getCredentialOperations().delete(request, handler);
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
+					try
+					{
+						ICredential iops = getCredentialOperations();
+						Thread.currentThread().setContextClassLoader(iops.getClass().getClassLoader());
+						return iops.delete(request, handler);
+					}
+					finally
+					{
+						Thread.currentThread().setContextClassLoader(cl);
+					}
 				}
 		});
 
@@ -502,7 +575,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 				@Override
 				public ICancellable execute(InstanceBootRequest request, ResponseHandler<InstanceResponse> handler) {
-					return getInstanceOperations().boot(request,  handler);
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
+					try
+					{
+						IInstance iops = getInstanceOperations();
+						Thread.currentThread().setContextClassLoader(iops.getClass().getClassLoader());
+						return iops.boot(request,  handler);
+					}
+					finally
+					{
+						Thread.currentThread().setContextClassLoader(cl);
+					}
 				}
 		});
 
@@ -510,7 +593,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 				@Override
 				public ICancellable execute(InstanceCreateRequest request, ResponseHandler<InstanceResponse> handler) {
-					return getInstanceOperations().create(request,  handler);
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
+					try
+					{
+						IInstance iops = getInstanceOperations();
+						Thread.currentThread().setContextClassLoader(iops.getClass().getClassLoader());
+						return iops.create(request,  handler);
+					}
+					finally
+					{
+						Thread.currentThread().setContextClassLoader(cl);
+					}
 				}
 		});
 
@@ -518,7 +611,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 				@Override
 				public ICancellable execute(InstanceStartRequest request, ResponseHandler<InstanceResponse> handler) {
-					return getInstanceOperations().start(request,  handler);
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
+					try
+					{
+						IInstance iops = getInstanceOperations();
+						Thread.currentThread().setContextClassLoader(iops.getClass().getClassLoader());
+						return iops.start(request,  handler);
+					}
+					finally
+					{
+						Thread.currentThread().setContextClassLoader(cl);
+					}
 				}
 		});
 
@@ -526,7 +629,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 				@Override
 				public ICancellable execute(InstanceStopRequest request, ResponseHandler<InstanceResponse> handler) {
-					return getInstanceOperations().stop(request,  handler);
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
+					try
+					{
+						IInstance iops = getInstanceOperations();
+						Thread.currentThread().setContextClassLoader(iops.getClass().getClassLoader());
+						return iops.stop(request,  handler);
+					}
+					finally
+					{
+						Thread.currentThread().setContextClassLoader(cl);
+					}
 				}
 		});
 
@@ -534,7 +647,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 				@Override
 				public ICancellable execute(InstanceRebootRequest request, ResponseHandler<InstanceResponse> handler) {
-					return getInstanceOperations().reboot(request,  handler);
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
+					try
+					{
+						IInstance iops = getInstanceOperations();
+						Thread.currentThread().setContextClassLoader(iops.getClass().getClassLoader());
+						return iops.reboot(request,  handler);
+					}
+					finally
+					{
+						Thread.currentThread().setContextClassLoader(cl);
+					}
 				}
 		});
 
@@ -542,7 +665,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 				@Override
 				public ICancellable execute(InstanceReleaseRequest request, ResponseHandler<InstanceResponse> handler) {
-					return getInstanceOperations().release(request,  handler);
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
+					try
+					{
+						IInstance iops = getInstanceOperations();
+						Thread.currentThread().setContextClassLoader(iops.getClass().getClassLoader());
+						return iops.release(request,  handler);
+					}
+					finally
+					{
+						Thread.currentThread().setContextClassLoader(cl);
+					}
 				}
 		});
 
@@ -554,7 +687,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 				@Override
 				public ICancellable execute(ImageCreateRequest request, ResponseHandler<ImageResponse> handler) {
-					return getImageOperations().create(request,  handler);
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
+					try
+					{
+						IImage iops = getImageOperations();
+						Thread.currentThread().setContextClassLoader(iops.getClass().getClassLoader());
+						return iops.create(request,  handler);
+					}
+					finally
+					{
+						Thread.currentThread().setContextClassLoader(cl);
+					}
 				}
 		});
 
@@ -562,7 +705,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 				@Override
 				public ICancellable execute(ImageDeleteRequest request, ResponseHandler<ImageResponse> handler) {
-					return getImageOperations().delete(request,  handler);
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
+					try
+					{
+						IImage iops = getImageOperations();
+						Thread.currentThread().setContextClassLoader(iops.getClass().getClassLoader());
+						return iops.delete(request,  handler);
+					}
+					finally
+					{
+						Thread.currentThread().setContextClassLoader(cl);
+					}
 				}
 		});
 		
@@ -574,7 +727,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 				@Override
 				public ICancellable execute(StorageCreateRequest request, ResponseHandler<StorageResponse> handler) {
-					return getStorageOperations().create(request,  handler);
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
+					try
+					{
+						IStorage iops = getStorageOperations();
+						Thread.currentThread().setContextClassLoader(iops.getClass().getClassLoader());
+						return iops.create(request,  handler);
+					}
+					finally
+					{
+						Thread.currentThread().setContextClassLoader(cl);
+					}
 				}
 		});
 		
@@ -582,7 +745,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 				@Override
 				public ICancellable execute(StorageAttachRequest request, ResponseHandler<StorageResponse> handler) {
-					return getStorageOperations().attach(request,  handler);
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
+					try
+					{
+						IStorage iops = getStorageOperations();
+						Thread.currentThread().setContextClassLoader(iops.getClass().getClassLoader());
+						return iops.attach(request,  handler);
+					}
+					finally
+					{
+						Thread.currentThread().setContextClassLoader(cl);
+					}
 				}
 		});
 		
@@ -590,7 +763,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 				@Override
 				public ICancellable execute(StorageDeleteRequest request, ResponseHandler<StorageResponse> handler) {
-					return getStorageOperations().delete(request,  handler);
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
+					try
+					{
+						IStorage iops = getStorageOperations();
+						Thread.currentThread().setContextClassLoader(iops.getClass().getClassLoader());
+						return iops.delete(request,  handler);
+					}
+					finally
+					{
+						Thread.currentThread().setContextClassLoader(cl);
+					}
 				}
 		});
 		
@@ -598,7 +781,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 				@Override
 				public ICancellable execute(StorageDetachRequest request, ResponseHandler<StorageResponse> handler) {
-					return getStorageOperations().detach(request,  handler);
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
+					try
+					{
+						IStorage iops = getStorageOperations();
+						Thread.currentThread().setContextClassLoader(iops.getClass().getClassLoader());
+						return iops.detach(request,  handler);
+					}
+					finally
+					{
+						Thread.currentThread().setContextClassLoader(cl);
+					}
 				}
 		});
 		
@@ -606,7 +799,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 				@Override
 				public ICancellable execute(StorageSnapshotCreateRequest request, ResponseHandler<StorageSnapshotResponse> handler) {
-					return getSnapshotOperations().create(request,  handler);
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
+					try
+					{
+						IStorageSnapshot iops = getSnapshotOperations();
+						Thread.currentThread().setContextClassLoader(iops.getClass().getClassLoader());
+						return iops.create(request,  handler);
+					}
+					finally
+					{
+						Thread.currentThread().setContextClassLoader(cl);
+					}
 				}
 		});
 		
@@ -614,7 +817,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 				@Override
 				public ICancellable execute(StorageCreateFromSnapshotRequest request, ResponseHandler<StorageResponse> handler) {
-					return getSnapshotOperations().createFromSnapshot(request,  handler);
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
+					try
+					{
+						IStorageSnapshot iops = getSnapshotOperations();
+						Thread.currentThread().setContextClassLoader(iops.getClass().getClassLoader());
+						return iops.createFromSnapshot(request,  handler);
+					}
+					finally
+					{
+						Thread.currentThread().setContextClassLoader(cl);
+					}
 				}
 		});
 
@@ -622,7 +835,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 				@Override
 				public ICancellable execute(StorageSnapshotDeleteRequest request, ResponseHandler<StorageSnapshotResponse> handler) {
-					return getSnapshotOperations().delete(request,  handler);
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
+					try
+					{
+						IStorageSnapshot iops = getSnapshotOperations();
+						Thread.currentThread().setContextClassLoader(iops.getClass().getClassLoader());
+						return iops.delete(request,  handler);
+					}
+					finally
+					{
+						Thread.currentThread().setContextClassLoader(cl);
+					}
 				}
 		});
 
@@ -634,8 +857,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 				@Override
 				public ICancellable execute(AddressRangeSyncRequest request, ResponseHandler<AddressRangeSyncResponse> handler) {
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
 					ISync<AddressRangeSyncRequest,AddressRangeSyncResponse> isync = getAddressRangeSync();
-					return isync.sync(request,  handler);
+					try
+					{						
+						Thread.currentThread().setContextClassLoader(isync.getClass().getClassLoader());
+						return isync.sync(request,  handler);
+					}
+					finally
+					{
+						Thread.currentThread().setContextClassLoader(cl);
+					}
 				}
 		});
 
@@ -643,8 +875,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 				@Override
 				public ICancellable execute(CloudSyncRequest request, ResponseHandler<CloudSyncResponse> handler) {
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
 					ISync<CloudSyncRequest,CloudSyncResponse> isync = getCloudSync();
-		            return isync.sync(request, handler);
+					try
+					{						
+						Thread.currentThread().setContextClassLoader(isync.getClass().getClassLoader());
+						return isync.sync(request,  handler);
+					}
+					finally
+					{
+						Thread.currentThread().setContextClassLoader(cl);
+					}
 				}
 		});
 		
@@ -652,8 +893,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 				@Override
 				public ICancellable execute(CredentialSyncRequest request, ResponseHandler<CredentialSyncResponse> handler) {
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
 					ISync<CredentialSyncRequest,CredentialSyncResponse> isync = getCredentialSync();
-		            return isync.sync(request, handler);
+					try
+					{						
+						Thread.currentThread().setContextClassLoader(isync.getClass().getClassLoader());
+						return isync.sync(request,  handler);
+					}
+					finally
+					{
+						Thread.currentThread().setContextClassLoader(cl);
+					}
 				}
 		});
 
@@ -661,8 +911,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 				@Override
 				public ICancellable execute(LocationSyncRequest request, ResponseHandler<LocationSyncResponse> handler) {
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
 					ISync<LocationSyncRequest,LocationSyncResponse> isync = getLocationSync();
-		            return isync.sync(request, handler);
+					try
+					{						
+						Thread.currentThread().setContextClassLoader(isync.getClass().getClassLoader());
+						return isync.sync(request,  handler);
+					}
+					finally
+					{
+						Thread.currentThread().setContextClassLoader(cl);
+					}
 				}
 		});
 		
@@ -670,8 +929,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 				@Override
 				public ICancellable execute(ImageSyncRequest request, ResponseHandler<ImageSyncResponse> handler) {
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
 					ISync<ImageSyncRequest,ImageSyncResponse> isync = getImageSync();
-		            return isync.sync(request, handler);
+					try
+					{						
+						Thread.currentThread().setContextClassLoader(isync.getClass().getClassLoader());
+						return isync.sync(request,  handler);
+					}
+					finally
+					{
+						Thread.currentThread().setContextClassLoader(cl);
+					}
 				}
 		});
 		
@@ -679,8 +947,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 				@Override
 				public ICancellable execute(InstanceSyncRequest request, ResponseHandler<InstanceSyncResponse> handler) {
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
 					ISync<InstanceSyncRequest,InstanceSyncResponse> isync = getInstanceSync();
-		            return isync.sync(request, handler);
+					try
+					{						
+						Thread.currentThread().setContextClassLoader(isync.getClass().getClassLoader());
+						return isync.sync(request,  handler);
+					}
+					finally
+					{
+						Thread.currentThread().setContextClassLoader(cl);
+					}
 				}
 		});
 		
@@ -688,8 +965,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 				@Override
 				public ICancellable execute(ModelSyncRequest request, ResponseHandler<ModelSyncResponse> handler) {
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
 					ISync<ModelSyncRequest,ModelSyncResponse> isync = getModelSync();
-		            return isync.sync(request, handler);
+					try
+					{						
+						Thread.currentThread().setContextClassLoader(isync.getClass().getClassLoader());
+						return isync.sync(request,  handler);
+					}
+					finally
+					{
+						Thread.currentThread().setContextClassLoader(cl);
+					}
 				}
 		});
 		
@@ -697,8 +983,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 				@Override
 				public ICancellable execute(NetworkSyncRequest request, ResponseHandler<NetworkSyncResponse> handler) {
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
 					ISync<NetworkSyncRequest,NetworkSyncResponse> isync = getNetworkSync();
-		            return isync.sync(request, handler);
+					try
+					{						
+						Thread.currentThread().setContextClassLoader(isync.getClass().getClassLoader());
+						return isync.sync(request,  handler);
+					}
+					finally
+					{
+						Thread.currentThread().setContextClassLoader(cl);
+					}
 				}
 		});
 		
@@ -706,8 +1001,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 				@Override
 				public ICancellable execute(StorageSyncRequest request, ResponseHandler<StorageSyncResponse> handler) {
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
 					ISync<StorageSyncRequest,StorageSyncResponse> isync = getStorageSync();
-		            return isync.sync(request, handler);
+					try
+					{						
+						Thread.currentThread().setContextClassLoader(isync.getClass().getClassLoader());
+						return isync.sync(request,  handler);
+					}
+					finally
+					{
+						Thread.currentThread().setContextClassLoader(cl);
+					}
 				}
 		});
 		
@@ -715,8 +1019,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 				@Override
 				public ICancellable execute(VPCSyncRequest request, ResponseHandler<VPCSyncResponse> handler) {
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
 					ISync<VPCSyncRequest,VPCSyncResponse> isync = getVPCSync();
-		            return isync.sync(request, handler);
+					try
+					{						
+						Thread.currentThread().setContextClassLoader(isync.getClass().getClassLoader());
+						return isync.sync(request,  handler);
+					}
+					finally
+					{
+						Thread.currentThread().setContextClassLoader(cl);
+					}
 				}
 		});
 		
@@ -724,8 +1037,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 				@Override
 				public ICancellable execute(RepositorySyncRequest request, ResponseHandler<RepositorySyncResponse> handler) {
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
 					ISync<RepositorySyncRequest,RepositorySyncResponse> isync = getRepositorySync();
-		            return isync.sync(request, handler);
+					try
+					{						
+						Thread.currentThread().setContextClassLoader(isync.getClass().getClassLoader());
+						return isync.sync(request,  handler);
+					}
+					finally
+					{
+						Thread.currentThread().setContextClassLoader(cl);
+					}
 				}
 		});
 
@@ -737,8 +1059,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 				@Override
 				public ICancellable execute(PreCreateRequest request, ResponseHandler<CloudResponse> handler) {
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
 					IAssetNotification notification = getAssetNotificationOperations();
-					return notification.preCreate(request, handler);
+					try
+					{						
+						Thread.currentThread().setContextClassLoader(notification.getClass().getClassLoader());
+						return notification.preCreate(request, handler);
+					}
+					finally
+					{
+						Thread.currentThread().setContextClassLoader(cl);
+					}
 				}
 		});
 
@@ -746,8 +1077,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 				@Override
 				public ICancellable execute(PostCreateRequest request, ResponseHandler<CloudResponse> handler) {
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
 					IAssetNotification notification = getAssetNotificationOperations();
-					return notification.postCreate(request, handler);
+					try
+					{						
+						Thread.currentThread().setContextClassLoader(notification.getClass().getClassLoader());
+						return notification.postCreate(request, handler);
+					}
+					finally
+					{
+						Thread.currentThread().setContextClassLoader(cl);
+					}
 				}
 		});
 
@@ -755,8 +1095,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(PreUpdateRequest request, ResponseHandler<CloudResponse> handler) {
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
 				IAssetNotification notification = getAssetNotificationOperations();
-				return notification.preUpdate(request, handler);
+				try
+				{						
+					Thread.currentThread().setContextClassLoader(notification.getClass().getClassLoader());
+					return notification.preUpdate(request, handler);
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
+				}
 			}
 		});
 
@@ -764,8 +1113,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(PostUpdateRequest request, ResponseHandler<CloudResponse> handler) {
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
 				IAssetNotification notification = getAssetNotificationOperations();
-				return notification.postUpdate(request, handler);
+				try
+				{						
+					Thread.currentThread().setContextClassLoader(notification.getClass().getClassLoader());
+					return notification.postUpdate(request, handler);
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
+				}
 			}
 		});
 
@@ -773,8 +1131,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(PreDeleteRequest request, ResponseHandler<CloudResponse> handler) {
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
 				IAssetNotification notification = getAssetNotificationOperations();
-				return notification.preDelete(request, handler);
+				try
+				{						
+					Thread.currentThread().setContextClassLoader(notification.getClass().getClassLoader());
+					return notification.preDelete(request, handler);
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
+				}
 			}
 		});
 
@@ -782,8 +1149,17 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(PostDeleteRequest request, ResponseHandler<CloudResponse> handler) {
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
 				IAssetNotification notification = getAssetNotificationOperations();
-				return notification.postDelete(request, handler);
+				try
+				{						
+					Thread.currentThread().setContextClassLoader(notification.getClass().getClassLoader());
+					return notification.postDelete(request, handler);
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
+				}
 			}
 		});
 		
@@ -794,16 +1170,27 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(InstanceCreateSnapshotRequest request, ResponseHandler<InstanceSnapshotResponse> handler) {
-				ISnapshot operations = getInstanceSnapshotOperations();
-				if (operations != null)
-					return operations.createSnapshot(request,  handler);
-				else
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
 				{
-					InstanceSnapshotResponse response = new InstanceSnapshotResponse();
-					response.setStatus(Status.FAILURE);
-					response.setMessage("Instance snapshot create operation not supported");
-					handler.onResponse(response);
-					return null;
+					ISnapshot operations = getInstanceSnapshotOperations();
+					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
+						return operations.createSnapshot(request,  handler);
+					}
+					else
+					{
+						InstanceSnapshotResponse response = new InstanceSnapshotResponse();
+						response.setStatus(Status.FAILURE);
+						response.setMessage("Instance snapshot create operation not supported");
+						handler.onResponse(response);
+						return null;
+					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
 				}
 			}
 		});
@@ -812,9 +1199,15 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(InstanceUpdateSnapshotRequest request, ResponseHandler<InstanceSnapshotResponse> handler) {
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
+				{
 					ISnapshot operations = getInstanceSnapshotOperations();
 					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
 						return operations.updateSnapshot(request,  handler);
+					}
 					else
 					{
 						InstanceSnapshotResponse response = new InstanceSnapshotResponse();
@@ -823,6 +1216,11 @@ public abstract class CloudAdapter implements BundleActivator {
 						handler.onResponse(response);
 						return null;
 					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
+				}
 			}
 		});
 		
@@ -830,9 +1228,15 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(InstanceRemoveSnapshotRequest request, ResponseHandler<InstanceSnapshotResponse> handler) {
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
+				{
 					ISnapshot operations = getInstanceSnapshotOperations();
 					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
 						return operations.removeSnapshot(request,  handler);
+					}
 					else
 					{
 						InstanceSnapshotResponse response = new InstanceSnapshotResponse();
@@ -841,6 +1245,11 @@ public abstract class CloudAdapter implements BundleActivator {
 						handler.onResponse(response);
 						return null;
 					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
+				}
 			}
 		});
 		
@@ -848,9 +1257,15 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(InstanceRemoveAllSnapshotRequest request, ResponseHandler<InstanceSnapshotResponse> handler) {
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
+				{
 					ISnapshot operations = getInstanceSnapshotOperations();
 					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
 						return operations.removeAllSnapshots(request,  handler);
+					}
 					else
 					{
 						InstanceSnapshotResponse response = new InstanceSnapshotResponse();
@@ -859,6 +1274,11 @@ public abstract class CloudAdapter implements BundleActivator {
 						handler.onResponse(response);
 						return null;
 					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
+				}
 			}
 		});
 		
@@ -866,9 +1286,15 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(InstanceRevertSnapshotRequest request, ResponseHandler<InstanceSnapshotResponse> handler) {
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
+				{
 					ISnapshot operations = getInstanceSnapshotOperations();
 					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
 						return operations.revertSnapshot(request,  handler);
+					}
 					else
 					{
 						InstanceSnapshotResponse response = new InstanceSnapshotResponse();
@@ -877,6 +1303,11 @@ public abstract class CloudAdapter implements BundleActivator {
 						handler.onResponse(response);
 						return null;
 					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
+				}
 			}
 		});
 		
@@ -887,9 +1318,15 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(InstanceHotswapRequest request, ResponseHandler<InstanceResponse> handler) {
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
+				{
 					IHotSwap operations = getHotSwapOperations();
 					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
 						return operations.reconfigure(request, handler);
+					}
 					else
 					{
 						InstanceResponse response = new InstanceResponse();
@@ -898,6 +1335,11 @@ public abstract class CloudAdapter implements BundleActivator {
 						handler.onResponse(response);
 						return null;
 					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
+				}
 			}
 		});
 		
@@ -908,9 +1350,15 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(CloudPropertyRequest request, ResponseHandler<CloudPropertyResponse> handler) {
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
+				{
 					ICloudProperties operations = getCloudPropertyOperations();
 					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
 						return operations.getCloudProperty(request, handler);
+					}
 					else
 					{
 						CloudPropertyResponse response = new CloudPropertyResponse();
@@ -919,6 +1367,11 @@ public abstract class CloudAdapter implements BundleActivator {
 						handler.onResponse(response);
 						return null;
 					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
+				}
 			}
 		});
 		
@@ -926,17 +1379,21 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(StorageDetachableRequest request, ResponseHandler<StorageResponse> handler) {
-					ICloudProperties operations = getCloudPropertyOperations();
-					if (operations != null)
-						return operations.isDetachable(request, handler);
-					else
-					{
-						StorageResponse response = new StorageResponse();
-						response.setStatus(Status.COMPLETE);
-						response.setDetachable(true);  //  Default for most adapters
-						handler.onResponse(response);
-						return null;
-					}
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				ICloudProperties operations = getCloudPropertyOperations();
+				if (operations != null)
+				{
+					Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
+					return operations.isDetachable(request, handler);
+				}
+				else
+				{
+					StorageResponse response = new StorageResponse();
+					response.setStatus(Status.COMPLETE);
+					response.setDetachable(true);  //  Default for most adapters
+					handler.onResponse(response);
+					return null;
+				}
 			}
 		});
 		
@@ -947,9 +1404,15 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(AddressAllocateRequest request, ResponseHandler<AddressResponse> handler) {
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
+				{
 					IAddress operations = getAddressOperations();
 					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
 						return operations.allocate(request, handler);
+					}
 					else
 					{
 						AddressResponse response = new AddressResponse();
@@ -958,6 +1421,11 @@ public abstract class CloudAdapter implements BundleActivator {
 						handler.onResponse(response);
 						return null;
 					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
+				}
 			}
 		});
 		
@@ -965,9 +1433,15 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(AddressReleaseRequest request, ResponseHandler<AddressResponse> handler) {
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
+				{
 					IAddress operations = getAddressOperations();
 					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
 						return operations.release(request, handler);
+					}
 					else
 					{
 						AddressResponse response = new AddressResponse();
@@ -976,6 +1450,11 @@ public abstract class CloudAdapter implements BundleActivator {
 						handler.onResponse(response);
 						return null;
 					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
+				}
 			}
 		});
 		
@@ -983,9 +1462,15 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(AddressAssociateRequest request, ResponseHandler<AddressResponse> handler) {
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
+				{
 					IAddress operations = getAddressOperations();
 					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
 						return operations.associate(request, handler);
+					}
 					else
 					{
 						AddressResponse response = new AddressResponse();
@@ -994,6 +1479,11 @@ public abstract class CloudAdapter implements BundleActivator {
 						handler.onResponse(response);
 						return null;
 					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
+				}
 			}
 		});
 		
@@ -1001,9 +1491,15 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(AddressDisassociateRequest request, ResponseHandler<AddressResponse> handler) {
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
+				{
 					IAddress operations = getAddressOperations();
 					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
 						return operations.disassociate(request, handler);
+					}
 					else
 					{
 						AddressResponse response = new AddressResponse();
@@ -1012,6 +1508,11 @@ public abstract class CloudAdapter implements BundleActivator {
 						handler.onResponse(response);
 						return null;
 					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
+				}
 			}
 		});
 		
@@ -1022,9 +1523,15 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(CredentialSelectRequest request, ResponseHandler<CredentialSelectResponse> handler) {
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
+				{
 					ICredentialSelector operations = getCredentialSelectorOperations();
 					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
 						return operations.select(request, handler);
+					}
 					else
 					{
 						CredentialSelectResponse response = new CredentialSelectResponse();
@@ -1033,6 +1540,11 @@ public abstract class CloudAdapter implements BundleActivator {
 						handler.onResponse(response);
 						return null;
 					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
+				}
 			}
 		});
 		
@@ -1044,9 +1556,15 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(VPCCreateRequest request, ResponseHandler<VPCResponse> handler) {
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
+				{
 					IVPC operations = getVPCOperations();
 					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
 						return operations.create(request, handler);
+					}
 					else
 					{
 						VPCResponse response = new VPCResponse();
@@ -1055,6 +1573,11 @@ public abstract class CloudAdapter implements BundleActivator {
 						handler.onResponse(response);
 						return null;
 					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
+				}
 			}
 		});
 		
@@ -1062,9 +1585,15 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(VPCDeleteRequest request, ResponseHandler<VPCResponse> handler) {
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
+				{
 					IVPC operations = getVPCOperations();
 					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
 						return operations.delete(request, handler);
+					}
 					else
 					{
 						VPCResponse response = new VPCResponse();
@@ -1073,6 +1602,11 @@ public abstract class CloudAdapter implements BundleActivator {
 						handler.onResponse(response);
 						return null;
 					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
+				}
 			}
 		});
 		
@@ -1080,9 +1614,15 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(SubnetAddRequest request, ResponseHandler<VPCResponse> handler) {
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
+				{
 					IVPC operations = getVPCOperations();
 					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
 						return operations.subnetAdd(request, handler);
+					}
 					else
 					{
 						VPCResponse response = new VPCResponse();
@@ -1091,6 +1631,11 @@ public abstract class CloudAdapter implements BundleActivator {
 						handler.onResponse(response);
 						return null;
 					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
+				}
 			}
 		});
 		
@@ -1098,9 +1643,15 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(SubnetChangeRequest request, ResponseHandler<VPCResponse> handler) {
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
+				{
 					IVPC operations = getVPCOperations();
 					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
 						return operations.subnetChange(request, handler);
+					}
 					else
 					{
 						VPCResponse response = new VPCResponse();
@@ -1109,6 +1660,11 @@ public abstract class CloudAdapter implements BundleActivator {
 						handler.onResponse(response);
 						return null;
 					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
+				}
 			}
 		});
 		
@@ -1116,9 +1672,15 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(SubnetDeleteRequest request, ResponseHandler<VPCResponse> handler) {
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
+				{
 					IVPC operations = getVPCOperations();
 					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
 						return operations.subnetDelete(request, handler);
+					}
 					else
 					{
 						VPCResponse response = new VPCResponse();
@@ -1127,6 +1689,11 @@ public abstract class CloudAdapter implements BundleActivator {
 						handler.onResponse(response);
 						return null;
 					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
+				}
 			}
 		});
 
@@ -1134,9 +1701,15 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(VPCSubnetsDeleteRequest request, ResponseHandler<VPCResponse> handler) {
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
+				{
 					IVPC operations = getVPCOperations();
 					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
 						return operations.vpcSubnetsDelete(request, handler);
+					}
 					else
 					{
 						VPCResponse response = new VPCResponse();
@@ -1145,6 +1718,11 @@ public abstract class CloudAdapter implements BundleActivator {
 						handler.onResponse(response);
 						return null;
 					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
+				}
 			}
 		});
 
@@ -1152,9 +1730,15 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(DHCPOptionsCreateRequest request, ResponseHandler<VPCResponse> handler) {
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
+				{
 					IVPC operations = getVPCOperations();
 					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
 						return operations.dhcpOptionsCreate(request, handler);
+					}
 					else
 					{
 						VPCResponse response = new VPCResponse();
@@ -1163,6 +1747,11 @@ public abstract class CloudAdapter implements BundleActivator {
 						handler.onResponse(response);
 						return null;
 					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
+				}
 			}
 		});
 		
@@ -1170,9 +1759,15 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(DHCPOptionsDeleteRequest request, ResponseHandler<VPCResponse> handler) {
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
+				{
 					IVPC operations = getVPCOperations();
 					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
 						return operations.dhcpOptionsDelete(request, handler);
+					}
 					else
 					{
 						VPCResponse response = new VPCResponse();
@@ -1181,6 +1776,11 @@ public abstract class CloudAdapter implements BundleActivator {
 						handler.onResponse(response);
 						return null;
 					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
+				}
 			}
 		});
 		
@@ -1188,9 +1788,15 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(DHCPOptionsAssociateRequest request, ResponseHandler<VPCResponse> handler) {
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
+				{
 					IVPC operations = getVPCOperations();
 					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
 						return operations.dhcpOptionsAssociate(request, handler);
+					}
 					else
 					{
 						VPCResponse response = new VPCResponse();
@@ -1199,6 +1805,11 @@ public abstract class CloudAdapter implements BundleActivator {
 						handler.onResponse(response);
 						return null;
 					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
+				}
 			}
 		});
 		
@@ -1206,9 +1817,15 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(VPNGatewayConnectionCreateRequest request, ResponseHandler<VPCResponse> handler) {
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
+				{
 					IVPC operations = getVPCOperations();
 					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
 						return operations.vpnGatewayConnectionCreate(request, handler);
+					}
 					else
 					{
 						VPCResponse response = new VPCResponse();
@@ -1217,6 +1834,11 @@ public abstract class CloudAdapter implements BundleActivator {
 						handler.onResponse(response);
 						return null;
 					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
+				}
 			}
 		});
 		
@@ -1224,9 +1846,15 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(VPNGatewayConnectionDeleteRequest request, ResponseHandler<VPCResponse> handler) {
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
+				{
 					IVPC operations = getVPCOperations();
 					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
 						return operations.vpnGatewayConnectionDelete(request, handler);
+					}
 					else
 					{
 						VPCResponse response = new VPCResponse();
@@ -1235,6 +1863,11 @@ public abstract class CloudAdapter implements BundleActivator {
 						handler.onResponse(response);
 						return null;
 					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
+				}
 			}
 		});
 		
@@ -1242,9 +1875,15 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(VPNGatewayAttachRequest request, ResponseHandler<VPCResponse> handler) {
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
+				{
 					IVPC operations = getVPCOperations();
 					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
 						return operations.vpnGatewayAttach(request, handler);
+					}
 					else
 					{
 						VPCResponse response = new VPCResponse();
@@ -1253,6 +1892,11 @@ public abstract class CloudAdapter implements BundleActivator {
 						handler.onResponse(response);
 						return null;
 					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
+				}
 			}
 		});
 		
@@ -1260,9 +1904,15 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(VPNGatewayDetachRequest request, ResponseHandler<VPCResponse> handler) {
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
+				{
 					IVPC operations = getVPCOperations();
 					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
 						return operations.vpnGatewayDetach(request, handler);
+					}
 					else
 					{
 						VPCResponse response = new VPCResponse();
@@ -1271,6 +1921,11 @@ public abstract class CloudAdapter implements BundleActivator {
 						handler.onResponse(response);
 						return null;
 					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
+				}
 			}
 		});
 		
@@ -1278,9 +1933,15 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(VPNConnectionStateRequest request, ResponseHandler<VPNConnectionStateResponse> handler) {
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
+				{
 					IVPC operations = getVPCOperations();
 					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
 						return operations.vpnConnectionState(request, handler);
+					}
 					else
 					{
 						VPNConnectionStateResponse response = new VPNConnectionStateResponse();
@@ -1289,6 +1950,11 @@ public abstract class CloudAdapter implements BundleActivator {
 						handler.onResponse(response);
 						return null;
 					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
+				}
 			}
 		});
 		
@@ -1296,9 +1962,15 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(VPNGatewayStateRequest request, ResponseHandler<VPNGatewayStateResponse> handler) {
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
+				{
 					IVPC operations = getVPCOperations();
 					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
 						return operations.vpnGatewayState(request, handler);
+					}
 					else
 					{
 						VPNGatewayStateResponse response = new VPNGatewayStateResponse();
@@ -1307,6 +1979,11 @@ public abstract class CloudAdapter implements BundleActivator {
 						handler.onResponse(response);
 						return null;
 					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
+				}
 			}
 		});
 
@@ -1314,16 +1991,27 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(VPNConnectionDeleteRequest request, ResponseHandler<VPCResponse> handler) {
-				IVPC operations = getVPCOperations();
-				if (operations != null)
-					return operations.vpnConnectionDelete(request, handler);
-				else
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
 				{
-					VPCResponse response = new VPCResponse();
-					response.setStatus(Status.FAILURE);
-					response.setMessage("VPC operations not supported");
-					handler.onResponse(response);
-					return null;
+					IVPC operations = getVPCOperations();
+					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
+						return operations.vpnConnectionDelete(request, handler);
+					}
+					else
+					{
+						VPCResponse response = new VPCResponse();
+						response.setStatus(Status.FAILURE);
+						response.setMessage("VPC operations not supported");
+						handler.onResponse(response);
+						return null;
+					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
 				}
 			}
 		});
@@ -1332,16 +2020,27 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(VPNGatewayDeleteRequest request, ResponseHandler<VPCResponse> handler) {
-				IVPC operations = getVPCOperations();
-				if (operations != null)
-					return operations.vpnGatewayDelete(request, handler);
-				else
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
 				{
-					VPCResponse response = new VPCResponse();
-					response.setStatus(Status.FAILURE);
-					response.setMessage("VPC operations not supported");
-					handler.onResponse(response);
-					return null;
+					IVPC operations = getVPCOperations();
+					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
+						return operations.vpnGatewayDelete(request, handler);
+					}
+					else
+					{
+						VPCResponse response = new VPCResponse();
+						response.setStatus(Status.FAILURE);
+						response.setMessage("VPC operations not supported");
+						handler.onResponse(response);
+						return null;
+					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
 				}
 			}
 		});
@@ -1350,16 +2049,27 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(CustomerGatewayDeleteRequest request, ResponseHandler<VPCResponse> handler) {
-				IVPC operations = getVPCOperations();
-				if (operations != null)
-					return operations.customerGatewayDelete(request, handler);
-				else
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
 				{
-					VPCResponse response = new VPCResponse();
-					response.setStatus(Status.FAILURE);
-					response.setMessage("VPC operations not supported");
-					handler.onResponse(response);
-					return null;
+					IVPC operations = getVPCOperations();
+					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
+						return operations.customerGatewayDelete(request, handler);
+					}
+					else
+					{
+						VPCResponse response = new VPCResponse();
+						response.setStatus(Status.FAILURE);
+						response.setMessage("VPC operations not supported");
+						handler.onResponse(response);
+						return null;
+					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
 				}
 			}
 		});
@@ -1368,16 +2078,27 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(InternetGatewayDetachRequest request, ResponseHandler<VPCResponse> handler) {
-				IVPC operations = getVPCOperations();
-				if (operations != null)
-					return operations.internetGatewayDetach(request, handler);
-				else
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
 				{
-					VPCResponse response = new VPCResponse();
-					response.setStatus(Status.FAILURE);
-					response.setMessage("VPC operations not supported");
-					handler.onResponse(response);
-					return null;
+					IVPC operations = getVPCOperations();
+					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
+						return operations.internetGatewayDetach(request, handler);
+					}
+					else
+					{
+						VPCResponse response = new VPCResponse();
+						response.setStatus(Status.FAILURE);
+						response.setMessage("VPC operations not supported");
+						handler.onResponse(response);
+						return null;
+					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
 				}
 			}
 		});
@@ -1386,16 +2107,27 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(VPNGatewayAttachmentsRequest request, ResponseHandler<VPNGatewayAttachmentsResponse> handler) {
-				IVPC operations = getVPCOperations();
-				if (operations != null)
-					return operations.vpnGatewayAttachments(request, handler);
-				else
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
 				{
-					VPNGatewayAttachmentsResponse response = new VPNGatewayAttachmentsResponse();
-					response.setStatus(Status.FAILURE);
-					response.setMessage("VPC operations not supported");
-					handler.onResponse(response);
-					return null;
+					IVPC operations = getVPCOperations();
+					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
+						return operations.vpnGatewayAttachments(request, handler);
+					}
+					else
+					{
+						VPNGatewayAttachmentsResponse response = new VPNGatewayAttachmentsResponse();
+						response.setStatus(Status.FAILURE);
+						response.setMessage("VPC operations not supported");
+						handler.onResponse(response);
+						return null;
+					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
 				}
 			}
 		});
@@ -1406,16 +2138,27 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(RunningInstancesStopRequest request, ResponseHandler<VPCResponse> handler) {
-				IVPC operations = getVPCOperations();
-				if (operations != null)
-					return operations.runningInstancesStop(request, handler);
-				else
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
 				{
-					VPCResponse response = new VPCResponse();
-					response.setStatus(Status.FAILURE);
-					response.setMessage("VPC operations not supported");
-					handler.onResponse(response);
-					return null;
+					IVPC operations = getVPCOperations();
+					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
+						return operations.runningInstancesStop(request, handler);
+					}
+					else
+					{
+						VPCResponse response = new VPCResponse();
+						response.setStatus(Status.FAILURE);
+						response.setMessage("VPC operations not supported");
+						handler.onResponse(response);
+						return null;
+					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
 				}
 			}
 		});
@@ -1427,9 +2170,15 @@ public abstract class CloudAdapter implements BundleActivator {
 		{
 			@Override
 			public ICancellable execute(CloudChangeRequest request, ResponseHandler<CloudResponse> handler) {
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				try
+				{
 					ICloudChanged operations = getCloudChangedOperations();
 					if (operations != null)
+					{
+						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
 						return operations.cloudChanged(request, handler);
+					}
 					else
 					{
 						CloudResponse response = new CloudResponse();
@@ -1437,6 +2186,11 @@ public abstract class CloudAdapter implements BundleActivator {
 						handler.onResponse(response);
 						return null;
 					}
+				}
+				finally
+				{
+					Thread.currentThread().setContextClassLoader(cl);
+				}
 			}
 		});
 
