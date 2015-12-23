@@ -16,5 +16,7 @@ If you want to edit these projects using eclipse you will need to set up 3 build
 * COMMON-LIB - Contains the path to the lib directory under agility-platform-sdk
 * DIST - Contains the path to the dist directory under agility-platform-sdk
 
+For more information, see [the Wiki](https://github.com/csc/agility-platform-sdk/wiki).
+
 ## License
 All of the code provided in this repository is licensed under the Apache Licence, Version 2.0. See [LICENSE](https://github.com/csc/agility-platform-sdk/blob/master/LICENSE) for the full license text.

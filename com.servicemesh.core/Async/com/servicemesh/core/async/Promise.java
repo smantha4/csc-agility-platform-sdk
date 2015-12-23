@@ -33,7 +33,7 @@ import com.servicemesh.core.reactor.WorkHandler;
 
 /**
  * 
- * A promise to produce a result of type &lt;T&gt; at some point in the future.
+ * A promise to produce a result of type <T> at some point in the future.
  * Enables a functional approach to transforming/completing work as intermediate
  * results complete.
  * 
@@ -229,20 +229,10 @@ public abstract class Promise<T>
          });
 
          // failures propagate from wrapped(this) to wrapper(promise)
-         this.onFailure(new Callback<Throwable>() {
-             @Override
-             public void invoke(final Throwable th) {
-                 promise.failure(th);
-             }
-         });
+         this.onFailure(th -> promise.failure(th));
 
          // cancel propagate from wrapper(promise) to wrapped(this)
-         promise.onCancel(new Callback<Void>() {
-             @Override
-             public void invoke(final Void arg) {
-                 cancel();
-             }
-         });
+         promise.onCancel((v) -> cancel());
 
          return promise;
      }
@@ -265,28 +255,13 @@ public abstract class Promise<T>
                      // on completion of the result - complete the wrapper
                      final Promise<R> flatten = func.invoke(tArg);
 
-                     flatten.onComplete(new Callback<R>() {
-                         @Override
-                         public void invoke(final R rArg) {
-                             promise.complete(rArg);
-                         }
-                     });
+                     flatten.onComplete(rArg -> promise.complete(rArg));
 
                      // on failure of the result - fail the wrapper
-                     flatten.onFailure(new Callback<Throwable>() {
-                         @Override
-                         public void invoke(final Throwable t) {
-                             promise.failure(t);
-                         }
-                     });
+                     flatten.onFailure(th -> promise.failure(th));
 
                      // if the wrapper is canceled - cancel the result
-                     promise.onCancel(new Callback<Void>() {
-                         @Override
-                         public void invoke(final Void arg) {
-                             flatten.cancel();
-                         }
-                     });
+                     promise.onCancel((v) -> cancel());
                  } catch (final Throwable th) {
                      promise.failure(th);
                  }
@@ -294,20 +269,10 @@ public abstract class Promise<T>
          });
 
          // failures propagate from wrapped(this) to wrapper(promise)
-         this.onFailure(new Callback<Throwable>() {
-             @Override
-             public void invoke(final Throwable t) {
-                 promise.failure(t);
-             }
-         });
+         this.onFailure(th -> promise.failure(th));
 
          // cancel propagate from wrapper(promise) to wrapped(this)
-         promise.onCancel(new Callback<Void>() {
-             @Override
-             public void invoke(final Void arg) {
-                 cancel();
-             }
-         });
+         promise.onCancel((v) -> cancel());
 
          // if the result is cancelled - fail the wrapper
          this.onCancel(new Callback<Void>() {
@@ -358,12 +323,7 @@ public abstract class Promise<T>
         });
 
         // cancel propagate from wrapper(promise) to wrapped(this)
-        promise.onCancel(new Callback<Void>() {
-            @Override
-            public void invoke(final Void arg) {
-                cancel();
-            }
-        });
+        promise.onCancel((v) -> cancel());
 
         return promise;
     }
@@ -412,28 +372,13 @@ public abstract class Promise<T>
         if (promises.size() > 0) {
             for (final Promise<T> promise : promises) {
                 // completion propagates from wrapped to wrapper
-                promise.onComplete(new Callback<T>() {
-                    @Override
-                    public void invoke(T result) {
-                        sequence.add(result);
-                    }
-                });
+                promise.onComplete(result -> sequence.add(result));
 
                 // failures propagate from wrapped to wrapper
-                promise.onFailure(new Callback<Throwable>() {
-                    @Override
-                    public void invoke(Throwable t) {
-                        sequence.failure(t);
-                    }
-                });
+                promise.onFailure(th -> sequence.failure(th));
 
                 // cancel propagates from wrapper to wrapped
-                sequence.onCancel(new Callback<Void>() {
-                    @Override
-                    public void invoke(Void arg) {
-                        promise.cancel();
-                    }
-                });
+                sequence.onCancel((v) -> promise.cancel());
 
                 // propagate wrapped cancels as failures to the sequenced promise
                 promise.onCancel(new Callback<Void>() {
@@ -457,7 +402,7 @@ public abstract class Promise<T>
     /**
      * Returns a promise that completes when the supplied list of promises complete
      */
-    @SuppressWarnings("unchecked")
+    //@SuppressWarnings("unchecked")
     public static Promise<List<Object>> sequenceAny(List<Promise<?>> promises)
     {
         if (promises == null) {
@@ -469,28 +414,13 @@ public abstract class Promise<T>
         if (promises.size() > 0) {
             for (final Promise<?> promise : promises) {
                 // completion propagates from wrapped to wrapper
-                promise.onComplete(new Callback() {
-                    @Override
-                    public void invoke(Object result) {
-                        sequence.add(result);
-                    }
-                });
+                promise.onComplete(result -> sequence.add(result));
 
                 // failures propagate from wrapped to wrapper
-                promise.onFailure(new Callback<Throwable>() {
-                    @Override
-                    public void invoke(Throwable t) {
-                        sequence.failure(t);
-                    }
-                });
+                promise.onFailure(th -> sequence.failure(th));
 
                 // cancel propagates from wrapper to wrapped
-                sequence.onCancel(new Callback<Void>() {
-                    @Override
-                    public void invoke(Void arg) {
-                        promise.cancel();
-                    }
-                });
+                sequence.onCancel((v) -> promise.cancel());
 
                 // propagate wrapped cancels as failures to the sequenced promise
                 promise.onCancel(new Callback<Void>() {

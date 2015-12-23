@@ -538,6 +538,16 @@ REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIB
             </xsd:annotation>
          </xsd:element>
          
+         <xsd:element name="templateId" type="xsd:int" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Existing template identifer.  When present existing template resources are included in the deployment plan." systemGenerated="true" />
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+         
       </xsd:sequence>
    </xsd:complexType>
    
@@ -1371,4 +1381,32 @@ REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIB
          </xsd:element>
       </xsd:sequence>
    </xsd:complexType>
+   
+      <xsd:complexType name="License">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>License</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Body of an Agility License"
+                           description = ""
+                           externalDocLink = "" 
+                           introducedIn = "3.2"/>
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:sequence>
+         <xsd:element name="license" type="xsd:string" minOccurs="1" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <annox:annotate target="field">
+                     <a:ApiField comment="Agility License"/>
+                  </annox:annotate>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   
 </xsd:schema>

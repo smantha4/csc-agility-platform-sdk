@@ -20,6 +20,7 @@ package com.servicemesh.core.async.test;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -560,6 +561,50 @@ public class PromiseTest
     }
 
     @Test
+    public void testCompletionCallbackLambdas()
+        throws Throwable
+    {
+        final CompletablePromise<Integer> promise = PromiseFactory.create();
+        final CompletionValue<Integer> completion1 = new CompletionValue<>();
+        final CompletionValue<Integer> completion2 = new CompletionValue<>();
+        final CompletionValue<Throwable> failure = new CompletionValue<>();
+        final CompletionValue<Boolean> cancel = new CompletionValue<>();
+
+        promise.onComplete(value -> completion1.setValue(Integer.valueOf(value)));
+        promise.onComplete(value -> completion2.setValue(Integer.valueOf(value)));
+        promise.onFailure(value -> failure.setValue(value));
+        promise.onCancel(value -> cancel.setValue(Boolean.TRUE));
+        Assert.assertFalse(completion1.getValue().isCompleted());
+        Assert.assertFalse(completion2.getValue().isCompleted());
+        Assert.assertFalse(failure.getValue().isCompleted());
+        Assert.assertFalse(cancel.getValue().isCompleted());
+
+        final Thread completeThread = new Thread() {
+            @Override
+            public void run()
+            {
+                promise.complete(101);
+            }
+        };
+
+        completeThread.setDaemon(true);
+        completeThread.start();
+
+        // Specify timeout large enough for thread switching but not too large
+        // to hang the test
+        Assert.assertEquals(Integer.valueOf(101), promise.get(5, TimeUnit.SECONDS));
+        Assert.assertEquals(101, completion1.getValue().get(5, TimeUnit.SECONDS).intValue());
+        Assert.assertEquals(101, completion2.getValue().get(5, TimeUnit.SECONDS).intValue());
+        Assert.assertFalse(failure.getValue().isCompleted());
+        Assert.assertFalse(cancel.getValue().isCompleted());
+
+        // Add another callback after completion
+        final CompletionValue<Integer> completion3 = new CompletionValue<>();
+        promise.onComplete(value -> completion3.setValue(Integer.valueOf(value)));
+        Assert.assertEquals(101, completion3.getValue().get(5, TimeUnit.SECONDS).intValue());
+    }
+
+    @Test
     public void testFailureCallback()
         throws Throwable
     {
@@ -623,6 +668,59 @@ public class PromiseTest
     }
 
     @Test
+    public void testFailureCallbackLambdas()
+        throws Throwable
+    {
+        final CompletablePromise<Integer> promise = PromiseFactory.create();
+        final CompletionValue<Throwable> failure1 = new CompletionValue<>();
+        final CompletionValue<Throwable> failure2 = new CompletionValue<>();
+        final CompletionValue<Integer> completion = new CompletionValue<>();
+        final CompletionValue<Boolean> cancel = new CompletionValue<>();
+
+        promise.onFailure(value -> failure1.setValue(value));
+        promise.onFailure(value -> failure2.setValue(value));
+        promise.onComplete(value -> completion.setValue(Integer.valueOf(value)));
+        promise.onCancel(value -> cancel.setValue(Boolean.TRUE));
+        Assert.assertFalse(failure1.getValue().isCompleted());
+        Assert.assertFalse(failure2.getValue().isCompleted());
+        Assert.assertFalse(completion.getValue().isCompleted());
+        Assert.assertFalse(cancel.getValue().isCompleted());
+
+        final Thread completeThread = new Thread() {
+            @Override
+            public void run()
+            {
+                promise.failure(new IllegalArgumentException("Test"));
+            }
+        };
+
+        completeThread.setDaemon(true);
+        completeThread.start();
+
+        try {
+            // Specify timeout large enough for thread switching but not too large
+            // to hang the test
+            promise.get(5, TimeUnit.SECONDS);
+            Assert.fail("Exception had been set");
+        } catch (IllegalArgumentException ex) {
+            // Ignore, expected
+        }
+
+        Assert.assertTrue(failure1.getValue().get(5, TimeUnit.SECONDS) instanceof IllegalArgumentException);
+        Assert.assertTrue("Test".equals(failure1.getValue().get().getMessage()));
+        Assert.assertTrue(failure2.getValue().get(5, TimeUnit.SECONDS) instanceof IllegalArgumentException);
+        Assert.assertTrue("Test".equals(failure2.getValue().get().getMessage()));
+        Assert.assertFalse(completion.getValue().isCompleted());
+        Assert.assertFalse(cancel.getValue().isCompleted());
+
+        // Add another callback after failure
+        final CompletionValue<Throwable> failure3 = new CompletionValue<>();
+        promise.onFailure(value -> failure3.setValue(value));
+        Assert.assertTrue(failure3.getValue().get(5, TimeUnit.SECONDS) instanceof IllegalArgumentException);
+        Assert.assertTrue("Test".equals(failure3.getValue().get().getMessage()));
+    }
+
+    @Test
     public void testCancelCallback()
         throws Throwable
     {
@@ -683,6 +781,56 @@ public class PromiseTest
     }
 
     @Test
+    public void testCancelCallbackLambdas()
+        throws Throwable
+    {
+        final Promise<Integer> promise = PromiseFactory.create();
+        final CompletionValue<Integer> completion1 = new CompletionValue<>();
+        final CompletionValue<Throwable> failure = new CompletionValue<>();
+        final CompletionValue<Boolean> cancel1 = new CompletionValue<>();
+        final CompletionValue<Boolean> cancel2 = new CompletionValue<>();
+
+        promise.onCancel(value -> cancel1.setValue(Boolean.TRUE));
+        promise.onCancel(value -> cancel2.setValue(Boolean.TRUE));
+        promise.onFailure(value -> failure.setValue(value));
+        promise.onComplete(value -> completion1.setValue(Integer.valueOf(value)));
+        Assert.assertFalse(cancel1.getValue().isCompleted());
+        Assert.assertFalse(cancel2.getValue().isCompleted());
+        Assert.assertFalse(failure.getValue().isCompleted());
+        Assert.assertFalse(completion1.getValue().isCompleted());
+
+        final Thread completeThread = new Thread() {
+            @Override
+            public void run()
+            {
+                promise.cancel();
+            }
+        };
+
+        completeThread.setDaemon(true);
+        completeThread.start();
+
+        try {
+            // Specify timeout large enough for thread switching but not too large
+            // to hang the test
+            promise.get(5, TimeUnit.SECONDS);
+            Assert.fail("Promise had been cancelled");
+        } catch (CancellationException ex) {
+            // Ignore, expected
+        }
+
+        Assert.assertTrue(cancel1.getValue().get(5, TimeUnit.SECONDS));
+        Assert.assertTrue(cancel2.getValue().get(5, TimeUnit.SECONDS));
+        Assert.assertFalse(failure.getValue().isCompleted());
+        Assert.assertFalse(completion1.getValue().isCompleted());
+
+        // Add another callback after cancel
+        final CompletionValue<Boolean> cancel3 = new CompletionValue<>();
+        promise.onCancel(value -> cancel3.setValue(Boolean.TRUE));
+        Assert.assertTrue(cancel3.getValue().get(5, TimeUnit.SECONDS));
+    }
+
+    @Test
     public void testMapComplete()
         throws Throwable
     {
@@ -697,6 +845,59 @@ public class PromiseTest
 
         promise.complete(42);
         Assert.assertEquals(Long.valueOf(-42), promise2.get(1, TimeUnit.SECONDS));
+    }
+
+    @Test
+    public void testMapCompleteLambda()
+        throws Throwable
+    {
+        final CompletablePromise<Integer> promise = PromiseFactory.create();
+        final Promise<Long> promise2 = promise.map(value -> new Long(value.longValue() * -1));
+
+        promise.complete(42);
+        Assert.assertEquals(Long.valueOf(-42), promise2.get(1, TimeUnit.SECONDS));
+    }
+
+    @Test
+    public void testMapList()
+        throws Throwable
+    {
+        final List<Integer> intList = Arrays.asList(1, 2, 3, 4, 5);
+        final CompletablePromise<List<Integer>> promise = PromiseFactory.create();
+        final Promise<List<List<Integer>>> promise2 = promise.map(new Function<List<Integer>, List<List<Integer>>>() {
+            @Override
+            public List<List<Integer>> invoke(final List<Integer> result)
+            {
+                final List<List<Integer>> rv = new ArrayList<>();
+
+                for (final Integer value : result) {
+                    final List<Integer> entry = new ArrayList<>();
+                    final int intValue = value.intValue();
+
+                    entry.add(intValue - 1);
+                    entry.add(intValue);
+                    entry.add(intValue + 1);
+                    rv.add(entry);
+                }
+
+                return rv;
+            }
+        });
+
+        promise.complete(intList);
+        List<List<Integer>> result = promise2.get(1, TimeUnit.SECONDS);
+        Assert.assertNotNull(result);
+        Assert.assertEquals(5, result.size());
+
+        for (int i = 1; i < 6; i++) {
+            final List<Integer> entryList = result.get(i - 1);
+
+            Assert.assertNotNull(entryList);
+            Assert.assertEquals(3, entryList.size());
+            Assert.assertEquals(i - 1, entryList.get(0).intValue());
+            Assert.assertEquals(i, entryList.get(1).intValue());
+            Assert.assertEquals(i + 1, entryList.get(2).intValue());
+        }
     }
 
     @Test(expected=NullPointerException.class)
@@ -770,8 +971,47 @@ public class PromiseTest
         Assert.assertFalse(flattened.isCompleted());
         String[] array1 = { "one", "two", "three" };
         promise1.complete(Arrays.asList(array1));
+        Assert.assertFalse(flattened.isCompleted());
         String[] array2 = { "four", "five", "six" };
         promise2.complete(Arrays.asList(array2));
+        Assert.assertFalse(flattened.isCompleted());
+        String[] array3 = { "seven", "eight", "nine" };
+        promise3.complete(Arrays.asList(array3));
+
+        Set<String> allTogether = flattened.get(1, TimeUnit.SECONDS);
+        Assert.assertTrue(allTogether.containsAll(Arrays.asList(array1)));
+        Assert.assertTrue(allTogether.containsAll(Arrays.asList(array2)));
+        Assert.assertTrue(allTogether.containsAll(Arrays.asList(array3)));
+    }
+
+    @Test
+    public void testFlatmapLambdas()
+        throws Throwable
+    {
+        final CompletablePromise<List<String>> promise1 = PromiseFactory.create();
+        final CompletablePromise<List<String>> promise2 = PromiseFactory.create();
+        final CompletablePromise<List<String>> promise3 = PromiseFactory.create();
+        final Promise<Set<String>> flattened = promise1.flatMap(result1 ->
+            promise2.flatMap(result2 ->
+                promise3.map(result3 -> {
+                    Set<String> collected = new TreeSet<String>();
+
+                    collected.addAll(result1);
+                    collected.addAll(result2);
+                    collected.addAll(result3);
+
+                    return collected;
+                })
+            )
+        );
+
+        Assert.assertFalse(flattened.isCompleted());
+        String[] array1 = { "one", "two", "three" };
+        promise1.complete(Arrays.asList(array1));
+        Assert.assertFalse(flattened.isCompleted());
+        String[] array2 = { "four", "five", "six" };
+        promise2.complete(Arrays.asList(array2));
+        Assert.assertFalse(flattened.isCompleted());
         String[] array3 = { "seven", "eight", "nine" };
         promise3.complete(Arrays.asList(array3));
 
@@ -1030,6 +1270,21 @@ public class PromiseTest
         } catch(Throwable t) {
         	assertNotNull(t);
         	assertTrue(t.getMessage().contains(errMsg));
+        }
+    }
+
+    private static class CompletionValue<T>
+    {
+        final private CompletablePromise<T> promise = PromiseFactory.create();
+
+        public void setValue(final T value)
+        {
+            promise.complete(value);
+        }
+
+        public Promise<T> getValue()
+        {
+            return promise;
         }
     }
 

@@ -9,11 +9,11 @@ import com.servicemesh.agility.api.Task;
 
 public interface IBlueprint {
 
-		public DeploymentPlan evaluate(Blueprint blueprint, Container container, PlanEvalRequest planRequest) throws Exception;
+		public DeploymentPlan evaluate(Blueprint blueprint, Container container, PlanEvalRequest planRequest, Context context) throws Exception;
 
 		public DeploymentPlan validatePlan(Blueprint blueprint, Container container, PlanEvalRequest planRequest, DeploymentPlan plan) throws Exception;
 
-		public Blueprint validateBlueprint(Blueprint blueprint, boolean randomize, boolean throwUponFailure) throws Exception;
+		public Blueprint validateBlueprint(Blueprint blueprint, boolean randomize, boolean throwUponFailure, Context context) throws Exception;
 
-		public Task deploy(Blueprint blueprint, Container container, PlanEvalRequest planRequest, DeploymentRequest deployRequest) throws Exception;
+		public Task deploy(Blueprint blueprint, Container container, PlanEvalRequest planRequest, DeploymentRequest deployRequest, Context context) throws Exception;
 }

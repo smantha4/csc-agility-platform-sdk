@@ -6,6 +6,7 @@ import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
 import com.servicemesh.agility.sdk.service.msgs.RegistrationRequest;
 import com.servicemesh.agility.sdk.service.msgs.RegistrationResponse;
+import com.servicemesh.agility.sdk.service.spi.IAddressManagement;
 import com.servicemesh.agility.sdk.service.spi.IInstanceLifecycle;
 import com.servicemesh.agility.sdk.service.spi.IServiceProvider;
 import com.servicemesh.agility.sdk.service.spi.IServiceInstance;
@@ -52,6 +53,9 @@ public class AsyncTracker implements ServiceTrackerCustomizer {
 				request.getSupportedInterfaces().add(IServiceProvider.class.getName());
 			if(_adapter.getServiceInstanceOperations() != null)
 				request.getSupportedInterfaces().add(IServiceInstance.class.getName());
+			if (_adapter.getAddressManagementOperations() != null) {
+				request.getSupportedInterfaces().add(IAddressManagement.class.getName());
+			}
 			_serviceProvider.sendRequest(request,new ResponseHandler<RegistrationResponse>() {
 
 				@Override
