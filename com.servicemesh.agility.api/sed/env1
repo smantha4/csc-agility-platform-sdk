@@ -1,2 +1,0 @@
-/\(import javax.xml.bind.annotation.XmlType;\)/a\
-import org.codehaus.jackson.annotate.JsonProperty;\

@@ -1,3 +1,0 @@
-/@XmlElement(name = "Asset")/a\
-    @JsonProperty("assets")\
-@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="__type")\
