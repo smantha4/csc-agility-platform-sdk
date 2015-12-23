@@ -1,8 +1,0 @@
-Bundle-ManifestVersion: 2
-Bundle-Name: Agility - SDK - Core Messaging
-Bundle-SymbolicName: com.servicemesh.agility.sdk.cloud
-Bundle-Version: 1.0
-Bundle-Vendor: ServiceMesh
-DynamicImport-Package: * 
-Export-Package: 
- com.servicemesh.core.messaging;version="1.0.0"

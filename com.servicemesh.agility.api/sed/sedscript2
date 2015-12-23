@@ -1,4 +1,0 @@
-/XmlElementDecl(namespace = "http:\/\/servicemesh.com\/agility\/api", name = "Container")/,/}/d
-/private final static QName _Container_QNAME = new QName("http:\/\/servicemesh.com\/agility\/api", "Container");/d
-/XmlElementDecl(namespace = "http:\/\/servicemesh.com\/agility\/api", name = "Topology")/,/}/d
-/private final static QName _Topology_QNAME = new QName("http:\/\/servicemesh.com\/agility\/api", "Topology");/d

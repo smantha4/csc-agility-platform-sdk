@@ -1,2 +1,0 @@
-s/import javax.xml.datatype.XMLGregorianCalendar;/import java.util.Calendar;/
-s/XMLGregorianCalendar /Calendar /1

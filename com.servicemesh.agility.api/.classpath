@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="var" path="COMMON-LIB/agility-athena-1.0.4-bin.jar"/>
-	<classpathentry kind="var" path="IVY-LIB/jackson-core-asl-1.7.3.jar"/>
-	<classpathentry kind="output" path="bin/classes"/>
-</classpath>
