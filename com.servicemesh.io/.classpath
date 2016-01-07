@@ -3,7 +3,6 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" output="test/unit/bin" path="test/unit/src"/>
-	<classpathentry exported="true" kind="lib" path="lib/mindterm.jar"/>
 	<classpathentry kind="lib" path="test/unit/lib/poc-models-0.0.1.jar"/>
 	<classpathentry kind="lib" path="test/unit/lib/jsocks.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
@@ -44,7 +43,7 @@
 	<classpathentry kind="var" path="IVY-LIB/slf4j-log4j12-1.7.5.jar"/>
 	<classpathentry kind="var" path="IVY-LIB/sshd-core-0.13.0.jar"/>
 	<classpathentry kind="var" path="IVY-LIB/wiremock-1.43.jar"/>
-   <classpathentry kind="var" path="COMMON-LIB/powermock-mockito-1.6.3-full.jar"/>
+	<classpathentry kind="var" path="COMMON-LIB/powermock-mockito-1.6.3-full.jar"/>
 	<classpathentry kind="var" path="DIST/com.servicemesh.core-1.0.0.jar"/>
 	<classpathentry kind="lib" path="lib/httpasyncclient-4.1.jar"/>
 	<classpathentry kind="lib" path="lib/httpclient-4.4.1.jar"/>
