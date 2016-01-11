@@ -57,6 +57,7 @@ ALL SOFTWARE, INFORMATION AND ANY OTHER RELATED COMMUNICATIONS (COLLECTIVELY, "W
          <xsd:enumeration value="adminPublicKeyName"/>
          <xsd:enumeration value="adminPrivateKeyName"/>
          <xsd:enumeration value="storageSyncLimited"/>
+         <xsd:enumeration value="skipStartupAfterClone"/>
       </xsd:restriction>
    </xsd:simpleType>
       

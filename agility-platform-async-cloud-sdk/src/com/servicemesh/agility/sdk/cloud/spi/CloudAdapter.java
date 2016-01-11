@@ -109,7 +109,6 @@ public abstract class CloudAdapter implements BundleActivator {
 	public IHotSwap getHotSwapOperations() { return null; }
 	public ICloudProperties getCloudPropertyOperations() { return null; }
 	public IVPC getVPCOperations() { return null; }
-	public IAddress getAddressOperations() { return null; }
 	public ICredentialSelector getCredentialSelectorOperations() { return null; }
 	public ICloudChanged getCloudChangedOperations() { return null; }
 	
@@ -1397,124 +1396,6 @@ public abstract class CloudAdapter implements BundleActivator {
 			}
 		});
 		
-		//
-		// Address 
-		//
-		register(AddressAllocateRequest.class,new Dispatch<AddressAllocateRequest,AddressResponse>()
-		{
-			@Override
-			public ICancellable execute(AddressAllocateRequest request, ResponseHandler<AddressResponse> handler) {
-				ClassLoader cl = Thread.currentThread().getContextClassLoader();
-				try
-				{
-					IAddress operations = getAddressOperations();
-					if (operations != null)
-					{
-						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
-						return operations.allocate(request, handler);
-					}
-					else
-					{
-						AddressResponse response = new AddressResponse();
-						response.setStatus(Status.FAILURE);
-						response.setMessage("Adapter Address operation not supported");
-						handler.onResponse(response);
-						return null;
-					}
-				}
-				finally
-				{
-					Thread.currentThread().setContextClassLoader(cl);
-				}
-			}
-		});
-		
-		register(AddressReleaseRequest.class,new Dispatch<AddressReleaseRequest,AddressResponse>()
-		{
-			@Override
-			public ICancellable execute(AddressReleaseRequest request, ResponseHandler<AddressResponse> handler) {
-				ClassLoader cl = Thread.currentThread().getContextClassLoader();
-				try
-				{
-					IAddress operations = getAddressOperations();
-					if (operations != null)
-					{
-						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
-						return operations.release(request, handler);
-					}
-					else
-					{
-						AddressResponse response = new AddressResponse();
-						response.setStatus(Status.FAILURE);
-						response.setMessage("Adapter Address operation not supported");
-						handler.onResponse(response);
-						return null;
-					}
-				}
-				finally
-				{
-					Thread.currentThread().setContextClassLoader(cl);
-				}
-			}
-		});
-		
-		register(AddressAssociateRequest.class,new Dispatch<AddressAssociateRequest,AddressResponse>()
-		{
-			@Override
-			public ICancellable execute(AddressAssociateRequest request, ResponseHandler<AddressResponse> handler) {
-				ClassLoader cl = Thread.currentThread().getContextClassLoader();
-				try
-				{
-					IAddress operations = getAddressOperations();
-					if (operations != null)
-					{
-						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
-						return operations.associate(request, handler);
-					}
-					else
-					{
-						AddressResponse response = new AddressResponse();
-						response.setStatus(Status.FAILURE);
-						response.setMessage("Adapter Address operation not supported");
-						handler.onResponse(response);
-						return null;
-					}
-				}
-				finally
-				{
-					Thread.currentThread().setContextClassLoader(cl);
-				}
-			}
-		});
-		
-		register(AddressDisassociateRequest.class,new Dispatch<AddressDisassociateRequest,AddressResponse>()
-		{
-			@Override
-			public ICancellable execute(AddressDisassociateRequest request, ResponseHandler<AddressResponse> handler) {
-				ClassLoader cl = Thread.currentThread().getContextClassLoader();
-				try
-				{
-					IAddress operations = getAddressOperations();
-					if (operations != null)
-					{
-						Thread.currentThread().setContextClassLoader(operations.getClass().getClassLoader());
-						return operations.disassociate(request, handler);
-					}
-					else
-					{
-						AddressResponse response = new AddressResponse();
-						response.setStatus(Status.FAILURE);
-						response.setMessage("Adapter Address operation not supported");
-						handler.onResponse(response);
-						return null;
-					}
-				}
-				finally
-				{
-					Thread.currentThread().setContextClassLoader(cl);
-				}
-			}
-		});
 		
 		//
 		// ICredentialInfoSelector

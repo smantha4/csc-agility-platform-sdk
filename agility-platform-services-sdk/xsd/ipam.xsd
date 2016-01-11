@@ -119,6 +119,15 @@ ALL SOFTWARE, INFORMATION AND ANY OTHER RELATED COMMUNICATIONS (COLLECTIVELY, "W
                   </xsd:annotation>
                </xsd:element>
                
+               <xsd:element name="templateAddress" type="agility:Address" >
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="The current address for the template." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
                               
             </xsd:sequence>
          </xsd:extension>
