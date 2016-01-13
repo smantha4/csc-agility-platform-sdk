@@ -53,6 +53,16 @@ ALL SOFTWARE, INFORMATION AND ANY OTHER RELATED COMMUNICATIONS (COLLECTIVELY, "W
                   </xsd:annotation>
                </xsd:element>
 
+               <xsd:element name="operatingSystem" type="agility:OperatingSystem">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="The instance's operating system." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+
                <xsd:element name="serviceInstance" type="agility:ServiceInstance">
                   <xsd:annotation>
                      <xsd:appinfo>
