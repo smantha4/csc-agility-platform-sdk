@@ -26,8 +26,7 @@ import javax.net.ssl.SSLException;
 import com.servicemesh.io.proxy.PipelinedChannel;
 import com.servicemesh.io.proxy.PipelinedChannelResult;
 
-public class PassThroughChannel
-    implements PipelinedChannel
+public class PassThroughChannel implements PipelinedChannel
 {
     private PipelinedChannel _downstream;
 
@@ -36,15 +35,13 @@ public class PassThroughChannel
     }
 
     @Override
-    public PipelinedChannelResult read(final ByteBuffer dst, final ByteChannel channel)
-        throws IOException
+    public PipelinedChannelResult read(final ByteBuffer dst, final ByteChannel channel) throws IOException
     {
         return (_downstream != null) ? _downstream.read(dst, channel) : new PipelinedChannelResult(dst, channel.read(dst));
     }
 
     /**
      * {@inheritDoc}
-     * 
      */
     @Override
     public int readBuffered(final ByteBuffer dst)
@@ -53,21 +50,22 @@ public class PassThroughChannel
     }
 
     @Override
-    public PipelinedChannelResult write(final ByteBuffer src, final ByteChannel channel)
-        throws IOException
+    public PipelinedChannelResult write(final ByteBuffer src, final ByteChannel channel) throws IOException
     {
         return (_downstream != null) ? _downstream.write(src, channel) : new PipelinedChannelResult(src, channel.write(src));
     }
 
     @Override
-    public PipelinedChannelResult wrap(final ByteBuffer src, final ByteBuffer dst)
-        throws SSLException
+    public PipelinedChannelResult wrap(final ByteBuffer src, final ByteBuffer dst) throws SSLException
     {
         PipelinedChannelResult channelResult;
 
-        if  (_downstream != null) {
+        if (_downstream != null)
+        {
             channelResult = _downstream.wrap(src, dst);
-        } else {
+        }
+        else
+        {
             int count = transferBytes(src, dst);
 
             channelResult = new PipelinedChannelResult(dst, null, count);
@@ -80,14 +78,16 @@ public class PassThroughChannel
      * Caller must call PipelinedChannelResult.getResultBuffer().compact()
      */
     @Override
-    public PipelinedChannelResult unwrap(final ByteBuffer src, final ByteBuffer dst)
-        throws SSLException
+    public PipelinedChannelResult unwrap(final ByteBuffer src, final ByteBuffer dst) throws SSLException
     {
         PipelinedChannelResult channelResult;
 
-        if (_downstream != null) {
+        if (_downstream != null)
+        {
             channelResult = _downstream.unwrap(src, dst);
-        } else {
+        }
+        else
+        {
             int count = transferBytes(src, dst);
 
             channelResult = new PipelinedChannelResult(dst, null, count);
@@ -126,7 +126,8 @@ public class PassThroughChannel
 
         count = Math.min(src.remaining(), dst.remaining());
 
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < count; i++)
+        {
             dst.put(src.get());
         }
 

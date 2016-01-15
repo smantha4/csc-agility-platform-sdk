@@ -26,11 +26,13 @@ public class HttpStatus
 
     public HttpStatus(HttpVersion version, int statusCode, String reason)
     {
-        if (version == null) {
+        if (version == null)
+        {
             throw new IllegalArgumentException("Missing version");
         }
 
-        if (statusCode < 0) {
+        if (statusCode < 0)
+        {
             throw new IllegalArgumentException("Invalid status code");
         }
 
@@ -57,14 +59,16 @@ public class HttpStatus
     @Override
     public String toString()
     {
-        if (_toString == null) {
+        if (_toString == null)
+        {
             StringBuilder sb = new StringBuilder("HttpStatus: version=");
 
             sb.append(_version);
             sb.append(", status code = ");
             sb.append(_statusCode);
 
-            if (_reason != null) {
+            if (_reason != null)
+            {
                 sb.append(", reason = ");
                 sb.append(_reason);
             }

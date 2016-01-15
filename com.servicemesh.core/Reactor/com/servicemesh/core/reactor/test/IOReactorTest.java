@@ -8,7 +8,8 @@ import org.junit.Test;
 
 import com.servicemesh.core.reactor.IOReactor;
 
-public class IOReactorTest extends TimerReactorTest {
+public class IOReactorTest extends TimerReactorTest
+{
     /** The number of TimerReactors created during testing. */
     protected int m_reactorCount;
 
@@ -16,25 +17,33 @@ public class IOReactorTest extends TimerReactorTest {
     protected IOReactor m_ioReactor;
 
     @BeforeClass
-    public static void setUpBeforeClass() {}
-
-    @AfterClass
-    public static void tearDownAfterClass() {
+    public static void setUpBeforeClass()
+    {
     }
 
+    @AfterClass
+    public static void tearDownAfterClass()
+    {
+    }
+
+    @Override
     @Before
-    public void setUp() {
+    public void setUp()
+    {
         m_ioReactor = IOReactor.getIOReactor("TestIOReactor_" + ++m_reactorCount);
         m_workReactor = m_timerReactor = m_ioReactor;
     }
 
+    @Override
     @After
-    public void tearDown() {
+    public void tearDown()
+    {
         m_ioReactor.shutdown();
     }
 
     @Test
-    public void testNothing() {
+    public void testNothing()
+    {
         // Stub
     }
 }

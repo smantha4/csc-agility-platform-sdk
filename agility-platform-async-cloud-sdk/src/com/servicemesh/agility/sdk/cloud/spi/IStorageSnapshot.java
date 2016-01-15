@@ -9,10 +9,9 @@ import com.servicemesh.core.async.ResponseHandler;
 
 public interface IStorageSnapshot
 {
-  public ICancellable create(StorageSnapshotCreateRequest request,
-      ResponseHandler<StorageSnapshotResponse> handler);
-  public ICancellable delete(StorageSnapshotDeleteRequest request,
-      ResponseHandler<StorageSnapshotResponse> handler);
-  public ICancellable createFromSnapshot(StorageCreateFromSnapshotRequest request,
-      ResponseHandler<StorageResponse> handler);
+    public ICancellable create(StorageSnapshotCreateRequest request, ResponseHandler<StorageSnapshotResponse> handler);
+
+    public ICancellable delete(StorageSnapshotDeleteRequest request, ResponseHandler<StorageSnapshotResponse> handler);
+
+    public ICancellable createFromSnapshot(StorageCreateFromSnapshotRequest request, ResponseHandler<StorageResponse> handler);
 }

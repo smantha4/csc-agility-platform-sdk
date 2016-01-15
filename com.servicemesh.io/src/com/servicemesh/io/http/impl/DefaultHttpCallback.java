@@ -22,8 +22,7 @@ import org.apache.log4j.Logger;
 import com.servicemesh.io.http.BaseHttpCallback;
 import com.servicemesh.io.http.IHttpResponse;
 
-public class DefaultHttpCallback
-    extends BaseHttpCallback<IHttpResponse>
+public class DefaultHttpCallback extends BaseHttpCallback<IHttpResponse>
 {
     private static final Logger logger = Logger.getLogger(DefaultHttpCallback.class);
 

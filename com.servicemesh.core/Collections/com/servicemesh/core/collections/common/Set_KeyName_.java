@@ -6,13 +6,14 @@ import com.servicemesh.core.collections.itemizer.Itemizable;
 import com.servicemesh.core.collections.itemizer.Itemizer;
 
 /** Interface for a set of _KeyType_ keys. */
-public interface Set_KeyName_ extends Itemizable {
+public interface Set_KeyName_ extends Itemizable
+{
     /**
      * Adds the specified item to this set if it is not already present.
      * 
-     * @param key key to be added to the set.
-     * @return the entry number for the key in the set, whether or not
-     *         the key was already in the set.
+     * @param key
+     *            key to be added to the set.
+     * @return the entry number for the key in the set, whether or not the key was already in the set.
      */
     int add(_KeyType_ key);
 
@@ -26,7 +27,8 @@ public interface Set_KeyName_ extends Itemizable {
     /**
      * Retrieves an entry's key.
      * 
-     * @param entry the entry whose key we want to retrieve.
+     * @param entry
+     *            the entry whose key we want to retrieve.
      * @return the key associated with the entry.
      */
     _KeyType_ getEntryKey(int entry);
@@ -37,14 +39,16 @@ public interface Set_KeyName_ extends Itemizable {
     /**
      * Removes the specified element from this set if it is present.
      * 
-     * @param key the key of the item to be removed from the set.
+     * @param key
+     *            the key of the item to be removed from the set.
      */
     void remove(_KeyType_ key);
 
     /**
      * Returns true if this set contains the specified key.
      * 
-     * @param key the key whose presence in this set is to be tested.
+     * @param key
+     *            the key whose presence in this set is to be tested.
      * @return true if this set contains the specified key.
      */
     boolean containsKey(_KeyType_ key);
@@ -73,11 +77,10 @@ public interface Set_KeyName_ extends Itemizable {
     /**
      * Retrieves all of the entries in the set.
      * 
-     * @param dst the arry into which the entries are to be stored, if
-     *            it is big enough; otherwise, a new array will be
-     *            allocated for this purpose. If the array is longer
-     *            than needed, then the extra elements at the end of
-     *            the array will be initialized to -1;
+     * @param dst
+     *            the arry into which the entries are to be stored, if it is big enough; otherwise, a new array will be allocated
+     *            for this purpose. If the array is longer than needed, then the extra elements at the end of the array will be
+     *            initialized to -1;
      * @return an array of integer entries.
      */
     int[] getEntries(int[] dst);
@@ -92,13 +95,10 @@ public interface Set_KeyName_ extends Itemizable {
     /**
      * Retrieves all of the keys in the set.
      * 
-     * @param dst the array into which the keys are to be stored, if
-     *            it is big enough; otherwise, a new array of the same
-     *            runtime type is allocated for this purpose. If the
-     *            array is longer than needed then the extra elements
-     *            at the end of the array will be initialized to
-     *            null. If dst is null, then an array of the
-     *            appropriate size is returned.
+     * @param dst
+     *            the array into which the keys are to be stored, if it is big enough; otherwise, a new array of the same runtime
+     *            type is allocated for this purpose. If the array is longer than needed then the extra elements at the end of the
+     *            array will be initialized to null. If dst is null, then an array of the appropriate size is returned.
      * @return an array of integer entries.
      */
     _KeyType_[] getKeys(_KeyType_[] dst);

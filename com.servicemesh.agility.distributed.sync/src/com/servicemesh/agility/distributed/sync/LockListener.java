@@ -18,21 +18,17 @@
 package com.servicemesh.agility.distributed.sync;
 
 /**
- * This class has two methods which are call
- * back methods when a lock is acquired and 
- * when the lock is released.
- *
+ * This class has two methods which are call back methods when a lock is acquired and when the lock is released.
  */
-public interface LockListener {
+public interface LockListener
+{
     /**
-     * call back called when the lock 
-     * is acquired
+     * call back called when the lock is acquired
      */
     public void lockAcquired();
-    
+
     /**
-     * call back called when the lock is 
-     * released.
+     * call back called when the lock is released.
      */
     public void lockReleased();
 }

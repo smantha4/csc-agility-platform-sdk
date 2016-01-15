@@ -22,13 +22,15 @@ import java.util.concurrent.Future;
 
 import com.servicemesh.core.async.Promise;
 
-public interface IHttpClient
-    extends Closeable
+public interface IHttpClient extends Closeable
 {
-    @Deprecated 
+    @Deprecated
     public IHttpResponse exec(final IHttpRequest request) throws Exception;
-    @Deprecated 
+
+    @Deprecated
     public Future<IHttpResponse> execute(final IHttpRequest request);
+
     public <V> Future<V> execute(final IHttpRequest request, final IHttpCallback<V> callback);
+
     public Promise<IHttpResponse> promise(final IHttpRequest request);
 }

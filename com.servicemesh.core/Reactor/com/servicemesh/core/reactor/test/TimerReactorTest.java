@@ -1,6 +1,9 @@
 package com.servicemesh.core.reactor.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -12,7 +15,8 @@ import com.servicemesh.core.reactor.BlockingTimer;
 import com.servicemesh.core.reactor.Timer;
 import com.servicemesh.core.reactor.TimerReactor;
 
-public class TimerReactorTest extends WorkReactorTest {
+public class TimerReactorTest extends WorkReactorTest
+{
     /** The number of TimerReactors created during testing. */
     protected int m_reactorCount;
 
@@ -23,67 +27,84 @@ public class TimerReactorTest extends WorkReactorTest {
     protected final static long INTERVAL = 10L;
 
     @BeforeClass
-    public static void setUpBeforeClass() {}
+    public static void setUpBeforeClass()
+    {
+    }
 
     @AfterClass
-    public static void tearDownAfterClass() {}
+    public static void tearDownAfterClass()
+    {
+    }
 
+    @Override
     @Before
-    public void setUp() {
+    public void setUp()
+    {
         m_timerReactor = TimerReactor.getTimerReactor("TestTimerReactor_" + ++m_reactorCount);
         m_workReactor = m_timerReactor;
     }
 
+    @Override
     @After
-    public void tearDown() {
+    public void tearDown()
+    {
         m_timerReactor.shutdown();
     }
 
     /**
-     * Timer class that resubmits itself a specified number of times. It also
-     * allows other threads to wait until completion.
+     * Timer class that resubmits itself a specified number of times. It also allows other threads to wait until completion.
      */
-    protected static class CountdownTimer extends AwaitableTimer {
+    protected static class CountdownTimer extends AwaitableTimer
+    {
         protected int m_count;
         protected long m_interval;
 
-        public CountdownTimer() {
+        public CountdownTimer()
+        {
             this(0L, 1);
         }
 
-        public CountdownTimer(long interval, int count) {
+        public CountdownTimer(long interval, int count)
+        {
             m_interval = interval;
             m_count = count;
         }
 
-        public void setCount(int count) {
+        public void setCount(int count)
+        {
             m_count = count;
         }
 
-        public long doTimer(long scheduledTime, long actualTime) {
+        @Override
+        public long doTimer(long scheduledTime, long actualTime)
+        {
             return (--m_count == 0) ? 0L : actualTime + m_interval;
         }
     }
 
     /**
-     * Work class that waits until it is externally signaled to proceed. Useful
-     * for guaranteeing checkpoints during tests.
+     * Work class that waits until it is externally signaled to proceed. Useful for guaranteeing checkpoints during tests.
      */
-    protected static class CounterTimer extends Timer {
+    protected static class CounterTimer extends Timer
+    {
         int m_count;
 
-        public int getCount() {
+        public int getCount()
+        {
             return m_count;
         }
 
-        public long timerFire(long schedule, long actual) {
+        @Override
+        public long timerFire(long schedule, long actual)
+        {
             m_count++;
             return 0L;
         }
     }
 
     @Test
-    public void testTimerSimple() {
+    public void testTimerSimple()
+    {
         CountdownTimer timer = new CountdownTimer(INTERVAL, ITERATIONS);
 
         // Treat a timer as a TimerHandler. This should return a different
@@ -99,14 +120,16 @@ public class TimerReactorTest extends WorkReactorTest {
     }
 
     @Test
-    public void testTimerMultiple() {
+    public void testTimerMultiple()
+    {
         // Make sure nothing happens until we're ready
         BlockingTimer bt = new BlockingTimer();
         m_timerReactor.timerSubmitRel(0L, bt);
 
         // Submit a bunch of work
         CounterWork counterWork = new CounterWork();
-        for (int i = 0; i < ITERATIONS; i++) {
+        for (int i = 0; i < ITERATIONS; i++)
+        {
             // We submit counterWork as a WorkHandler.
             // A new Work will be created internally
             // for each call.
@@ -123,12 +146,12 @@ public class TimerReactorTest extends WorkReactorTest {
 
         // Ensure that all of the counterWork submissions
         // were done.
-        assertEquals("The CounterWork value is wrong", ITERATIONS, counterWork
-                     .getCount());
+        assertEquals("The CounterWork value is wrong", ITERATIONS, counterWork.getCount());
     }
 
     @Test
-    public void testCancel() {
+    public void testCancel()
+    {
         // Make sure nothing happens until we're ready
         BlockingTimer bt = new BlockingTimer();
         m_timerReactor.timerSubmitRel(0L, bt);
@@ -146,7 +169,8 @@ public class TimerReactorTest extends WorkReactorTest {
         long deadline = System.currentTimeMillis() + INTERVAL;
         CounterTimer counterTimer = new CounterTimer();
         Timer toCancel = null;
-        for (int i = 0; i < ITERATIONS; i++) {
+        for (int i = 0; i < ITERATIONS; i++)
+        {
             // We submit counterTimer as a TimerHandler.
             // A new Timer will be created internally
             // for each call.
@@ -168,7 +192,6 @@ public class TimerReactorTest extends WorkReactorTest {
 
         // Ensure that all of the counterWork submissions
         // were done except for the canceled one.
-        assertEquals("The CounterTimer value is wrong", (ITERATIONS - 1),
-                     counterTimer.getCount());
+        assertEquals("The CounterTimer value is wrong", (ITERATIONS - 1), counterTimer.getCount());
     }
 }

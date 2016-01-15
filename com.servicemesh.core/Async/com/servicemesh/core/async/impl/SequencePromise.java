@@ -25,13 +25,12 @@ import java.util.List;
  * Should not be used directly - see IPromise.sequence
  */
 
-public class SequencePromise<T>
-    extends DefaultCompletablePromise<List<T>>
+public class SequencePromise<T> extends DefaultCompletablePromise<List<T>>
 {
     private volatile int _pending = 0;
     private List<T> _results = Collections.synchronizedList(new ArrayList<T>());
 
-    public SequencePromise(final int pending) 
+    public SequencePromise(final int pending)
     {
         _pending = pending;
     }
@@ -41,19 +40,23 @@ public class SequencePromise<T>
         boolean completed = false;
         final List<T> results = new ArrayList<T>();
 
-        synchronized(this) {
+        synchronized (this)
+        {
             _results.add(result);
 
-            if (--_pending == 0) {
+            if (--_pending == 0)
+            {
                 completed = true;
 
-                synchronized(_results) {
+                synchronized (_results)
+                {
                     results.addAll(_results);
                 }
             }
         }
 
-        if (completed) {
+        if (completed)
+        {
             complete(results);
         }
     }

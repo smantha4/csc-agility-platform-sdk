@@ -16,36 +16,45 @@ import com.servicemesh.core.async.Promise;
 
 /**
  * Provides a hook for managing addresses
+ * 
  * @see ServiceAdapter#registerValueProvider(String, IAddressProvider)
  */
-public interface IAddressManagement {
+public interface IAddressManagement
+{
 
     /**
      * Used to retrieve current list of available addresses for a network
      *
-     * @param request Specifies the network for which available addresses are desired
+     * @param request
+     *            Specifies the network for which available addresses are desired
      * @return Promise to results on completion.
      */
-	public Promise<AvailableAddressesResponse> getAvailableAddresses(AvailableAddressesRequest request);
-	
-	/**
-	 * Used to release an address
-	 * @param request Specifies the address to release, as well as network and networkInterface
-	 * @return Promise to results on completion
-	 */
-	public Promise<ReleaseAddressResponse> releaseAddress(ReleaseAddressRequest request);
+    public Promise<AvailableAddressesResponse> getAvailableAddresses(AvailableAddressesRequest request);
 
-	/**
-	 * Used to reserve an address
-	 * @param request Specifies the address to reserve, as well as network and networkInterface
-	 * @return Promise to results on completion
-	 */
-	public Promise<ReserveAddressResponse> reserveAddress(ReserveAddressRequest request);
+    /**
+     * Used to release an address
+     * 
+     * @param request
+     *            Specifies the address to release, as well as network and networkInterface
+     * @return Promise to results on completion
+     */
+    public Promise<ReleaseAddressResponse> releaseAddress(ReleaseAddressRequest request);
 
-	/**
-	 * Used to unreserve an address
-	 * @param request Specifies the address to unreserve, as well as network and networkInterface
-	 * @return Promise to results on completion
-	 */
-	public Promise<UnreserveAddressResponse> unreserveAddress(UnreserveAddressRequest request);
+    /**
+     * Used to reserve an address
+     * 
+     * @param request
+     *            Specifies the address to reserve, as well as network and networkInterface
+     * @return Promise to results on completion
+     */
+    public Promise<ReserveAddressResponse> reserveAddress(ReserveAddressRequest request);
+
+    /**
+     * Used to unreserve an address
+     * 
+     * @param request
+     *            Specifies the address to unreserve, as well as network and networkInterface
+     * @return Promise to results on completion
+     */
+    public Promise<UnreserveAddressResponse> unreserveAddress(UnreserveAddressRequest request);
 }

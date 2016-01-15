@@ -27,37 +27,46 @@ public interface PipelinedChannel
 {
     /**
      * Read incoming data through the pipeline.
-     * 
-     * @param dst Buffer to hold incoming data.
-     * @param channel I/O channel to read from.
+     *
+     * @param dst
+     *            Buffer to hold incoming data.
+     * @param channel
+     *            I/O channel to read from.
      * @return Object containing the number of bytes read and any SSL engine result.
-     * @throws IOException Throws exception on I/O failures.
+     * @throws IOException
+     *             Throws exception on I/O failures.
      */
     public PipelinedChannelResult read(final ByteBuffer dst, final ByteChannel channel) throws IOException;
 
     /**
      * Reads buffered data in the pipeline into the destination buffer.
-     * 
-     * @param dst Buffer to hold incoming data.
+     *
+     * @param dst
+     *            Buffer to hold incoming data.
      * @return The number of bytes placed into the destination buffer.
      */
     public int readBuffered(final ByteBuffer dst);
 
     /**
      * Writes outgoing data through the pipeline.
-     * 
-     * @param src Buffer holding the data to be written.
-     * @param channel I/O channel to write to.
+     *
+     * @param src
+     *            Buffer holding the data to be written.
+     * @param channel
+     *            I/O channel to write to.
      * @return Object containing the number of bytes written and any SSL engine result.
-     * @throws IOException Throws exception on I/O failures.
+     * @throws IOException
+     *             Throws exception on I/O failures.
      */
     public PipelinedChannelResult write(final ByteBuffer src, final ByteChannel channel) throws IOException;
 
     /**
      * Encodes data using pipelined SSL engines.
-     * 
-     * @param src Buffer holding the data to be encoded.
-     * @param dst Buffer to hold the encoded data.
+     *
+     * @param src
+     *            Buffer holding the data to be encoded.
+     * @param dst
+     *            Buffer to hold the encoded data.
      * @return Object containing the number of bytes encoded and the SSL engine result.
      * @throws SSLException
      */
@@ -65,9 +74,11 @@ public interface PipelinedChannel
 
     /**
      * Decodes data using pipelined SSL engines.
-     * 
-     * @param src Buffer holding the data to be decoded.
-     * @param dst Buffer to hold the decoded data.
+     *
+     * @param src
+     *            Buffer holding the data to be decoded.
+     * @param dst
+     *            Buffer to hold the decoded data.
      * @return Object containing the number of bytes decoded and the SSL engine result.
      * @throws SSLException
      */
@@ -75,28 +86,29 @@ public interface PipelinedChannel
 
     /**
      * Retrieve the next downstream pipeline.
-     * 
+     *
      * @return The next downstream pipeline.
      */
     public PipelinedChannel downstream();
 
     /**
      * Sets the downstream pipeline.
-     * 
-     * @param downstream The downstream pipeline to set.
+     *
+     * @param downstream
+     *            The downstream pipeline to set.
      */
     public void setDownstream(final PipelinedChannel downstream);
 
     /**
      * Test to see if the pipeline contains any buffered input.
-     * 
+     *
      * @return True if the pipeline contains buffered input, otherwise false.
      */
     public boolean hasBufferedInput();
 
     /**
      * Test to see if the pipeline contains any buffered output.
-     * 
+     *
      * @return True if the pipeline contains buffered output, otherwise false.
      */
     public boolean hasBufferedOutput();

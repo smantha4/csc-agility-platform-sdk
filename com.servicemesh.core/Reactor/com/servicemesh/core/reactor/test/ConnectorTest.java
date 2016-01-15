@@ -1,8 +1,9 @@
 package com.servicemesh.core.reactor.test;
 
+import static org.junit.Assert.assertTrue;
+
 import java.nio.channels.SocketChannel;
 
-import static org.junit.Assert.*;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -40,14 +41,19 @@ public class ConnectorTest
     protected Timer m_timer;
 
     @BeforeClass
-    public static void setUpBeforeClass() {}
+    public static void setUpBeforeClass()
+    {
+    }
 
     @AfterClass
-    public static void tearDownAfterClass() {}
+    public static void tearDownAfterClass()
+    {
+    }
 
     /** Set up tests. */
     @Before
-    public void setUp() {
+    public void setUp()
+    {
         m_ioReactor = IOReactor.getIOReactor("ConnectorTestIOReactor");
         m_connectDone = m_acceptDone = m_timedOut = false;
         m_lock = new Object();
@@ -55,7 +61,8 @@ public class ConnectorTest
 
     /** Tear down tests. */
     @After
-    public void tearDown() {
+    public void tearDown()
+    {
         m_ioReactor.shutdown();
         m_ioReactor = null;
         m_timer = null;
@@ -63,39 +70,55 @@ public class ConnectorTest
     }
 
     /** Simple ConnectorListener that notes if connection is successful. */
-    protected class TestConnectorAdapter extends ConnectorAdapter {
-        TestConnectorAdapter(String name, String host, int port) {
+    protected class TestConnectorAdapter extends ConnectorAdapter
+    {
+        TestConnectorAdapter(String name, String host, int port)
+        {
             super(name, host, port);
         }
 
-        public void peerCreate(IOReactor ioReactor, SocketChannel socketChannel) {
+        @Override
+        public void peerCreate(IOReactor ioReactor, SocketChannel socketChannel)
+        {
             m_timer.cancel();
-            try {
+            try
+            {
                 socketChannel.close();
-                synchronized (m_lock) {
+                synchronized (m_lock)
+                {
                     m_connectDone = true;
                     m_lock.notify();
                 }
-            } catch (Throwable t) {
+            }
+            catch (Throwable t)
+            {
             }
         }
     }
 
     /** Simple AcceptorListener that notes if connection is successful. */
-    protected class TestAcceptorAdapter extends AcceptorAdapter {
-        TestAcceptorAdapter(String name, String host, int port) {
+    protected class TestAcceptorAdapter extends AcceptorAdapter
+    {
+        TestAcceptorAdapter(String name, String host, int port)
+        {
             super(name, host, port);
         }
 
-        public void peerCreate(IOReactor ioReactor, SocketChannel socketChannel) {
+        @Override
+        public void peerCreate(IOReactor ioReactor, SocketChannel socketChannel)
+        {
             m_timer.cancel();
-            try {
+            try
+            {
                 socketChannel.close();
-                synchronized (m_lock) {
+                synchronized (m_lock)
+                {
                     m_acceptDone = true;
                     m_lock.notify();
                 }
-            } catch (Throwable t) {
+            }
+            catch (Throwable t)
+            {
             }
         }
     }
@@ -104,7 +127,8 @@ public class ConnectorTest
      * Spawn a Connector and Acceptor and time out if they don't connect soon.
      */
     @Test
-    public void testConnector() {
+    public void testConnector()
+    {
         //        m_timer = m_ioReactor.timerCreateRel(1000L, new TimerHandler() {
         //            public long timerFire(long time, long actualTime) {
         //                m_timedOut = true;
@@ -139,36 +163,42 @@ public class ConnectorTest
     }
 
     /**
-     * Spawn a connector and acceptor that are guaranteed not to connect and
-     * ensure that the timeout occurs.
+     * Spawn a connector and acceptor that are guaranteed not to connect and ensure that the timeout occurs.
      */
     //    @Test
-    public void testBadConnector() {
+    public void testBadConnector()
+    {
         m_timer = m_ioReactor.timerCreateRel(1000L, new TimerHandler() {
-                public long timerFire(long time, long actualTime) {
-                    synchronized (m_lock) {
-                        m_timedOut = true;
-                        m_lock.notify();
-                        return 0L;
-                    }
+            @Override
+            public long timerFire(long time, long actualTime)
+            {
+                synchronized (m_lock)
+                {
+                    m_timedOut = true;
+                    m_lock.notify();
+                    return 0L;
                 }
-            });
+            }
+        });
 
-        ConnectorListener cl = new TestConnectorAdapter("testConnector",
-                                                        "localhost", 9877);
+        ConnectorListener cl = new TestConnectorAdapter("testConnector", "localhost", 9877);
         Connector conn = new Connector(m_ioReactor, cl);
         conn.connect();
 
-        AcceptorListener al = new TestAcceptorAdapter("testAcceptor",
-                                                      "localhost", 9878);
+        AcceptorListener al = new TestAcceptorAdapter("testAcceptor", "localhost", 9878);
         Acceptor acc = new Acceptor(m_ioReactor, al);
         acc.listen();
 
-        synchronized (m_lock) {
-            while ((!m_acceptDone || !m_connectDone) && !m_timedOut) {
-                try {
+        synchronized (m_lock)
+        {
+            while ((!m_acceptDone || !m_connectDone) && !m_timedOut)
+            {
+                try
+                {
                     m_lock.wait();
-                } catch (InterruptedException t) {
+                }
+                catch (InterruptedException t)
+                {
                 }
             }
         }

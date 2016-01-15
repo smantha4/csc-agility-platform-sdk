@@ -18,7 +18,8 @@
 package com.servicemesh.core.async;
 
 @FunctionalInterface
-public interface Function0<R> {
+public interface Function0<R>
+{
 
-	public R exec();
+    public R exec();
 }

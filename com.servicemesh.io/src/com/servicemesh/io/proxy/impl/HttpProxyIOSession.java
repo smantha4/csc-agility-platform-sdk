@@ -26,13 +26,11 @@ import org.apache.http.nio.reactor.IOSession;
 import org.apache.http.nio.reactor.SessionBufferStatus;
 
 import com.google.common.base.Preconditions;
-
 import com.servicemesh.io.proxy.PipelinedChannel;
 import com.servicemesh.io.proxy.ProxyByteChannel;
 import com.servicemesh.io.util.ExpandableByteBuffer;
 
-public class HttpProxyIOSession
-    implements IOSession
+public class HttpProxyIOSession implements IOSession
 {
     private final IOSession _ioSession;
     private final ProxyByteChannel _channel;
@@ -159,8 +157,7 @@ public class HttpProxyIOSession
         return _ioSession.removeAttribute(name);
     }
 
-    private class HttpProxyInternalByteChannel
-        implements ProxyByteChannel
+    private class HttpProxyInternalByteChannel implements ProxyByteChannel
     {
         private final ExpandableByteBuffer _netDataIn;
         private final ExpandableByteBuffer _netDataOut;
@@ -176,12 +173,14 @@ public class HttpProxyIOSession
         }
 
         @Override
-        public int write(final ByteBuffer src)
-            throws IOException
+        public int write(final ByteBuffer src) throws IOException
         {
-            if (_pipelinedChannel == null) {
+            if (_pipelinedChannel == null)
+            {
                 return _ioSession.channel().write(src);
-            } else {
+            }
+            else
+            {
                 // First flush any buffered data
                 int bytesWritten = _netDataOut.flush(_consumer);
 
@@ -194,12 +193,14 @@ public class HttpProxyIOSession
         }
 
         @Override
-        public int read(final ByteBuffer dst)
-            throws IOException
+        public int read(final ByteBuffer dst) throws IOException
         {
-            if (_pipelinedChannel == null) {
+            if (_pipelinedChannel == null)
+            {
                 return _ioSession.channel().read(dst);
-            } else {
+            }
+            else
+            {
                 // Read any buffered data in the pipeline
                 int totalBytesRead = _pipelinedChannel.readBuffered(dst);
                 PipelinedSSLConsumer sslConsumer = new PipelinedSSLConsumer(_pipelinedChannel, dst);
@@ -209,13 +210,18 @@ public class HttpProxyIOSession
 
                 // Read incoming and flush
                 int bytesRead = _netDataIn.fill(_producer);
-                if (bytesRead >= 0) {
+                if (bytesRead >= 0)
+                {
                     totalBytesRead += _netDataIn.flush(sslConsumer);
-                } else {
-                    if (bytesRead == -1) {
+                }
+                else
+                {
+                    if (bytesRead == -1)
+                    {
                         // Channel is closed, if we had buffered data send that.
                         // The next read should return a -1.
-                        if (totalBytesRead == 0) {
+                        if (totalBytesRead == 0)
+                        {
                             totalBytesRead = -1;
                         }
                     }
@@ -226,8 +232,7 @@ public class HttpProxyIOSession
         }
 
         @Override
-        public void close()
-            throws IOException
+        public void close() throws IOException
         {
             HttpProxyIOSession.this.close();
         }
@@ -235,7 +240,7 @@ public class HttpProxyIOSession
         @Override
         public boolean isOpen()
         {
-            return !HttpProxyIOSession.this.isClosed();
+            return !isClosed();
         }
 
         @Override
@@ -243,7 +248,8 @@ public class HttpProxyIOSession
         {
             boolean rv = _netDataIn.hasData();
 
-            if (!rv && (_pipelinedChannel != null)) {
+            if (!rv && (_pipelinedChannel != null))
+            {
                 rv = _pipelinedChannel.hasBufferedInput();
             }
 
@@ -255,7 +261,8 @@ public class HttpProxyIOSession
         {
             boolean rv = _netDataOut.hasData();
 
-            if (!rv && (_pipelinedChannel != null)) {
+            if (!rv && (_pipelinedChannel != null))
+            {
                 rv = _pipelinedChannel.hasBufferedOutput();
             }
 

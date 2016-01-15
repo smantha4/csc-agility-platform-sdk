@@ -13,15 +13,18 @@ import com.servicemesh.core.async.Promise;
 
 /**
  * Provides a hook for executing a named method.
+ * 
  * @see ServiceAdapter#registerMethod(String, IMethod)
  */
-public interface IMethod {
+public interface IMethod
+{
 
-   /**
-    * Method call exposed by the service adapter
-    * 
-    * @param request Specifies the specific method parameters 
-    * @return Promise to results on completion.
-    */   
-	public Promise<MethodResponse> execute(MethodRequest request, Map<String,MethodVariable> params);
+    /**
+     * Method call exposed by the service adapter
+     * 
+     * @param request
+     *            Specifies the specific method parameters
+     * @return Promise to results on completion.
+     */
+    public Promise<MethodResponse> execute(MethodRequest request, Map<String, MethodVariable> params);
 }

@@ -21,15 +21,15 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
- * Abstract content producer. Content producers can be used to write entity
- * content in small chunks.
+ * Abstract content producer. Content producers can be used to write entity content in small chunks.
  */
 public interface ContentProducer
 {
     /**
      * Writes content data to the destination buffer.
-     * 
-     * @param dst Buffer to hold incoming data.
+     *
+     * @param dst
+     *            Buffer to hold incoming data.
      * @return The number of bytes written.
      * @throws IOException
      */
@@ -37,7 +37,7 @@ public interface ContentProducer
 
     /**
      * Determines the number of bytes that can currently be produced.
-     * 
+     *
      * @return The number of writable bytes.
      */
     public int remaining();

@@ -20,7 +20,6 @@ package com.servicemesh.core.async.test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CancellationException;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -37,8 +36,7 @@ import com.servicemesh.core.reactor.WorkReactor;
 public class PromiseFactoryTest
 {
     @Test
-    public void testPureCompleted()
-        throws Throwable
+    public void testPureCompleted() throws Throwable
     {
         final Promise<Integer> promise = Promise.pure(101);
 
@@ -49,15 +47,17 @@ public class PromiseFactoryTest
     }
 
     @Test
-    public void testPureFailed()
-        throws Throwable
+    public void testPureFailed() throws Throwable
     {
         final Promise<Integer> promise = Promise.pure(new NullPointerException("Test"));
 
-        try {
+        try
+        {
             promise.get(1, TimeUnit.SECONDS);
             Assert.fail("Succeeded when exception set");
-        } catch (NullPointerException ex) {
+        }
+        catch (NullPointerException ex)
+        {
             Assert.assertTrue("Test".equals(ex.getMessage()));
         }
 
@@ -67,8 +67,7 @@ public class PromiseFactoryTest
     }
 
     @Test
-    public void testSequencePromise()
-        throws Throwable
+    public void testSequencePromise() throws Throwable
     {
         final CompletablePromise<Integer> promise1 = PromiseFactory.create();
         final CompletablePromise<Integer> promise2 = PromiseFactory.create();
@@ -81,26 +80,35 @@ public class PromiseFactoryTest
 
         final Promise<List<Integer>> sequence = Promise.sequence(promises);
 
-        try {
+        try
+        {
             sequence.get(100, TimeUnit.MILLISECONDS);
             Assert.fail("Expected timeout exception");
-        } catch (TimeoutException ex) {
+        }
+        catch (TimeoutException ex)
+        {
             // Ignore, expected
         }
 
         promise1.complete(101);
-        try {
+        try
+        {
             sequence.get(100, TimeUnit.MILLISECONDS);
             Assert.fail("Expected timeout exception");
-        } catch (TimeoutException ex) {
+        }
+        catch (TimeoutException ex)
+        {
             // Ignore, expected
         }
 
         promise2.complete(202);
-        try {
+        try
+        {
             sequence.get(100, TimeUnit.MILLISECONDS);
             Assert.fail("Expected timeout exception");
-        } catch (TimeoutException ex) {
+        }
+        catch (TimeoutException ex)
+        {
             // Ignore, expected
         }
 
@@ -112,12 +120,18 @@ public class PromiseFactoryTest
 
         Assert.assertEquals(3, completedValues.size());
 
-        for (final Integer nextValue : completedValues) {
-            if (101 == nextValue) {
+        for (final Integer nextValue : completedValues)
+        {
+            if (101 == nextValue)
+            {
                 ++promise1Found;
-            } else if (202 == nextValue) {
+            }
+            else if (202 == nextValue)
+            {
                 ++promise2Found;
-            } else if (303 == nextValue) {
+            }
+            else if (303 == nextValue)
+            {
                 ++promise3Found;
             }
         }
@@ -128,8 +142,7 @@ public class PromiseFactoryTest
     }
 
     @Test
-    public void testSequenceEmpty()
-        throws Throwable
+    public void testSequenceEmpty() throws Throwable
     {
         final Promise<List<Integer>> sequence = Promise.sequence(new ArrayList<Promise<Integer>>());
         final List<Integer> completedValues = sequence.get(1, TimeUnit.SECONDS);
@@ -137,16 +150,14 @@ public class PromiseFactoryTest
         Assert.assertEquals(0, completedValues.size());
     }
 
-    @Test(expected=IllegalArgumentException.class)
-    public void testSequenceNull()
-        throws Throwable
+    @Test(expected = IllegalArgumentException.class)
+    public void testSequenceNull() throws Throwable
     {
         Promise.sequence(null);
     }
 
     @Test
-    public void testSequenceFailure()
-        throws Throwable
+    public void testSequenceFailure() throws Throwable
     {
         final Promise<Integer> promise1 = PromiseFactory.create();
         final CompletablePromise<Integer> promise2 = PromiseFactory.create();
@@ -161,10 +172,13 @@ public class PromiseFactoryTest
 
         promise2.failure(new NullPointerException("Test"));
 
-        try {
+        try
+        {
             sequence.get(1, TimeUnit.SECONDS);
             Assert.fail("Succeeded when exception set");
-        } catch (NullPointerException ex) {
+        }
+        catch (NullPointerException ex)
+        {
             Assert.assertTrue("Test".equals(ex.getMessage()));
         }
 
@@ -174,8 +188,7 @@ public class PromiseFactoryTest
     }
 
     @Test
-    public void testSequenceCancel()
-        throws Throwable
+    public void testSequenceCancel() throws Throwable
     {
         final Promise<Integer> promise1 = PromiseFactory.create();
         final Promise<Integer> promise2 = PromiseFactory.create();
@@ -191,39 +204,49 @@ public class PromiseFactoryTest
         // Cancels propagate inside out
         sequence.cancel();
 
-        try {
+        try
+        {
             promise1.get(1, TimeUnit.SECONDS);
             Assert.fail("Promise had been cancelled");
-        } catch (CancellationException ex) {
+        }
+        catch (CancellationException ex)
+        {
             // Ignore, expected
         }
 
-        try {
+        try
+        {
             promise2.get(1, TimeUnit.SECONDS);
             Assert.fail("Promise had been cancelled");
-        } catch (CancellationException ex) {
+        }
+        catch (CancellationException ex)
+        {
             // Ignore, expected
         }
 
-        try {
+        try
+        {
             promise3.get(1, TimeUnit.SECONDS);
             Assert.fail("Promise had been cancelled");
-        } catch (CancellationException ex) {
+        }
+        catch (CancellationException ex)
+        {
             // Ignore, expected
         }
 
-
-        try {
+        try
+        {
             sequence.get(1, TimeUnit.SECONDS);
             Assert.fail("Promise had been cancelled");
-        } catch (CancellationException ex) {
+        }
+        catch (CancellationException ex)
+        {
             // Ignore, expected
         }
     }
 
     @Test
-    public void testSequenceCancelWrapped()
-        throws Throwable
+    public void testSequenceCancelWrapped() throws Throwable
     {
         final Promise<Integer> promise1 = PromiseFactory.create();
         final Promise<Integer> promise2 = PromiseFactory.create();
@@ -238,10 +261,13 @@ public class PromiseFactoryTest
 
         promise2.cancel();
 
-        try {
+        try
+        {
             sequence.get(1, TimeUnit.SECONDS);
             Assert.fail("Succeeded when wrapped promise was cancelled");
-        } catch (CancellationException ex) {
+        }
+        catch (CancellationException ex)
+        {
             // Ignore, expected
         }
 
@@ -250,8 +276,7 @@ public class PromiseFactoryTest
     }
 
     @Test
-    public void testSequenceAnyPromise()
-        throws Throwable
+    public void testSequenceAnyPromise() throws Throwable
     {
         final CompletablePromise<Integer> promise1 = PromiseFactory.create();
         final CompletablePromise<String> promise2 = PromiseFactory.create();
@@ -264,26 +289,35 @@ public class PromiseFactoryTest
 
         final Promise<List<Object>> sequence = Promise.sequenceAny(promises);
 
-        try {
+        try
+        {
             sequence.get(100, TimeUnit.MILLISECONDS);
             Assert.fail("Expected timeout exception");
-        } catch (TimeoutException ex) {
+        }
+        catch (TimeoutException ex)
+        {
             // Ignore, expected
         }
 
         promise1.complete(101);
-        try {
+        try
+        {
             sequence.get(100, TimeUnit.MILLISECONDS);
             Assert.fail("Expected timeout exception");
-        } catch (TimeoutException ex) {
+        }
+        catch (TimeoutException ex)
+        {
             // Ignore, expected
         }
 
         promise2.complete("Completed");
-        try {
+        try
+        {
             sequence.get(100, TimeUnit.MILLISECONDS);
             Assert.fail("Expected timeout exception");
-        } catch (TimeoutException ex) {
+        }
+        catch (TimeoutException ex)
+        {
             // Ignore, expected
         }
 
@@ -295,12 +329,18 @@ public class PromiseFactoryTest
 
         Assert.assertEquals(3, completedValues.size());
 
-        for (final Object nextValue : completedValues) {
-            if ((nextValue instanceof Integer) && (101 == ((Integer)nextValue).intValue())) {
+        for (final Object nextValue : completedValues)
+        {
+            if ((nextValue instanceof Integer) && (101 == ((Integer) nextValue).intValue()))
+            {
                 ++promise1Found;
-            } else if ((nextValue instanceof String) && ("Completed".equals((String)nextValue))) {
+            }
+            else if ((nextValue instanceof String) && ("Completed".equals((String) nextValue)))
+            {
                 ++promise2Found;
-            } else if ((nextValue instanceof Long) && (303L == ((Long)(nextValue)).longValue())) {
+            }
+            else if ((nextValue instanceof Long) && (303L == ((Long) (nextValue)).longValue()))
+            {
                 ++promise3Found;
             }
         }
@@ -311,8 +351,7 @@ public class PromiseFactoryTest
     }
 
     @Test
-    public void testSequenceAnyEmpty()
-        throws Throwable
+    public void testSequenceAnyEmpty() throws Throwable
     {
         final Promise<List<Object>> sequence = Promise.sequenceAny(new ArrayList<Promise<?>>());
         final List<Object> completedValues = sequence.get(1, TimeUnit.SECONDS);
@@ -320,16 +359,14 @@ public class PromiseFactoryTest
         Assert.assertEquals(0, completedValues.size());
     }
 
-    @Test(expected=IllegalArgumentException.class)
-    public void testSequenceAnyNull()
-        throws Throwable
+    @Test(expected = IllegalArgumentException.class)
+    public void testSequenceAnyNull() throws Throwable
     {
         Promise.sequenceAny(null);
     }
 
     @Test
-    public void testSequenceAnyFailure()
-        throws Throwable
+    public void testSequenceAnyFailure() throws Throwable
     {
         final Promise<Integer> promise1 = PromiseFactory.create();
         final CompletablePromise<String> promise2 = PromiseFactory.create();
@@ -344,10 +381,13 @@ public class PromiseFactoryTest
 
         promise2.failure(new NullPointerException("Test"));
 
-        try {
+        try
+        {
             sequence.get(1, TimeUnit.SECONDS);
             Assert.fail("Succeeded when exception set");
-        } catch (NullPointerException ex) {
+        }
+        catch (NullPointerException ex)
+        {
             Assert.assertTrue("Test".equals(ex.getMessage()));
         }
 
@@ -357,8 +397,7 @@ public class PromiseFactoryTest
     }
 
     @Test
-    public void testSequenceAnyCancel()
-        throws Throwable
+    public void testSequenceAnyCancel() throws Throwable
     {
         final Promise<Integer> promise1 = PromiseFactory.create();
         final Promise<String> promise2 = PromiseFactory.create();
@@ -374,39 +413,49 @@ public class PromiseFactoryTest
         // Cancels propagate in
         sequence.cancel();
 
-        try {
+        try
+        {
             promise1.get(1, TimeUnit.SECONDS);
             Assert.fail("Promise had been cancelled");
-        } catch (CancellationException ex) {
+        }
+        catch (CancellationException ex)
+        {
             // Ignore, expected
         }
 
-        try {
+        try
+        {
             promise2.get(1, TimeUnit.SECONDS);
             Assert.fail("Promise had been cancelled");
-        } catch (CancellationException ex) {
+        }
+        catch (CancellationException ex)
+        {
             // Ignore, expected
         }
 
-        try {
+        try
+        {
             promise3.get(1, TimeUnit.SECONDS);
             Assert.fail("Promise had been cancelled");
-        } catch (CancellationException ex) {
+        }
+        catch (CancellationException ex)
+        {
             // Ignore, expected
         }
 
-
-        try {
+        try
+        {
             sequence.get(1, TimeUnit.SECONDS);
             Assert.fail("Promise had been cancelled");
-        } catch (CancellationException ex) {
+        }
+        catch (CancellationException ex)
+        {
             // Ignore, expected
         }
     }
 
     @Test
-    public void testSequenceAnyCancelWrapped()
-        throws Throwable
+    public void testSequenceAnyCancelWrapped() throws Throwable
     {
         final Promise<Integer> promise1 = PromiseFactory.create();
         final Promise<String> promise2 = PromiseFactory.create();
@@ -420,10 +469,13 @@ public class PromiseFactoryTest
         final Promise<List<Object>> sequence = Promise.sequenceAny(promises);
 
         promise2.cancel();
-        try {
+        try
+        {
             sequence.get(1, TimeUnit.SECONDS);
             Assert.fail("Succeeded when wrapped promise was cancelled");
-        } catch (CancellationException ex) {
+        }
+        catch (CancellationException ex)
+        {
             // Ignore, expected
         }
 
@@ -432,8 +484,7 @@ public class PromiseFactoryTest
     }
 
     @Test
-    public void testWorker()
-        throws Throwable
+    public void testWorker() throws Throwable
     {
         final Promise<Integer> promise = Promise.promise(WorkReactor.getDefaultWorkReactor(), new Function0<Integer>() {
             @Override
@@ -447,17 +498,15 @@ public class PromiseFactoryTest
     }
 
     @Test
-    public void testWorkerLambda()
-        throws Throwable
+    public void testWorkerLambda() throws Throwable
     {
-        final Promise<Integer> promise = Promise.promise(WorkReactor.getDefaultWorkReactor(),() -> 111);
+        final Promise<Integer> promise = Promise.promise(WorkReactor.getDefaultWorkReactor(), () -> 111);
 
         Assert.assertEquals(Integer.valueOf(111), promise.get(1, TimeUnit.SECONDS));
     }
 
     @Test
-    public void testWorkerFailure()
-        throws Throwable
+    public void testWorkerFailure() throws Throwable
     {
         final Promise<Integer> promise = Promise.promise(WorkReactor.getDefaultWorkReactor(), new Function0<Integer>() {
             @Override
@@ -467,17 +516,19 @@ public class PromiseFactoryTest
             }
         });
 
-        try {
+        try
+        {
             promise.get(1, TimeUnit.SECONDS);
             Assert.fail("Succeeded when worker failed");
-        } catch (NullPointerException ex) {
+        }
+        catch (NullPointerException ex)
+        {
             Assert.assertEquals("Worker Failure", ex.getMessage());
         }
     }
 
     @Test
-    public void testDelayed()
-        throws Throwable
+    public void testDelayed() throws Throwable
     {
         final Promise<Integer> promise = Promise.delayed(TimerReactor.getDefaultTimerReactor(), 250, new Function0<Integer>() {
             @Override
@@ -491,8 +542,7 @@ public class PromiseFactoryTest
     }
 
     @Test
-    public void testDelayedLambda()
-        throws Throwable
+    public void testDelayedLambda() throws Throwable
     {
         final Promise<Integer> promise = Promise.delayed(TimerReactor.getDefaultTimerReactor(), 250, () -> 222);
 
@@ -500,8 +550,7 @@ public class PromiseFactoryTest
     }
 
     @Test
-    public void testDelayedFailure()
-        throws Throwable
+    public void testDelayedFailure() throws Throwable
     {
         final Promise<Integer> promise = Promise.delayed(TimerReactor.getDefaultTimerReactor(), 250, new Function0<Integer>() {
             @Override
@@ -511,17 +560,19 @@ public class PromiseFactoryTest
             }
         });
 
-        try {
+        try
+        {
             promise.get(1, TimeUnit.SECONDS);
             Assert.fail("Succeeded when delayed worker failed");
-        } catch (NullPointerException ex) {
+        }
+        catch (NullPointerException ex)
+        {
             Assert.assertEquals("Delayed Failure", ex.getMessage());
         }
     }
 
     @Test
-    public void testTimeout()
-        throws Throwable
+    public void testTimeout() throws Throwable
     {
         final Promise<Integer> promise = Promise.timeout(TimerReactor.getDefaultTimerReactor(), 250, 333);
 

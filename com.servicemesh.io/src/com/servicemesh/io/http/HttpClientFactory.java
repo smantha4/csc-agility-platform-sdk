@@ -20,14 +20,16 @@ package com.servicemesh.io.http;
 import java.net.URI;
 import java.util.List;
 
+import com.servicemesh.io.http.impl.BaseHttpHeader;
 import com.servicemesh.io.http.impl.DefaultHttpClient;
 import com.servicemesh.io.http.impl.DefaultHttpClientConfigBuilder;
-import com.servicemesh.io.http.impl.BaseHttpHeader;
 import com.servicemesh.io.http.impl.DefaultHttpRequest;
 
 public class HttpClientFactory
 {
-    private HttpClientFactory() {}
+    private HttpClientFactory()
+    {
+    }
 
     private static class Holder
     {

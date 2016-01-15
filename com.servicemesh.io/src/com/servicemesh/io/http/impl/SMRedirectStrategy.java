@@ -33,26 +33,23 @@ import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 
-public class SMRedirectStrategy
-    extends DefaultRedirectStrategy
+public class SMRedirectStrategy extends DefaultRedirectStrategy
 {
     /**
      * Redirectable methods.
      */
-    private static final String[] REDIRECT_METHODS = new String[] {
-        HttpGet.METHOD_NAME,
-        HttpPost.METHOD_NAME,
-        HttpHead.METHOD_NAME,
-        HttpDelete.METHOD_NAME
-    };
+    private static final String[] REDIRECT_METHODS =
+            new String[] { HttpGet.METHOD_NAME, HttpPost.METHOD_NAME, HttpHead.METHOD_NAME, HttpDelete.METHOD_NAME };
 
     @Override
     protected boolean isRedirectable(final String method)
     {
         boolean rv = false;
 
-        for (final String methodName: REDIRECT_METHODS) {
-            if (methodName.equalsIgnoreCase(method)) {
+        for (final String methodName : REDIRECT_METHODS)
+        {
+            if (methodName.equalsIgnoreCase(method))
+            {
                 rv = true;
                 break;
             }
@@ -63,27 +60,38 @@ public class SMRedirectStrategy
 
     @Override
     public HttpUriRequest getRedirect(final HttpRequest request, final HttpResponse response, final HttpContext context)
-        throws ProtocolException
+            throws ProtocolException
     {
         final URI uri = getLocationURI(request, response, context);
         final String method = request.getRequestLine().getMethod();
         final int status = response.getStatusLine().getStatusCode();
         HttpUriRequest newRequest = null;
 
-        if (status == HttpStatus.SC_TEMPORARY_REDIRECT) {
+        if (status == HttpStatus.SC_TEMPORARY_REDIRECT)
+        {
             newRequest = RequestBuilder.copy(request).setUri(uri).build();
 
             newRequest.removeHeaders(HTTP.TRANSFER_ENCODING);
             newRequest.removeHeaders(HTTP.CONTENT_LEN);
-        } else if (method.equalsIgnoreCase(HttpGet.METHOD_NAME)) {
+        }
+        else if (method.equalsIgnoreCase(HttpGet.METHOD_NAME))
+        {
             newRequest = new HttpGet(uri);
-        } else if (method.equalsIgnoreCase(HttpHead.METHOD_NAME)) {
+        }
+        else if (method.equalsIgnoreCase(HttpHead.METHOD_NAME))
+        {
             newRequest = new HttpHead(uri);
-        } else if (method.equalsIgnoreCase(HttpPost.METHOD_NAME)) {
+        }
+        else if (method.equalsIgnoreCase(HttpPost.METHOD_NAME))
+        {
             newRequest = new HttpPost(uri);
-        } else if (method.equalsIgnoreCase(HttpDelete.METHOD_NAME)) {
+        }
+        else if (method.equalsIgnoreCase(HttpDelete.METHOD_NAME))
+        {
             newRequest = new HttpDelete(uri);
-        } else {
+        }
+        else
+        {
             newRequest = new HttpGet(uri);
         }
 

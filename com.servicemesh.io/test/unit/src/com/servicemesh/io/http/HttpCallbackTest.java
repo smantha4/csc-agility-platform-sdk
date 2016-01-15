@@ -32,8 +32,7 @@ public class HttpCallbackTest
 {
     @Test
     @Ignore
-    public void testHttpCallback()
-        throws Exception
+    public void testHttpCallback() throws Exception
     {
         IHttpCallback<IHttpResponse> callback = new DefaultHttpCallback();
         IHttpResponseFuture<IHttpResponse> future = new DefaultHttpResponseFuture<IHttpResponse>(callback);
@@ -47,8 +46,8 @@ public class HttpCallbackTest
         // Test success
         IHttpResponse testResponse = new DefaultHttpResponse();
         HttpStatus testStatus = new HttpStatus(HttpVersion.HTTP_1_1, 200, null);
-        ((DefaultHttpResponse)testResponse).setStatus(testStatus);
-        ((DefaultHttpResponse)testResponse).setContent("success".getBytes());
+        ((DefaultHttpResponse) testResponse).setStatus(testStatus);
+        ((DefaultHttpResponse) testResponse).setContent("success".getBytes());
 
         callback = new DefaultHttpCallback();
         future = new DefaultHttpResponseFuture<IHttpResponse>(callback);
@@ -67,20 +66,22 @@ public class HttpCallbackTest
         Assert.assertFalse(future.isCancelled());
         Assert.assertTrue(future.isDone());
 
-        try {
+        try
+        {
             responseBack = future.get(100, TimeUnit.MILLISECONDS);
             Assert.assertNotNull(responseBack);
             Assert.assertEquals(200, responseBack.getStatusCode());
             Assert.assertEquals("success", responseBack.getContent());
-        } catch (TimeoutException ex) {
+        }
+        catch (TimeoutException ex)
+        {
             Assert.fail("Timeout fired when retrieving a set future");
         }
     }
 
     @Test
     @Ignore
-    public void testCustomCallback()
-        throws Exception
+    public void testCustomCallback() throws Exception
     {
         IHttpCallback<Integer> callback = new CustomHttpCallback();
         IHttpResponseFuture<Integer> future = new DefaultHttpResponseFuture<Integer>(callback);
@@ -89,8 +90,7 @@ public class HttpCallbackTest
         Assert.assertEquals(10, future.get().intValue());
     }
 
-    private static class CustomHttpCallback
-        implements IHttpCallback<Integer>
+    private static class CustomHttpCallback implements IHttpCallback<Integer>
     {
         @Override
         public void onCompletion(final Integer response)

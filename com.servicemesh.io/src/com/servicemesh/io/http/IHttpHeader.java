@@ -22,6 +22,8 @@ import java.util.List;
 public interface IHttpHeader
 {
     public String getName();
+
     public String getValue();
+
     public List<String> getValues();
 }

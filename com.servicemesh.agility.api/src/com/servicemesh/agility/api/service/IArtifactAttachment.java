@@ -6,7 +6,8 @@ import com.servicemesh.agility.api.Artifact;
 import com.servicemesh.agility.api.ArtifactAttachment;
 import com.servicemesh.agility.api.Task;
 
-public interface IArtifactAttachment {
+public interface IArtifactAttachment
+{
 
-	public Task push(Artifact artifact, ArtifactAttachment attachment, InputStream is) throws Exception;
+    public Task push(Artifact artifact, ArtifactAttachment attachment, InputStream is) throws Exception;
 }

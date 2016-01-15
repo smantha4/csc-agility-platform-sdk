@@ -31,16 +31,15 @@ import org.apache.log4j.Logger;
 import com.google.common.base.Preconditions;
 import com.servicemesh.core.reactor.Reactor;
 import com.servicemesh.core.reactor.TimerHandler;
-import com.servicemesh.io.http.IHttpClientConfig;
-import com.servicemesh.io.http.IHttpRequest;
-import com.servicemesh.io.http.IHttpResponse;
 import com.servicemesh.io.http.HttpStatus;
 import com.servicemesh.io.http.HttpVersion;
 import com.servicemesh.io.http.IHttpCallback;
+import com.servicemesh.io.http.IHttpClientConfig;
+import com.servicemesh.io.http.IHttpRequest;
+import com.servicemesh.io.http.IHttpResponse;
 import com.servicemesh.io.util.IOUtil;
 
-public class DefaultHttpCallbackHandler<T>
-    implements FutureCallback<HttpResponse>
+public class DefaultHttpCallbackHandler<T> implements FutureCallback<HttpResponse>
 {
     private static final Logger logger = Logger.getLogger(DefaultHttpCallbackHandler.class);
 
@@ -56,35 +55,46 @@ public class DefaultHttpCallbackHandler<T>
      */
     protected DefaultHttpCallbackHandler(final DefaultHttpResponseFuture<T> future)
     {
-        this(future, (DefaultHttpClient)null, (IHttpRequest)null, (IHttpClientConfig)null);
+        this(future, (DefaultHttpClient) null, (IHttpRequest) null, (IHttpClientConfig) null);
     }
 
     public DefaultHttpCallbackHandler(final DefaultHttpResponseFuture<T> future, final DefaultHttpClient client,
-                                      final IHttpRequest request, final IHttpClientConfig config)
+            final IHttpRequest request, final IHttpClientConfig config)
     {
         this.future = Preconditions.checkNotNull(future, "Missing callback");
         _client = client;
         _request = request;
 
-        if (config != null) {
-            if (config.getRetries() != null) {
+        if (config != null)
+        {
+            if (config.getRetries() != null)
+            {
                 _retries = (config.getRetries() > 0) ? config.getRetries() : 0;
             }
 
-            if (config.getBusyRetries() != null) {
+            if (config.getBusyRetries() != null)
+            {
                 final int busyRetries = (config.getBusyRetries() > 0) ? config.getBusyRetries() : 0;
                 long busyRetryInterval;
 
-                if (busyRetries >= 0) {
-                    busyRetryInterval = (config.getBusyRetryInterval() != null) ? config.getBusyRetryInterval() : DefaultServerBusyRetryStrategy.DEFAULT_BUSY_RETRY_INTERVAL;
+                if (busyRetries >= 0)
+                {
+                    busyRetryInterval = (config.getBusyRetryInterval() != null) ? config.getBusyRetryInterval()
+                            : DefaultServerBusyRetryStrategy.DEFAULT_BUSY_RETRY_INTERVAL;
                     _busyStrategy = new DefaultServerBusyRetryStrategy(busyRetries, busyRetryInterval);
-                } else {
+                }
+                else
+                {
                     _busyStrategy = new DefaultServerBusyRetryStrategy();
                 }
-            } else {
+            }
+            else
+            {
                 _busyStrategy = new DefaultServerBusyRetryStrategy();
             }
-        } else {
+        }
+        else
+        {
             _retries = 0;
             _busyStrategy = new DefaultServerBusyRetryStrategy();
         }
@@ -92,9 +102,10 @@ public class DefaultHttpCallbackHandler<T>
 
     @Deprecated
     public DefaultHttpCallbackHandler(final DefaultHttpResponseFuture<T> future, final DefaultHttpClient client,
-                                      final IHttpRequest request, final int retries)
+            final IHttpRequest request, final int retries)
     {
-        if (future == null) {
+        if (future == null)
+        {
             throw new IllegalArgumentException("Missing callback");
         }
 
@@ -108,11 +119,14 @@ public class DefaultHttpCallbackHandler<T>
     @Override
     public void completed(final HttpResponse response)
     {
-        try {
+        try
+        {
             final IHttpResponse httpResponse = convertResponse(response);
 
-            if (_busyStrategy.retry(httpResponse)) {
-                logger.error("Service busy status=" + httpResponse.getStatusCode() + " - queuing request for retry: " + _request.getUri().toString());
+            if (_busyStrategy.retry(httpResponse))
+            {
+                logger.error("Service busy status=" + httpResponse.getStatusCode() + " - queuing request for retry: "
+                        + _request.getUri().toString());
                 httpResponse.close();
 
                 final Reactor reactor = IOUtil.getTimerReactor();
@@ -127,12 +141,16 @@ public class DefaultHttpCallbackHandler<T>
                 };
 
                 reactor.timerCreateRel(_busyStrategy.retryInterval(), timerHandler);
-            } else {
+            }
+            else
+            {
                 final IHttpCallback<T> callback = future.getFirstListener();
 
                 future.set(callback.decoder(httpResponse));
             }
-        } catch (final Throwable th) {
+        }
+        catch (final Throwable th)
+        {
             logger.error("Error while completing IO request: " + th.getLocalizedMessage(), th);
 
             future.setException(th);
@@ -148,13 +166,15 @@ public class DefaultHttpCallbackHandler<T>
     @Override
     public void failed(Exception ex)
     {
-    	if (_retries-- > 0)
-    	{
-    		logger.error("HTTP Error: " + ex.getMessage() + " - Retrying request: " + _request.getUri().toString());
-    		_client.execute(_request, (FutureCallback<HttpResponse>)this);
-    	}
-    	else
-    		future.setException(ex);
+        if (_retries-- > 0)
+        {
+            logger.error("HTTP Error: " + ex.getMessage() + " - Retrying request: " + _request.getUri().toString());
+            _client.execute(_request, (FutureCallback<HttpResponse>) this);
+        }
+        else
+        {
+            future.setException(ex);
+        }
     }
 
     private IHttpResponse convertResponse(HttpResponse response)
@@ -164,24 +184,31 @@ public class DefaultHttpCallbackHandler<T>
         StatusLine statusLine = response.getStatusLine();
         HttpEntity entity = response.getEntity();
 
-        if (headers != null) {
-            for (Header header : headers) {
+        if (headers != null)
+        {
+            for (Header header : headers)
+            {
                 httpResponse.addHeader(new BaseHttpHeader(header.getName(), header.getValue()));
             }
         }
 
-        if (statusLine != null) {
+        if (statusLine != null)
+        {
             HttpVersion httpVersion;
             ProtocolVersion version = statusLine.getProtocolVersion();
 
-            if (version != null) {
+            if (version != null)
+            {
                 httpVersion = HttpVersion.find(version.getProtocol(), version.getMajor(), version.getMinor());
 
-                if (httpVersion == null) {
+                if (httpVersion == null)
+                {
                     logger.warn("Unmatched protocol version: " + version.toString());
                     httpVersion = HttpVersion.HTTP_1_1;
                 }
-            } else {
+            }
+            else
+            {
                 httpVersion = HttpVersion.HTTP_1_1;
                 logger.warn("Response with null protocol version");
             }
@@ -190,11 +217,15 @@ public class DefaultHttpCallbackHandler<T>
             httpResponse.setStatus(status);
         }
 
-        if (entity != null) {
-            try {
-            	InputStream stream = entity.getContent();
-                httpResponse.setContent(stream);   //  Could be null
-            } catch (IOException ex) {
+        if (entity != null)
+        {
+            try
+            {
+                InputStream stream = entity.getContent();
+                httpResponse.setContent(stream); //  Could be null
+            }
+            catch (IOException ex)
+            {
                 logger.error("Error reading content: " + ex.getMessage(), ex);
             }
         }

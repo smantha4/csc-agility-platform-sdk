@@ -8,8 +8,7 @@ import java.nio.channels.SocketChannel;
 /**
  * The Acceptor class is used to initiate socket listeners.
  */
-public class Acceptor
-    implements TimerHandler, ValveHandler
+public class Acceptor implements TimerHandler, ValveHandler
 {
     /** The multiplexed asynchronous I/O reactor. */
     protected IOReactor m_ioReactor;
@@ -27,23 +26,25 @@ public class Acceptor
     protected Timer m_timer;
 
     /**
-     * Constructs an Acceptor that will listen for connections and will notify
-     * an AcceptorListener of its progress.
-     * 
-     * @param ioReactor the asynchronous I/O reactor used to manage
-     *                  activities.
-     * @param listener the object to be informed of connections and
-     *                 other progress.
+     * Constructs an Acceptor that will listen for connections and will notify an AcceptorListener of its progress.
+     *
+     * @param ioReactor
+     *            the asynchronous I/O reactor used to manage activities.
+     * @param listener
+     *            the object to be informed of connections and other progress.
      */
-    public Acceptor(IOReactor ioReactor, AcceptorListener listener) {
+    public Acceptor(IOReactor ioReactor, AcceptorListener listener)
+    {
         m_ioReactor = ioReactor;
         m_listener = listener;
     }
 
     /** Attempts to establish a listening socket. */
-    public void listen() {
+    public void listen()
+    {
         SocketAddress sa = m_listener.getSocketAddress();
-        try {
+        try
+        {
             m_serverChannel = ServerSocketChannel.open();
             m_serverChannel.configureBlocking(false);
             m_listener.setup(m_serverChannel);
@@ -51,18 +52,23 @@ public class Acceptor
             m_listener.listening();
             m_valve = m_ioReactor.valveCreate(m_serverChannel, this);
             m_valve.enable(SelectionKey.OP_ACCEPT);
-        } catch (Throwable t) {
+        }
+        catch (Throwable t)
+        {
             failure(t);
         }
     }
 
     /** Closes the listening socket. It is possible to call listen() again. */
-    public void shutdown() {
-        if (m_timer != null) {
+    public void shutdown()
+    {
+        if (m_timer != null)
+        {
             m_timer.cancel();
             m_timer = null;
         }
-        if (m_valve != null) {
+        if (m_valve != null)
+        {
             m_valve.disable(SelectionKey.OP_ACCEPT);
             m_valve.close();
             m_valve = null;
@@ -71,13 +77,15 @@ public class Acceptor
     }
 
     /**
-     * This is called when we fail to establish a listening socket. This cleans
-     * up, notifies the listener, and schedules a retry.
-     * 
-     * @param t the Throwable that indicates the reason for failure.
+     * This is called when we fail to establish a listening socket. This cleans up, notifies the listener, and schedules a retry.
+     *
+     * @param t
+     *            the Throwable that indicates the reason for failure.
      */
-    protected void failure(Throwable t) {
-        if (m_valve != null) {
+    protected void failure(Throwable t)
+    {
+        if (m_valve != null)
+        {
             m_valve.close();
         }
         m_valve = null;
@@ -86,34 +94,41 @@ public class Acceptor
         long nextDelay = m_listener.listenFailed(t);
 
         // If the returned value is Long.MIN_VALUE then we won't retry.
-        if (nextDelay != Long.MIN_VALUE) {
+        if (nextDelay != Long.MIN_VALUE)
+        {
             m_timer = m_ioReactor.timerCreateRel(nextDelay, this);
         }
     }
 
     /**
-     * Invoked when there is an I/O operation ready to be
-     * performed. This handles the acceptance of new connections.
+     * Invoked when there is an I/O operation ready to be performed. This handles the acceptance of new connections.
      */
+    @Override
     public void valveFire(Valve valve, SelectionKey selectionKey)
     {
-        try {
+        try
+        {
             SocketChannel socketChannel = m_serverChannel.accept();
             socketChannel.configureBlocking(false);
             m_listener.accepted(m_ioReactor, socketChannel);
-        } catch (Throwable t) {
+        }
+        catch (Throwable t)
+        {
             m_listener.acceptFailed(t);
         }
     }
 
     /**
-     * Performs work that was previously scheduled to be invoked by a
-     * timer.  This is used to reattempt listening after a failure.
-     * 
-     * @param time the time at which the Timer actually fired.
+     * Performs work that was previously scheduled to be invoked by a timer. This is used to reattempt listening after a failure.
+     *
+     * @param time
+     *            the time at which the Timer actually fired.
      */
-    public long timerFire(long time, long actualTime) {
-        if (m_timer == null) {
+    @Override
+    public long timerFire(long time, long actualTime)
+    {
+        if (m_timer == null)
+        {
             // Be extra careful not to fire the timer after a shutdown.
             return 0;
         }

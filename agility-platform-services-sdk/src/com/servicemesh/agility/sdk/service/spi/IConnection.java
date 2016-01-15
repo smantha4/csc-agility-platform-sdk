@@ -14,59 +14,67 @@ import com.servicemesh.agility.sdk.service.msgs.ServiceProviderResponse;
 import com.servicemesh.core.async.Promise;
 
 /**
- * Defines generic methods for an adapter to process notifications of creation,
- * modification, and deletion of an Agility asset connection.
+ * Defines generic methods for an adapter to process notifications of creation, modification, and deletion of an Agility asset
+ * connection.
  */
-public interface IConnection {
+public interface IConnection
+{
 
-	/**
-	 * Can be used by the adapter to validate the configuration of the connection prior to creation and allow/reject the settings.
-	 * 
-	 * @param request Contains the desired configuration 
-	 * @return Promise to accept/reject the configuration.
-	 */
-	public Promise<ServiceProviderResponse> preCreate(ConnectionPreCreateRequest request);
-	
-	/**
-	 * Called after successful creation of the connection. An adapter may need to push this
-	 * configuration to the actual service provider.
-	 * 
-	 * @param request Contains the initial configuration.
-	 * @return Promise to results on completion.
-	 */
-	public Promise<ServiceProviderResponse> postCreate(ConnectionPostCreateRequest request);
-	
-	/**
-	 * Can be used by the adapter to validate the configuration of the connection prior to an update and allow/reject the settings.
-	 * 
-	 * @param request Contains the desired configuration 
-     * @return Promise to results on completion.
-	 */
-	public Promise<ServiceProviderResponse> preUpdate(ConnectionPreUpdateRequest request);
+    /**
+     * Can be used by the adapter to validate the configuration of the connection prior to creation and allow/reject the settings.
+     * 
+     * @param request
+     *            Contains the desired configuration
+     * @return Promise to accept/reject the configuration.
+     */
+    public Promise<ServiceProviderResponse> preCreate(ConnectionPreCreateRequest request);
 
-	/**
-	 * Called after successful update of the connection. An adapter may need to push this
-	 * configuration to the actual service provider.
-	 * 
-	 * @param request Contains the initial configuration.
+    /**
+     * Called after successful creation of the connection. An adapter may need to push this configuration to the actual service
+     * provider.
+     * 
+     * @param request
+     *            Contains the initial configuration.
      * @return Promise to results on completion.
-	 */
-	public Promise<ServiceProviderResponse> postUpdate(ConnectionPostUpdateRequest request);
-	
-	/**
-	 * Can be used by the adapter to validate the system is in a valid state to perform a delete.
-	 * 
-	 * @param request Specifies the service provider instance. 
-     * @return Promise to results on completion.
-	 */	
-	public Promise<ServiceProviderResponse> preDelete(ConnectionPreDeleteRequest request);
+     */
+    public Promise<ServiceProviderResponse> postCreate(ConnectionPostCreateRequest request);
 
-	/**
-	 * Should be used to clean up any actual service provider resources associated with the connection.
-	 * 
-	 * @param request Specifies the service provider instance. 
+    /**
+     * Can be used by the adapter to validate the configuration of the connection prior to an update and allow/reject the
+     * settings.
+     * 
+     * @param request
+     *            Contains the desired configuration
      * @return Promise to results on completion.
-	 */	
-	public Promise<ServiceProviderResponse> postDelete(ConnectionPostDeleteRequest request);
+     */
+    public Promise<ServiceProviderResponse> preUpdate(ConnectionPreUpdateRequest request);
+
+    /**
+     * Called after successful update of the connection. An adapter may need to push this configuration to the actual service
+     * provider.
+     * 
+     * @param request
+     *            Contains the initial configuration.
+     * @return Promise to results on completion.
+     */
+    public Promise<ServiceProviderResponse> postUpdate(ConnectionPostUpdateRequest request);
+
+    /**
+     * Can be used by the adapter to validate the system is in a valid state to perform a delete.
+     * 
+     * @param request
+     *            Specifies the service provider instance.
+     * @return Promise to results on completion.
+     */
+    public Promise<ServiceProviderResponse> preDelete(ConnectionPreDeleteRequest request);
+
+    /**
+     * Should be used to clean up any actual service provider resources associated with the connection.
+     * 
+     * @param request
+     *            Specifies the service provider instance.
+     * @return Promise to results on completion.
+     */
+    public Promise<ServiceProviderResponse> postDelete(ConnectionPostDeleteRequest request);
 
 }

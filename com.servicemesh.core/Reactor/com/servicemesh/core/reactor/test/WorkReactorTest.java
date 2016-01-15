@@ -1,6 +1,9 @@
 package com.servicemesh.core.reactor.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -24,64 +27,80 @@ public class WorkReactorTest
     protected final static int ITERATIONS = 10;
 
     @BeforeClass
-    public static void setUpBeforeClass() {}
+    public static void setUpBeforeClass()
+    {
+    }
 
     @AfterClass
-    public static void tearDownAfterClass() {}
+    public static void tearDownAfterClass()
+    {
+    }
 
     @Before
-    public void setUp() {
-        m_workReactor = WorkReactor.getWorkReactor("TestWorkReactor_" +
-                                                   ++m_loopCount);
+    public void setUp()
+    {
+        m_workReactor = WorkReactor.getWorkReactor("TestWorkReactor_" + ++m_loopCount);
     }
 
     @After
-    public void tearDown() {
+    public void tearDown()
+    {
         m_workReactor.shutdown();
     }
 
     /**
-     * Work class that resubmits itself a specified number of times.
-     * It also allows other threads to wait until the work completes.
+     * Work class that resubmits itself a specified number of times. It also allows other threads to wait until the work
+     * completes.
      */
-    protected static class CountdownWork extends AwaitableWork {
+    protected static class CountdownWork extends AwaitableWork
+    {
         protected int m_count;
 
-        public CountdownWork() {
+        public CountdownWork()
+        {
             setCount(1);
         }
 
-        public CountdownWork(int count) {
+        public CountdownWork(int count)
+        {
             setCount(count);
         }
 
-        public void setCount(int count) {
+        public void setCount(int count)
+        {
             m_count = (count < 1) ? 1 : count;
         }
-        public boolean doWork() {
+
+        @Override
+        public boolean doWork()
+        {
             return (--m_count != 0);
         }
     }
 
     /**
-     * Work class that waits until it is externally signaled to proceed.
-     * Useful for guaranteeing checkpoints during tests.
+     * Work class that waits until it is externally signaled to proceed. Useful for guaranteeing checkpoints during tests.
      */
-    protected static class CounterWork extends Work {
+    protected static class CounterWork extends Work
+    {
         int m_count;
 
-        public int getCount() {
+        public int getCount()
+        {
             return m_count;
         }
 
-        public boolean workFire() {
+        @Override
+        public boolean workFire()
+        {
             m_count++;
             return false;
         }
     }
 
     @Test
-    public void testWorkSimple() {
+    public void testWorkSimple()
+    {
         CountdownWork work = new CountdownWork(ITERATIONS);
 
         // Treat work as a WorkHandler.  This should return a different
@@ -97,14 +116,16 @@ public class WorkReactorTest
     }
 
     @Test
-    public void testWorkMultiple() {
+    public void testWorkMultiple()
+    {
         // Make sure nothing happens until we're ready
         BlockingWork bw = new BlockingWork();
         m_workReactor.workSubmit(bw);
 
         // Submit a bunch of work
         CounterWork counterWork = new CounterWork();
-        for (int i = 0; i < ITERATIONS; i++) {
+        for (int i = 0; i < ITERATIONS; i++)
+        {
             // We submit counterWork as a WorkHandler.
             // A new Work will be created internally
             // for each call.
@@ -121,12 +142,12 @@ public class WorkReactorTest
 
         // Ensure that all of the counterWork submissions
         // were done.
-        assertEquals("The CounterWork value is wrong",
-                     ITERATIONS, counterWork.getCount());
+        assertEquals("The CounterWork value is wrong", ITERATIONS, counterWork.getCount());
     }
 
     @Test
-    public void testWorkCancel() {
+    public void testWorkCancel()
+    {
         // Make sure nothing happens until we're ready
         BlockingWork bw = new BlockingWork();
         m_workReactor.workSubmit(bw);
@@ -142,7 +163,8 @@ public class WorkReactorTest
         // Submit a bunch of work
         CounterWork counterWork = new CounterWork();
         Work toCancel = null;
-        for (int i = 0; i < ITERATIONS; i++) {
+        for (int i = 0; i < ITERATIONS; i++)
+        {
             // We submit counterWork as a WorkHandler.
             // A new Work will be created internally
             // for each call.
@@ -150,8 +172,7 @@ public class WorkReactorTest
         }
 
         // Cancel that last piece of work
-        assertTrue("Couldn't cancel inactive work",
-                   toCancel.cancel());
+        assertTrue("Couldn't cancel inactive work", toCancel.cancel());
 
         // Submit some final work that we can wait for
         CountdownWork work = new CountdownWork();
@@ -165,7 +186,6 @@ public class WorkReactorTest
 
         // Ensure that all of the counterWork submissions
         // were done except for the canceled one.
-        assertEquals("The CounterWork value is wrong",
-                     (ITERATIONS - 1), counterWork.getCount());
+        assertEquals("The CounterWork value is wrong", (ITERATIONS - 1), counterWork.getCount());
     }
 }

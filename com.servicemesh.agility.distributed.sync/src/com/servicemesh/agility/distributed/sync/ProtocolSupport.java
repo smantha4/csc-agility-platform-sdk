@@ -25,18 +25,16 @@ import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.ZooKeeper;
-import org.apache.zookeeper.Watcher.Event.KeeperState;
 import org.apache.zookeeper.data.ACL;
 import org.apache.zookeeper.data.Stat;
 
 /**
- * A base class for protocol implementations which provides a number of higher 
- * level helper methods for working with ZooKeeper along with retrying synchronous
- *  operations if the connection to ZooKeeper closes such as 
- *  {@link #retryOperation(ZooKeeperOperation)}
- *
+ * A base class for protocol implementations which provides a number of higher level helper methods for working with ZooKeeper
+ * along with retrying synchronous operations if the connection to ZooKeeper closes such as
+ * {@link #retryOperation(ZooKeeperOperation)}
  */
-class ProtocolSupport {
+class ProtocolSupport
+{
     private static final Logger LOG = Logger.getLogger(ProtocolSupport.class);
 
     protected final ZooKeeper zookeeper;
@@ -45,89 +43,108 @@ class ProtocolSupport {
     static int retryCount = 10;
     private List<ACL> acl = ZooDefs.Ids.OPEN_ACL_UNSAFE;
 
-    public ProtocolSupport(ZooKeeper zookeeper) {
+    public ProtocolSupport(ZooKeeper zookeeper)
+    {
         this.zookeeper = zookeeper;
     }
 
     /**
-     * Closes this strategy and releases any ZooKeeper resources; but keeps the
-     *  ZooKeeper instance open
+     * Closes this strategy and releases any ZooKeeper resources; but keeps the ZooKeeper instance open
      */
-    public void close() {
-        if (closed.compareAndSet(false, true)) {
+    public void close()
+    {
+        if (closed.compareAndSet(false, true))
+        {
             doClose();
         }
     }
-    
+
     /**
      * return zookeeper client instance
+     * 
      * @return zookeeper client instance
      */
-    public ZooKeeper getZookeeper() {
+    public ZooKeeper getZookeeper()
+    {
         return zookeeper;
     }
 
     /**
      * return the acl its using
+     * 
      * @return the acl.
      */
-    public List<ACL> getAcl() {
+    public List<ACL> getAcl()
+    {
         return acl;
     }
 
     /**
-     * set the acl 
-     * @param acl the acl to set to
+     * set the acl
+     * 
+     * @param acl
+     *            the acl to set to
      */
-    public void setAcl(List<ACL> acl) {
+    public void setAcl(List<ACL> acl)
+    {
         this.acl = acl;
     }
 
     /**
      * get the retry delay in milliseconds
+     * 
      * @return the retry delay
      */
-    public long getRetryDelay() {
+    public long getRetryDelay()
+    {
         return retryDelay;
     }
 
     /**
      * Sets the time waited between retry delays
-     * @param retryDelay the retry delay
+     * 
+     * @param retryDelay
+     *            the retry delay
      */
-    public void setRetryDelay(long retryDelay) {
+    public void setRetryDelay(long retryDelay)
+    {
         this.retryDelay = retryDelay;
     }
 
     /**
-     * Allow derived classes to perform 
-     * some custom closing operations to release resources
+     * Allow derived classes to perform some custom closing operations to release resources
      */
-    protected void doClose() {
+    protected void doClose()
+    {
     }
-
 
     /**
      * Perform the given operation, retrying if the connection fails
-     * @return object. it needs to be cast to the callee's expected 
-     * return type.
+     * 
+     * @return object. it needs to be cast to the callee's expected return type.
      */
-    protected boolean retryOperation(ZooKeeperOperation operation) 
-        throws KeeperException, InterruptedException {
+    protected boolean retryOperation(ZooKeeperOperation operation) throws KeeperException, InterruptedException
+    {
         KeeperException exception = null;
-        
-        for (int i = 0; i < retryCount; i++) {
-            try {
+
+        for (int i = 0; i < retryCount; i++)
+        {
+            try
+            {
                 return operation.execute();
-            } catch (KeeperException.SessionExpiredException e) {
-            	LOG.fatal("Zookeeper session expired. Can't recover, calling System.exit()", e);
-            	System.exit(-1);
-            } catch (KeeperException.ConnectionLossException e) {
-                if (exception == null) {
+            }
+            catch (KeeperException.SessionExpiredException e)
+            {
+                LOG.fatal("Zookeeper session expired. Can't recover, calling System.exit()", e);
+                System.exit(-1);
+            }
+            catch (KeeperException.ConnectionLossException e)
+            {
+                if (exception == null)
+                {
                     exception = e;
                 }
-                LOG.debug("Attempt " + i + " failed with connection loss so " +
-                		"attempting to reconnect: " + e, e);
+                LOG.debug("Attempt " + i + " failed with connection loss so " + "attempting to reconnect: " + e, e);
                 retryDelay(i);
             }
         }
@@ -135,58 +152,79 @@ class ProtocolSupport {
     }
 
     /**
-     * Ensures that the given path exists with no data, the current
-     * ACL and no flags
+     * Ensures that the given path exists with no data, the current ACL and no flags
+     * 
      * @param path
      */
-    protected void ensurePathExists(String path) {
+    protected void ensurePathExists(String path)
+    {
         ensureExists(path, null, acl, CreateMode.PERSISTENT);
     }
 
     /**
      * Ensures that the given path exists with the given data, ACL and flags
+     * 
      * @param path
      * @param acl
      * @param flags
      */
-    protected void ensureExists(final String path, final byte[] data,
-            final List<ACL> acl, final CreateMode flags) {
-        try {
+    protected void ensureExists(final String path, final byte[] data, final List<ACL> acl, final CreateMode flags)
+    {
+        try
+        {
             retryOperation(new ZooKeeperOperation() {
-                public boolean execute() throws KeeperException, InterruptedException {
+                @Override
+                public boolean execute() throws KeeperException, InterruptedException
+                {
                     Stat stat = zookeeper.exists(path, false);
-                    if (stat != null) {
+                    if (stat != null)
+                    {
                         return true;
                     }
                     zookeeper.create(path, data, acl, flags);
                     return true;
                 }
             });
-        } catch (KeeperException e) {
-        	if(e.code() != KeeperException.Code.NODEEXISTS)
-        		LOG.warn("Caught: " + e, e);
-        } catch (InterruptedException e) {
+        }
+        catch (KeeperException e)
+        {
+            if (e.code() != KeeperException.Code.NODEEXISTS)
+            {
+                LOG.warn("Caught: " + e, e);
+            }
+        }
+        catch (InterruptedException e)
+        {
             LOG.warn("Caught: " + e, e);
         }
     }
 
     /**
      * Returns true if this protocol has been closed
+     * 
      * @return true if this protocol is closed
      */
-    protected boolean isClosed() {
+    protected boolean isClosed()
+    {
         return closed.get();
     }
 
     /**
      * Performs a retry delay if this is not the first attempt
-     * @param attemptCount the number of the attempts performed so far
+     * 
+     * @param attemptCount
+     *            the number of the attempts performed so far
      */
-    protected void retryDelay(int attemptCount) {
-        if (attemptCount > 0) {
-            try {
+    protected void retryDelay(int attemptCount)
+    {
+        if (attemptCount > 0)
+        {
+            try
+            {
                 Thread.sleep(attemptCount * retryDelay);
-            } catch (InterruptedException e) {
+            }
+            catch (InterruptedException e)
+            {
                 LOG.debug("Failed to sleep: " + e, e);
             }
         }

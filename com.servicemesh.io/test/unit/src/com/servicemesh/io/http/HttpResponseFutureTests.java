@@ -20,11 +20,11 @@ package com.servicemesh.io.http;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeoutException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Assert;
@@ -36,23 +36,23 @@ import com.servicemesh.io.http.impl.DefaultHttpResponseFuture;
 public class HttpResponseFutureTests
 {
     @Test
-    public void testSuccess()
-        throws Exception
+    public void testSuccess() throws Exception
     {
-        DefaultHttpResponseFuture<IHttpResponse> defaultFuture = new DefaultHttpResponseFuture<IHttpResponse>(getDefaultCallback());
+        DefaultHttpResponseFuture<IHttpResponse> defaultFuture =
+                new DefaultHttpResponseFuture<IHttpResponse>(getDefaultCallback());
         IHttpResponseFuture<IHttpResponse> future = defaultFuture;
         Assert.assertFalse(future.isCancelled());
         Assert.assertFalse(future.isDone());
 
         IHttpResponse testResponse = new DefaultHttpResponse();
         HttpStatus testStatus = new HttpStatus(HttpVersion.HTTP_1_1, 200, null);
-        ((DefaultHttpResponse)testResponse).setStatus(testStatus);
-        ((DefaultHttpResponse)testResponse).setContent("success".getBytes());
+        ((DefaultHttpResponse) testResponse).setStatus(testStatus);
+        ((DefaultHttpResponse) testResponse).setContent("success".getBytes());
 
         IHttpResponse testResponse2 = new DefaultHttpResponse();
         HttpStatus testStatus2 = new HttpStatus(HttpVersion.HTTP_1_1, 404, null);
-        ((DefaultHttpResponse)testResponse2).setStatus(testStatus2);
-        ((DefaultHttpResponse)testResponse2).setContent("not found".getBytes());
+        ((DefaultHttpResponse) testResponse2).setStatus(testStatus2);
+        ((DefaultHttpResponse) testResponse2).setContent("not found".getBytes());
 
         Assert.assertTrue(defaultFuture.set(testResponse));
         Assert.assertFalse(future.isCancelled());
@@ -62,12 +62,15 @@ public class HttpResponseFutureTests
         Assert.assertEquals(200, responseBack.getStatusCode());
         Assert.assertEquals("success", responseBack.getContent());
 
-        try {
+        try
+        {
             responseBack = future.get(100, TimeUnit.MILLISECONDS);
             Assert.assertNotNull(responseBack);
             Assert.assertEquals(200, responseBack.getStatusCode());
             Assert.assertEquals("success", responseBack.getContent());
-        } catch (TimeoutException ex) {
+        }
+        catch (TimeoutException ex)
+        {
             Assert.fail("Timeout fired when retrieving a set future");
         }
 
@@ -88,10 +91,13 @@ public class HttpResponseFutureTests
         Assert.assertTrue(future.isCancelled());
         Assert.assertTrue(future.isDone());
 
-        try {
+        try
+        {
             future.get();
             Assert.fail("Retrieved result after cancellation");
-        } catch (CancellationException ex) {
+        }
+        catch (CancellationException ex)
+        {
             Assert.assertEquals("Task was cancelled.", ex.getMessage());
         }
 
@@ -105,32 +111,38 @@ public class HttpResponseFutureTests
         Assert.assertFalse(future.isCancelled());
         Assert.assertTrue(future.isDone());
 
-        try {
+        try
+        {
             future.get();
             Assert.fail("Retrieved result after failure");
-        } catch (ExecutionException ex) {
+        }
+        catch (ExecutionException ex)
+        {
             Assert.assertTrue(ex.getCause() instanceof IllegalArgumentException);
             Assert.assertEquals("bad parameters", ex.getCause().getMessage());
         }
     }
 
     @Test
-    public void testAsyncSuccess()
-        throws Exception
+    public void testAsyncSuccess() throws Exception
     {
         final IHttpResponse testResponse = new DefaultHttpResponse();
         HttpStatus testStatus = new HttpStatus(HttpVersion.HTTP_1_1, 200, null);
-        ((DefaultHttpResponse)testResponse).setStatus(testStatus);
-        ((DefaultHttpResponse)testResponse).setContent("success".getBytes());
-        final DefaultHttpResponseFuture<IHttpResponse> futureComplete = new DefaultHttpResponseFuture<IHttpResponse>(getDefaultCallback());
+        ((DefaultHttpResponse) testResponse).setStatus(testStatus);
+        ((DefaultHttpResponse) testResponse).setContent("success".getBytes());
+        final DefaultHttpResponseFuture<IHttpResponse> futureComplete =
+                new DefaultHttpResponseFuture<IHttpResponse>(getDefaultCallback());
         final Thread completeThread = new Thread() {
             @Override
             public void run()
             {
-                try {
+                try
+                {
                     Thread.sleep(100);
                     futureComplete.set(testResponse);
-                } catch (final InterruptedException boom) {
+                }
+                catch (final InterruptedException boom)
+                {
                 }
             }
         };
@@ -141,15 +153,19 @@ public class HttpResponseFutureTests
         Assert.assertTrue(futureComplete.isDone());
         Assert.assertFalse(futureComplete.isCancelled());
 
-        final DefaultHttpResponseFuture<IHttpResponse> futureCompleteTimeout = new DefaultHttpResponseFuture<IHttpResponse>(getDefaultCallback());
+        final DefaultHttpResponseFuture<IHttpResponse> futureCompleteTimeout =
+                new DefaultHttpResponseFuture<IHttpResponse>(getDefaultCallback());
         final Thread completeThreadTimeout = new Thread() {
             @Override
             public void run()
             {
-                try {
+                try
+                {
                     Thread.sleep(100);
                     futureCompleteTimeout.set(testResponse);
-                } catch (final InterruptedException boom) {
+                }
+                catch (final InterruptedException boom)
+                {
                 }
             }
         };
@@ -162,8 +178,7 @@ public class HttpResponseFutureTests
     }
 
     @Test
-    public void testCancel()
-        throws Exception
+    public void testCancel() throws Exception
     {
         IHttpResponseFuture<IHttpResponse> future = new DefaultHttpResponseFuture<IHttpResponse>(getDefaultCallback());
         Assert.assertFalse(future.isCancelled());
@@ -172,17 +187,23 @@ public class HttpResponseFutureTests
         Assert.assertTrue(future.isCancelled());
         Assert.assertTrue(future.isDone());
 
-        try {
+        try
+        {
             future.get();
             Assert.fail("Retrieved result after cancellation");
-        } catch (CancellationException ex) {
+        }
+        catch (CancellationException ex)
+        {
             Assert.assertEquals("Task was cancelled.", ex.getMessage());
         }
 
-        try {
+        try
+        {
             future.get(100, TimeUnit.MILLISECONDS);
             Assert.fail("Retrieved result after cancellation");
-        } catch (CancellationException ex) {
+        }
+        catch (CancellationException ex)
+        {
             Assert.assertEquals("Task was cancelled.", ex.getMessage());
         }
 
@@ -192,7 +213,8 @@ public class HttpResponseFutureTests
         Assert.assertTrue(future.isDone());
 
         // Test cancel after successful completion
-        DefaultHttpResponseFuture<IHttpResponse> defaultFuture = new DefaultHttpResponseFuture<IHttpResponse>(getDefaultCallback());
+        DefaultHttpResponseFuture<IHttpResponse> defaultFuture =
+                new DefaultHttpResponseFuture<IHttpResponse>(getDefaultCallback());
         future = defaultFuture;
         Assert.assertFalse(future.isCancelled());
         Assert.assertFalse(future.isDone());
@@ -213,18 +235,21 @@ public class HttpResponseFutureTests
     }
 
     @Test
-    public void testAsyncCancel()
-        throws Exception
+    public void testAsyncCancel() throws Exception
     {
-        final IHttpResponseFuture<IHttpResponse> futureCancel = new DefaultHttpResponseFuture<IHttpResponse>(getDefaultCallback());
+        final IHttpResponseFuture<IHttpResponse> futureCancel =
+                new DefaultHttpResponseFuture<IHttpResponse>(getDefaultCallback());
         final Thread cancelThread = new Thread() {
             @Override
             public void run()
             {
-                try {
+                try
+                {
                     Thread.sleep(100);
                     futureCancel.cancel(true);
-                } catch (final InterruptedException ex) {
+                }
+                catch (final InterruptedException ex)
+                {
                 }
             }
         };
@@ -232,25 +257,32 @@ public class HttpResponseFutureTests
         cancelThread.setDaemon(true);
         cancelThread.start();
 
-        try {
+        try
+        {
             futureCancel.get();
             Assert.fail("Retrieved result after cancellation");
-        } catch (CancellationException ex) {
+        }
+        catch (CancellationException ex)
+        {
             Assert.assertEquals("Task was cancelled.", ex.getMessage());
         }
 
         Assert.assertTrue(futureCancel.isDone());
         Assert.assertTrue(futureCancel.isCancelled());
 
-        final IHttpResponseFuture<IHttpResponse> futureCancelTimeout = new DefaultHttpResponseFuture<IHttpResponse>(getDefaultCallback());
+        final IHttpResponseFuture<IHttpResponse> futureCancelTimeout =
+                new DefaultHttpResponseFuture<IHttpResponse>(getDefaultCallback());
         final Thread cancelThreadTimeout = new Thread() {
             @Override
             public void run()
             {
-                try {
+                try
+                {
                     Thread.sleep(100);
                     futureCancelTimeout.cancel(true);
-                } catch (final InterruptedException ex) {
+                }
+                catch (final InterruptedException ex)
+                {
                 }
             }
         };
@@ -258,10 +290,13 @@ public class HttpResponseFutureTests
         cancelThreadTimeout.setDaemon(true);
         cancelThreadTimeout.start();
 
-        try {
+        try
+        {
             futureCancelTimeout.get(5, TimeUnit.SECONDS);
             Assert.fail("Retrieved result after cancellation");
-        } catch (CancellationException ex) {
+        }
+        catch (CancellationException ex)
+        {
             Assert.assertEquals("Task was cancelled.", ex.getMessage());
         }
 
@@ -270,10 +305,10 @@ public class HttpResponseFutureTests
     }
 
     @Test
-    public void testFail()
-        throws Exception
+    public void testFail() throws Exception
     {
-        DefaultHttpResponseFuture<IHttpResponse> defaultFuture = new DefaultHttpResponseFuture<IHttpResponse>(getDefaultCallback());
+        DefaultHttpResponseFuture<IHttpResponse> defaultFuture =
+                new DefaultHttpResponseFuture<IHttpResponse>(getDefaultCallback());
         IHttpResponseFuture<IHttpResponse> future = defaultFuture;
         Assert.assertFalse(future.isCancelled());
         Assert.assertFalse(future.isDone());
@@ -281,28 +316,37 @@ public class HttpResponseFutureTests
         Assert.assertFalse(future.isCancelled());
         Assert.assertTrue(future.isDone());
 
-        try {
+        try
+        {
             future.get();
             Assert.fail("Retrieved result after failure");
-        } catch (ExecutionException ex) {
+        }
+        catch (ExecutionException ex)
+        {
             Assert.assertTrue(ex.getCause() instanceof IllegalArgumentException);
             Assert.assertEquals("bad parameters", ex.getCause().getMessage());
         }
 
-        try {
+        try
+        {
             future.get(100, TimeUnit.MILLISECONDS);
             Assert.fail("Retrieved result after failure");
-        } catch (ExecutionException ex) {
+        }
+        catch (ExecutionException ex)
+        {
             Assert.assertTrue(ex.getCause() instanceof IllegalArgumentException);
             Assert.assertEquals("bad parameters", ex.getCause().getMessage());
         }
 
         // Second fail should not take
         Assert.assertFalse(defaultFuture.setException(new IllegalArgumentException("invalid parms")));
-        try {
+        try
+        {
             future.get();
             Assert.fail("Retrieved result after failure");
-        } catch (ExecutionException ex) {
+        }
+        catch (ExecutionException ex)
+        {
             Assert.assertTrue(ex.getCause() instanceof IllegalArgumentException);
             Assert.assertEquals("bad parameters", ex.getCause().getMessage());
         }
@@ -328,28 +372,34 @@ public class HttpResponseFutureTests
         Assert.assertTrue(future.isCancelled());
         Assert.assertTrue(future.isDone());
 
-        try {
+        try
+        {
             future.get();
             Assert.fail("Retrieved result after cancellation");
-        } catch (CancellationException ex) {
+        }
+        catch (CancellationException ex)
+        {
             Assert.assertEquals("Task was cancelled.", ex.getMessage());
         }
     }
 
     @Test
-    public void testAsyncFail()
-        throws Exception
+    public void testAsyncFail() throws Exception
     {
-        final DefaultHttpResponseFuture<IHttpResponse> futureFail = new DefaultHttpResponseFuture<IHttpResponse>(getDefaultCallback());
+        final DefaultHttpResponseFuture<IHttpResponse> futureFail =
+                new DefaultHttpResponseFuture<IHttpResponse>(getDefaultCallback());
         final Exception failure = new IllegalArgumentException("rogue parameters");
         final Thread failThread = new Thread() {
             @Override
             public void run()
             {
-                try {
+                try
+                {
                     Thread.sleep(100);
                     futureFail.setException(failure);
-                } catch (final InterruptedException ex) {
+                }
+                catch (final InterruptedException ex)
+                {
                 }
             }
         };
@@ -357,10 +407,13 @@ public class HttpResponseFutureTests
         failThread.setDaemon(true);
         failThread.start();
 
-        try {
+        try
+        {
             futureFail.get();
             Assert.fail("Successfully retrieved future value with failure set");
-        } catch (final ExecutionException ex) {
+        }
+        catch (final ExecutionException ex)
+        {
             Assert.assertTrue(ex.getCause() instanceof IllegalArgumentException);
             Assert.assertEquals("rogue parameters", ex.getCause().getMessage());
         }
@@ -368,15 +421,19 @@ public class HttpResponseFutureTests
         Assert.assertTrue(futureFail.isDone());
         Assert.assertFalse(futureFail.isCancelled());
 
-        final DefaultHttpResponseFuture<IHttpResponse> futureFailTimeout = new DefaultHttpResponseFuture<IHttpResponse>(getDefaultCallback());
+        final DefaultHttpResponseFuture<IHttpResponse> futureFailTimeout =
+                new DefaultHttpResponseFuture<IHttpResponse>(getDefaultCallback());
         final Thread failThreadTimeout = new Thread() {
             @Override
             public void run()
             {
-                try {
+                try
+                {
                     Thread.sleep(100);
                     futureFailTimeout.setException(failure);
-                } catch (final InterruptedException ex) {
+                }
+                catch (final InterruptedException ex)
+                {
                 }
             }
         };
@@ -384,10 +441,13 @@ public class HttpResponseFutureTests
         failThreadTimeout.setDaemon(true);
         failThreadTimeout.start();
 
-        try {
+        try
+        {
             futureFailTimeout.get(5, TimeUnit.SECONDS);
             Assert.fail("Successfully retrieved future value with failure set");
-        } catch (final ExecutionException ex) {
+        }
+        catch (final ExecutionException ex)
+        {
             Assert.assertTrue(ex.getCause() instanceof IllegalArgumentException);
             Assert.assertEquals("rogue parameters", ex.getCause().getMessage());
         }
@@ -397,43 +457,50 @@ public class HttpResponseFutureTests
     }
 
     @Test
-    public void testTimeout()
-        throws Exception
+    public void testTimeout() throws Exception
     {
         IHttpResponseFuture<IHttpResponse> future = new DefaultHttpResponseFuture<IHttpResponse>(getDefaultCallback());
 
-        try {
+        try
+        {
             future.get(100, TimeUnit.MILLISECONDS);
             Assert.fail("Timeout did not fire");
-        } catch (TimeoutException ex) {
+        }
+        catch (TimeoutException ex)
+        {
             Assert.assertNotNull(ex.getMessage());
             Assert.assertEquals("Timeout waiting for task.", ex.getMessage());
         }
 
         // Test with negative timeout
         future = new DefaultHttpResponseFuture<IHttpResponse>(getDefaultCallback());
-        try {
+        try
+        {
             future.get(-1, TimeUnit.MILLISECONDS);
             Assert.fail("Timeout did not fire");
-        } catch (TimeoutException ex) {
+        }
+        catch (TimeoutException ex)
+        {
             Assert.assertNotNull(ex.getMessage());
             Assert.assertEquals("Timeout waiting for task.", ex.getMessage());
         }
 
         // Test with timeout = 0
         future = new DefaultHttpResponseFuture<IHttpResponse>(getDefaultCallback());
-        try {
+        try
+        {
             future.get(0, TimeUnit.MILLISECONDS);
             Assert.fail("Timeout did not fire");
-        } catch (TimeoutException ex) {
+        }
+        catch (TimeoutException ex)
+        {
             Assert.assertNotNull(ex.getMessage());
             Assert.assertEquals("Timeout waiting for task.", ex.getMessage());
         }
     }
 
     @Test
-    public void testListenerCompletion()
-        throws Exception
+    public void testListenerCompletion() throws Exception
     {
         Integer completionValue = Integer.valueOf(3);
         AtomicInteger resultInt = new AtomicInteger(0);
@@ -441,7 +508,8 @@ public class HttpResponseFutureTests
         AtomicInteger failInt = new AtomicInteger(0);
         IntegerCallback callback1 = new IntegerCallback(resultInt, cancelInt, failInt);
         IntegerCallback callback2 = new IntegerCallback(resultInt, cancelInt, failInt);
-        DefaultHttpResponseFuture<Integer> integerFuture = new DefaultHttpResponseFuture<Integer>(new IntegerCallback(resultInt, cancelInt, failInt));
+        DefaultHttpResponseFuture<Integer> integerFuture =
+                new DefaultHttpResponseFuture<Integer>(new IntegerCallback(resultInt, cancelInt, failInt));
         IHttpResponseFuture<Integer> future = integerFuture;
 
         Assert.assertEquals(-1, callback1.getResult());
@@ -455,17 +523,23 @@ public class HttpResponseFutureTests
         Assert.assertNull(callback1.getFailure());
 
         // Make sure we can't add it twice
-        try {
+        try
+        {
             future.addListener(callback1);
             Assert.fail("Added same listener twice");
-        } catch (IllegalArgumentException ex) {
+        }
+        catch (IllegalArgumentException ex)
+        {
             Assert.assertEquals("Listener already registered", ex.getMessage());
         }
 
-        try {
+        try
+        {
             future.addListener(null);
             Assert.fail("Added null listener");
-        } catch (IllegalArgumentException ex) {
+        }
+        catch (IllegalArgumentException ex)
+        {
             Assert.assertEquals("Emtpy listener", ex.getMessage());
         }
 
@@ -534,15 +608,15 @@ public class HttpResponseFutureTests
     }
 
     @Test
-    public void testListenerCancel()
-        throws Exception
+    public void testListenerCancel() throws Exception
     {
         AtomicInteger resultInt = new AtomicInteger(0);
         AtomicInteger cancelInt = new AtomicInteger(0);
         AtomicInteger failInt = new AtomicInteger(0);
         IntegerCallback callback1 = new IntegerCallback(resultInt, cancelInt, failInt);
         IntegerCallback callback2 = new IntegerCallback(resultInt, cancelInt, failInt);
-        DefaultHttpResponseFuture<Integer> integerFuture = new DefaultHttpResponseFuture<Integer>(new IntegerCallback(resultInt, cancelInt, failInt));
+        DefaultHttpResponseFuture<Integer> integerFuture =
+                new DefaultHttpResponseFuture<Integer>(new IntegerCallback(resultInt, cancelInt, failInt));
         IHttpResponseFuture<Integer> future = integerFuture;
 
         Assert.assertEquals(-1, callback1.getResult());
@@ -620,8 +694,7 @@ public class HttpResponseFutureTests
     }
 
     @Test
-    public void testListenerFail()
-        throws Exception
+    public void testListenerFail() throws Exception
     {
         Exception ex1 = new IllegalArgumentException("bad parameters");
         Exception ex2 = new IllegalArgumentException("invalid parameters");
@@ -630,7 +703,8 @@ public class HttpResponseFutureTests
         AtomicInteger failInt = new AtomicInteger(0);
         IntegerCallback callback1 = new IntegerCallback(resultInt, cancelInt, failInt);
         IntegerCallback callback2 = new IntegerCallback(resultInt, cancelInt, failInt);
-        DefaultHttpResponseFuture<Integer> integerFuture = new DefaultHttpResponseFuture<Integer>(new IntegerCallback(resultInt, cancelInt, failInt));
+        DefaultHttpResponseFuture<Integer> integerFuture =
+                new DefaultHttpResponseFuture<Integer>(new IntegerCallback(resultInt, cancelInt, failInt));
         IHttpResponseFuture<Integer> future = integerFuture;
 
         Assert.assertEquals(-1, callback1.getResult());
@@ -714,8 +788,7 @@ public class HttpResponseFutureTests
     }
 
     @Test
-    public void testInterrupts()
-        throws Exception
+    public void testInterrupts() throws Exception
     {
         ExecutorService pool = Executors.newFixedThreadPool(1);
         final Callable<Exception> interruptible = new Callable<Exception>() {
@@ -723,14 +796,18 @@ public class HttpResponseFutureTests
             public Exception call()
             {
                 Exception rv = null;
-                DefaultHttpResponseFuture<IHttpResponse> defaultFuture = new DefaultHttpResponseFuture<IHttpResponse>(getDefaultCallback());
+                DefaultHttpResponseFuture<IHttpResponse> defaultFuture =
+                        new DefaultHttpResponseFuture<IHttpResponse>(getDefaultCallback());
                 IHttpResponseFuture<IHttpResponse> future = defaultFuture;
                 Assert.assertFalse(future.isCancelled());
                 Assert.assertFalse(future.isDone());
 
-                try {
+                try
+                {
                     future.get();
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     rv = ex;
                 }
 
@@ -749,14 +826,18 @@ public class HttpResponseFutureTests
             public Exception call()
             {
                 Exception rv = null;
-                DefaultHttpResponseFuture<IHttpResponse> defaultFuture = new DefaultHttpResponseFuture<IHttpResponse>(getDefaultCallback());
+                DefaultHttpResponseFuture<IHttpResponse> defaultFuture =
+                        new DefaultHttpResponseFuture<IHttpResponse>(getDefaultCallback());
                 IHttpResponseFuture<IHttpResponse> future = defaultFuture;
                 Assert.assertFalse(future.isCancelled());
                 Assert.assertFalse(future.isDone());
 
-                try {
+                try
+                {
                     future.get();
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     rv = ex;
                 }
 
@@ -774,7 +855,9 @@ public class HttpResponseFutureTests
     {
         IHttpCallback<IHttpResponse> callback = new IHttpCallback<IHttpResponse>() {
             @Override
-            public void onCompletion(final IHttpResponse value) {}
+            public void onCompletion(final IHttpResponse value)
+            {
+            }
 
             @Override
             public IHttpResponse decoder(final IHttpResponse response)
@@ -783,17 +866,20 @@ public class HttpResponseFutureTests
             }
 
             @Override
-            public void onCancel() {}
+            public void onCancel()
+            {
+            }
 
             @Override
-            public void onFailure(final Throwable th) {}
+            public void onFailure(final Throwable th)
+            {
+            }
         };
 
         return callback;
     }
 
-    private static class IntegerCallback
-        implements IHttpCallback<Integer>
+    private static class IntegerCallback implements IHttpCallback<Integer>
     {
         private final AtomicInteger resultInt;
         private final AtomicInteger cancelInt;

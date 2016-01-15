@@ -33,16 +33,18 @@ package intel.management.wsman;
 
 /**
  * Represents a runtime exception thrown during a WsMan operation.
- *
  * <P>
  * Runtime exceptions are thrown when an unrecoverable error occurs.
-
- *
- * 
- *
  */
-public class WsmanRuntimeException extends RuntimeException {
-    public WsmanRuntimeException(Exception exception) {
+public class WsmanRuntimeException extends RuntimeException
+{
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+
+    public WsmanRuntimeException(Exception exception)
+    {
         super(exception);
     }
 }

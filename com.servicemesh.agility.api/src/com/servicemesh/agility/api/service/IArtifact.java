@@ -8,12 +8,14 @@ import com.servicemesh.agility.api.ArtifactAttachment;
 import com.servicemesh.agility.api.Task;
 
 /**
- * Exposes operations to manage versioned items. 
+ * Exposes operations to manage versioned items.
  */
-public interface IArtifact {
-	
-	public Task publish(Artifact artifact, ArtifactAttachment attachment, InputStream input, Context context) throws Exception;
+public interface IArtifact
+{
 
-	public Task publish(Artifact artifact, List<ArtifactAttachment> attachments, List<InputStream> inputs, Context context) throws Exception; 
-	
+    public Task publish(Artifact artifact, ArtifactAttachment attachment, InputStream input, Context context) throws Exception;
+
+    public Task publish(Artifact artifact, List<ArtifactAttachment> attachments, List<InputStream> inputs, Context context)
+            throws Exception;
+
 }

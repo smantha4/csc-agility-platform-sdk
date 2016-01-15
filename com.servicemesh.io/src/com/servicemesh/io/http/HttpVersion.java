@@ -19,8 +19,7 @@ package com.servicemesh.io.http;
 
 public enum HttpVersion
 {
-    HTTP_1_0("HTTP/1.0", "HTTP", 1, 0),
-    HTTP_1_1("HTTP/1.1", "HTTP", 1, 1);
+    HTTP_1_0("HTTP/1.0", "HTTP", 1, 0), HTTP_1_1("HTTP/1.1", "HTTP", 1, 1);
 
     final private String _name;
     final private String _protocol;
@@ -41,10 +40,10 @@ public enum HttpVersion
     {
         HttpVersion match = null;
 
-        for (HttpVersion version : HttpVersion.values()) {
-            if (version.getProtocol().equalsIgnoreCase(protocol) &&
-                (version.getMajorVersion() == major) &&
-                (version.getMinorVersion() == minor))
+        for (HttpVersion version : HttpVersion.values())
+        {
+            if (version.getProtocol().equalsIgnoreCase(protocol) && (version.getMajorVersion() == major)
+                    && (version.getMinorVersion() == minor))
             {
                 match = version;
                 break;

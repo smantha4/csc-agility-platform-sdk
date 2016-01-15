@@ -23,18 +23,17 @@ import java.nio.ByteBuffer;
 import com.google.common.base.Preconditions;
 
 /**
- * A buffer that can expand its capacity on demand. Internally, this class is
- * backed by an instance of {@link ByteBuffer}.
+ * A buffer that can expand its capacity on demand. Internally, this class is backed by an instance of {@link ByteBuffer}.
  * <p>
  * This class is not thread safe.
  */
-public class ExpandableByteBuffer
-    extends TransferByteBuffer
+public class ExpandableByteBuffer extends TransferByteBuffer
 {
     /**
      * Allocates a buffer of the specified size.
-     * 
-     * @param bufSize Size of the buffer to allocate.
+     *
+     * @param bufSize
+     *            Size of the buffer to allocate.
      */
     public ExpandableByteBuffer(int bufSize)
     {
@@ -42,16 +41,16 @@ public class ExpandableByteBuffer
     }
 
     /**
-     * Invokes producer to read data into the buffer. The backing buffer will be
-     * reallocated to allow for data the producer supplies.
-     * 
-     * @param producer Producer that will read content.
+     * Invokes producer to read data into the buffer. The backing buffer will be reallocated to allow for data the producer
+     * supplies.
+     *
+     * @param producer
+     *            Producer that will read content.
      * @return The number of bytes read.
      * @throws IOException
      */
     @Override
-    public int fill(ContentProducer producer)
-        throws IOException
+    public int fill(ContentProducer producer) throws IOException
     {
         Preconditions.checkNotNull(producer, "Missing producer");
 
@@ -61,7 +60,8 @@ public class ExpandableByteBuffer
         int bytesRead = producer.produce(_buffer);
         int totalRead = (bytesRead > 0) ? 0 : bytesRead;
 
-        while (bytesRead > 0) {
+        while (bytesRead > 0)
+        {
             totalRead += bytesRead;
             requiredIncrement(producer.remaining());
             bytesRead = producer.produce(_buffer);
@@ -74,14 +74,16 @@ public class ExpandableByteBuffer
     {
         Preconditions.checkArgument(increment >= 0, "Increment must be >= 0");
 
-        if (increment > remaining()) {
+        if (increment > remaining())
+        {
             expand(_buffer.capacity() + increment);
         }
     }
 
     private void expand(int bufSize)
     {
-        if (bufSize > _buffer.capacity()) {
+        if (bufSize > _buffer.capacity())
+        {
             final ByteBuffer newBuffer = ByteBuffer.allocate(bufSize);
 
             _buffer.flip();

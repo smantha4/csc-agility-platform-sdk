@@ -17,6 +17,9 @@
 
 package com.servicemesh.io.http.impl;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.io.ByteArrayInputStream;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
@@ -28,24 +31,18 @@ import org.apache.http.StatusLine;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicStatusLine;
-
 import org.junit.Assert;
 import org.junit.Test;
-
 import org.mockito.Answers;
 
 import com.servicemesh.io.http.HttpVersion;
 import com.servicemesh.io.http.IHttpCallback;
 import com.servicemesh.io.http.IHttpResponse;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 public class DefaultHttpCallbackHandlerTest
 {
     @Test
-    public void testCompleted()
-        throws Exception
+    public void testCompleted() throws Exception
     {
         HttpResponse response = mock(HttpResponse.class, Answers.RETURNS_DEEP_STUBS.get());
         String httpResponseText = "<httpresponse>response</httpresponse>";
@@ -75,18 +72,20 @@ public class DefaultHttpCallbackHandlerTest
         Assert.assertEquals("success", responseBack.getStatus().getReason());
         Assert.assertEquals(httpResponseText, responseBack.getContent());
 
-        try {
+        try
+        {
             new DefaultHttpCallbackHandler<IHttpResponse>(null);
             Assert.fail("Created handler with null callback");
-        } catch (NullPointerException ex) {
+        }
+        catch (NullPointerException ex)
+        {
             Assert.assertNotNull(ex.getMessage());
             Assert.assertEquals("Missing callback", ex.getMessage());
         }
     }
 
     @Test
-    public void testCancelled()
-        throws Exception
+    public void testCancelled() throws Exception
     {
         HttpResponse response = mock(HttpResponse.class, Answers.RETURNS_DEEP_STUBS.get());
         String httpResponseText = "<httpresponse>response</httpresponse>";
@@ -111,17 +110,19 @@ public class DefaultHttpCallbackHandlerTest
         Assert.assertTrue(future.isCancelled());
         Assert.assertTrue(future.isDone());
 
-        try {
+        try
+        {
             future.get();
             Assert.fail("Cancelled callback handler returned future result");
-        } catch (CancellationException ex) {
+        }
+        catch (CancellationException ex)
+        {
             // All is good
         }
     }
 
     @Test
-    public void testFailed()
-        throws Exception
+    public void testFailed() throws Exception
     {
         HttpResponse response = mock(HttpResponse.class, Answers.RETURNS_DEEP_STUBS.get());
         String httpResponseText = "<httpresponse>response</httpresponse>";
@@ -146,10 +147,13 @@ public class DefaultHttpCallbackHandlerTest
         Assert.assertFalse(future.isCancelled());
         Assert.assertTrue(future.isDone());
 
-        try {
+        try
+        {
             future.get();
             Assert.fail("Cancelled callback handler returned future result");
-        } catch (ExecutionException ex) {
+        }
+        catch (ExecutionException ex)
+        {
             Assert.assertTrue(ex.getCause() instanceof IllegalArgumentException);
             // All is good
         }

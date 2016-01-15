@@ -20,64 +20,86 @@ package com.servicemesh.agility.distributed.sync;
 import org.apache.log4j.Logger;
 
 /**
- * Represents an ephemeral znode name which has an ordered sequence number
- * and can be sorted in order
- *
+ * Represents an ephemeral znode name which has an ordered sequence number and can be sorted in order
  */
-public class ZNodeName implements Comparable<ZNodeName> {
+public class ZNodeName implements Comparable<ZNodeName>
+{
     private final String name;
     private String prefix;
     private int sequence = -1;
     private static final Logger LOG = Logger.getLogger(ZNodeName.class);
-    
-    public ZNodeName(String name) {
-        if (name == null) {
+
+    public ZNodeName(String name)
+    {
+        if (name == null)
+        {
             throw new NullPointerException("id cannot be null");
         }
         this.name = name;
-        this.prefix = name;
+        prefix = name;
         int idx = name.lastIndexOf('-');
-        if (idx >= 0) {
-            this.prefix = name.substring(0, idx);
-            try {
-                this.sequence = Integer.parseInt(name.substring(idx + 1));
+        if (idx >= 0)
+        {
+            prefix = name.substring(0, idx);
+            try
+            {
+                sequence = Integer.parseInt(name.substring(idx + 1));
                 // If an exception occurred we misdetected a sequence suffix,
                 // so return -1.
-            } catch (NumberFormatException e) {
+            }
+            catch (NumberFormatException e)
+            {
                 LOG.info("Number format exception for " + idx, e);
-            } catch (ArrayIndexOutOfBoundsException e) {
-               LOG.info("Array out of bounds for " + idx, e);
+            }
+            catch (ArrayIndexOutOfBoundsException e)
+            {
+                LOG.info("Array out of bounds for " + idx, e);
             }
         }
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return name.toString();
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object o)
+    {
+        if (this == o)
+        {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass())
+        {
+            return false;
+        }
 
         ZNodeName sequence = (ZNodeName) o;
 
-        if (!name.equals(sequence.name)) return false;
+        if (!name.equals(sequence.name))
+        {
+            return false;
+        }
 
         return true;
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return name.hashCode() + 37;
     }
 
-    public int compareTo(ZNodeName that) {
-        int s1 = this.sequence;
+    @Override
+    public int compareTo(ZNodeName that)
+    {
+        int s1 = sequence;
         int s2 = that.sequence;
-        if (s1 == -1 && s2 == -1) {
-            return this.name.compareTo(that.name);
+        if (s1 == -1 && s2 == -1)
+        {
+            return name.compareTo(that.name);
         }
         return s1 == -1 ? 1 : s2 == -1 ? -1 : s1 - s2;
     }
@@ -85,21 +107,24 @@ public class ZNodeName implements Comparable<ZNodeName> {
     /**
      * Returns the name of the znode
      */
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
 
     /**
      * Returns the sequence number
      */
-    public int getZNodeName() {
+    public int getZNodeName()
+    {
         return sequence;
     }
 
     /**
      * Returns the text prefix before the sequence number
      */
-    public String getPrefix() {
+    public String getPrefix()
+    {
         return prefix;
     }
 }

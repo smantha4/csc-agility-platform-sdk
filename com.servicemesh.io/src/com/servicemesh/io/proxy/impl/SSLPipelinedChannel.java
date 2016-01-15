@@ -23,16 +23,15 @@ import java.nio.channels.ByteChannel;
 
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLEngineResult;
-import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLEngineResult.Status;
+import javax.net.ssl.SSLException;
 
 import org.apache.log4j.Logger;
 
 import com.servicemesh.io.proxy.PipelinedChannel;
 import com.servicemesh.io.proxy.PipelinedChannelResult;
 
-public class SSLPipelinedChannel
-    implements PipelinedChannel
+public class SSLPipelinedChannel implements PipelinedChannel
 {
     private static final Logger _logger = Logger.getLogger(SSLPipelinedChannel.class);
 
@@ -45,7 +44,8 @@ public class SSLPipelinedChannel
 
     public SSLPipelinedChannel(final SSLEngine sslEngine)
     {
-        if (sslEngine == null) {
+        if (sslEngine == null)
+        {
             throw new IllegalArgumentException("Missing SSLEngine");
         }
 
@@ -63,15 +63,13 @@ public class SSLPipelinedChannel
     }
 
     @Override
-    public PipelinedChannelResult read(final ByteBuffer dst, final ByteChannel channel)
-        throws IOException
+    public PipelinedChannelResult read(final ByteBuffer dst, final ByteChannel channel) throws IOException
     {
         return (_downstream != null) ? _downstream.read(dst, channel) : new PipelinedChannelResult(dst, channel.read(dst));
     }
 
     /**
      * {@inheritDoc}
-     * 
      */
     @Override
     public int readBuffered(final ByteBuffer dst)
@@ -80,8 +78,7 @@ public class SSLPipelinedChannel
     }
 
     @Override
-    public PipelinedChannelResult write(final ByteBuffer src, final ByteChannel channel)
-        throws IOException
+    public PipelinedChannelResult write(final ByteBuffer src, final ByteChannel channel) throws IOException
     {
         return (_downstream != null) ? _downstream.write(src, channel) : new PipelinedChannelResult(src, channel.write(src));
     }
@@ -90,15 +87,15 @@ public class SSLPipelinedChannel
     {
         int count = Math.min(src.remaining(), dst.remaining());
 
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < count; i++)
+        {
             dst.put(src.get());
         }
 
         return count;
     }
 
-    private SSLEngineResult wrapOutput()
-        throws SSLException
+    private SSLEngineResult wrapOutput() throws SSLException
     {
         _logger.trace("wrapOutput before wrap _appDataOut" + _appDataOut.toString());
         _logger.trace("wrapOutput before wrap _netDataOut" + _netDataOut.toString());
@@ -117,7 +114,8 @@ public class SSLPipelinedChannel
     {
         int count = 0;
 
-        if (_netDataOut.position() > 0) {
+        if (_netDataOut.position() > 0)
+        {
             _netDataOut.flip();
             count = transferBytes(_netDataOut, dst);
             _netDataOut.compact();
@@ -127,8 +125,7 @@ public class SSLPipelinedChannel
     }
 
     @Override
-    public PipelinedChannelResult wrap(final ByteBuffer src, final ByteBuffer dst)
-        throws SSLException
+    public PipelinedChannelResult wrap(final ByteBuffer src, final ByteBuffer dst) throws SSLException
     {
         _logger.trace("wrap on entry src " + src.toString());
         _logger.trace("wrap on entry dst " + dst.toString());
@@ -140,36 +137,46 @@ public class SSLPipelinedChannel
         _logger.trace("wrap after first transfer _netDataOut " + _netDataOut.toString());
         SSLEngineResult engineResult = null;
 
-        if (_downstream == null) {
+        if (_downstream == null)
+        {
             boolean needsWrap = true;
             boolean isFirst = true;
 
-            while (needsWrap) {
+            while (needsWrap)
+            {
                 SSLEngineResult wrapResult = _sslEngine.wrap(src, _netDataOut);
                 _logger.trace("wrap after first wrap src " + src.toString());
                 _logger.trace("wrap after first wrap _netDataOut " + _netDataOut.toString());
 
-                if (isFirst) {
+                if (isFirst)
+                {
                     engineResult = wrapResult;
                     isFirst = false;
                 }
 
-                if (wrapResult.getStatus() == Status.OK) {
+                if (wrapResult.getStatus() == Status.OK)
+                {
                     //byteCount += transferOutput(dst);
                     transferOutput(dst);
                     byteCount += wrapResult.bytesConsumed();
                     _logger.trace("wrap after second transfer dst " + dst.toString());
                     _logger.trace("wrap after second transfer _netDataOut " + _netDataOut.toString());
                     needsWrap = src.remaining() > 0;
-                } else {
-                    needsWrap =false;
+                }
+                else
+                {
+                    needsWrap = false;
                 }
             }
-        } else {
-            if (_appDataOut.position() > 0) {
+        }
+        else
+        {
+            if (_appDataOut.position() > 0)
+            {
                 engineResult = wrapOutput();
 
-                if (engineResult.getStatus() == Status.OK) {
+                if (engineResult.getStatus() == Status.OK)
+                {
                     byteCount += transferOutput(dst);
                     _logger.trace("wrap after transfer 3 dst " + dst.toString());
                     _logger.trace("wrap after transfer 3 _netDataOut " + _netDataOut.toString());
@@ -179,25 +186,31 @@ public class SSLPipelinedChannel
             PipelinedChannelResult channelResult = _downstream.wrap(src, _appDataOut);
             _logger.trace("wrap after wrap 3 src " + src.toString());
             _logger.trace("wrap after wrap 3 _appDataOut " + _appDataOut.toString());
-            if ((channelResult.getEngineResult() == null ) || (channelResult.getEngineResult().getStatus() == Status.OK)) {
+            if ((channelResult.getEngineResult() == null) || (channelResult.getEngineResult().getStatus() == Status.OK))
+            {
                 boolean needsWrap = true;
                 boolean isFirst = true;
 
-                while (needsWrap) {
+                while (needsWrap)
+                {
                     SSLEngineResult wrapResult = wrapOutput();
 
-                    if (isFirst) {
+                    if (isFirst)
+                    {
                         engineResult = wrapResult;
                         isFirst = false;
                     }
 
-                    if (wrapResult.getStatus() == Status.OK) {
+                    if (wrapResult.getStatus() == Status.OK)
+                    {
                         transferOutput(dst);
                         byteCount += wrapResult.bytesConsumed();
                         needsWrap = _appDataOut.position() > 0;
                         _logger.trace("wrap after transfer 4 dst " + dst.toString());
                         _logger.trace("wrap after transfer 4 _netDataOut " + _netDataOut.toString());
-                    } else {
+                    }
+                    else
+                    {
                         needsWrap = false;
                     }
                 }
@@ -211,7 +224,8 @@ public class SSLPipelinedChannel
     {
         int count = 0;
 
-        if (_appDataIn.position() > 0) {
+        if (_appDataIn.position() > 0)
+        {
             _appDataIn.flip();
             count += transferBytes(_appDataIn, dst);
             _appDataIn.compact();
@@ -224,8 +238,7 @@ public class SSLPipelinedChannel
      * Caller must call PipelinedChannelResult.getResultBuffer().compact()
      */
     @Override
-    public PipelinedChannelResult unwrap(final ByteBuffer src, final ByteBuffer dst)
-        throws SSLException
+    public PipelinedChannelResult unwrap(final ByteBuffer src, final ByteBuffer dst) throws SSLException
     {
         _logger.trace("unwrap on entry src " + src.toString());
         _logger.trace("unwrap on entry dst " + dst.toString());
@@ -237,32 +250,42 @@ public class SSLPipelinedChannel
         _logger.trace("unwrap after transfer 1 _appDataIn " + _appDataIn.toString());
         SSLEngineResult engineResult = null;
 
-        if (_downstream == null) {
+        if (_downstream == null)
+        {
             boolean needsUnwrap = true;
             boolean isFirst = true;
 
-            while (needsUnwrap) {
+            while (needsUnwrap)
+            {
                 SSLEngineResult unwrapResult = _sslEngine.unwrap(src, _appDataIn);
                 _logger.trace("unwrap after unwrap 1 src " + src.toString());
                 _logger.trace("unwrap after unwrap 1 _appDataIn " + _appDataIn.toString());
-                _logger.trace("unwrap after unwrap 1 engine result status = " + unwrapResult.getStatus() + ", bytes consumed = " + unwrapResult.bytesConsumed() + ", bytes produced = " + unwrapResult.bytesProduced());
+                _logger.trace("unwrap after unwrap 1 engine result status = " + unwrapResult.getStatus() + ", bytes consumed = "
+                        + unwrapResult.bytesConsumed() + ", bytes produced = " + unwrapResult.bytesProduced());
 
-                if (isFirst) {
+                if (isFirst)
+                {
                     engineResult = unwrapResult;
                     isFirst = false;
                 }
 
-                if (unwrapResult.getStatus() == Status.OK) {
+                if (unwrapResult.getStatus() == Status.OK)
+                {
                     byteCount += transferInput(dst);
                     _logger.trace("unwrap after transfer 2 dst " + dst.toString());
                     _logger.trace("unwrap after transfer 2 _appDataIn " + _appDataIn.toString());
                     needsUnwrap = src.remaining() > 0;
-                } else {
+                }
+                else
+                {
                     needsUnwrap = false;
                 }
             }
-        } else {
-            if (_netDataIn.position() > 0) {
+        }
+        else
+        {
+            if (_netDataIn.position() > 0)
+            {
                 _netDataIn.flip();
                 _downstream.unwrap(_netDataIn, _appDataIn);
                 _netDataIn.compact();
@@ -276,18 +299,22 @@ public class SSLPipelinedChannel
             boolean needsUnwrap = true;
             boolean isFirst = true;
 
-            while (needsUnwrap) {
+            while (needsUnwrap)
+            {
                 SSLEngineResult unwrapResult = _sslEngine.unwrap(src, _netDataIn);
                 _logger.trace("unwrap after unwrap 3 src " + src.toString());
                 _logger.trace("unwrap after unwrap 3 _netDataIn " + _netDataIn.toString());
-                _logger.trace("unwrap after unwrap 3 engine result status = " + unwrapResult.getStatus() + ", bytes consumed = " + unwrapResult.bytesConsumed() + ", bytes produced = " + unwrapResult.bytesProduced());
+                _logger.trace("unwrap after unwrap 3 engine result status = " + unwrapResult.getStatus() + ", bytes consumed = "
+                        + unwrapResult.bytesConsumed() + ", bytes produced = " + unwrapResult.bytesProduced());
 
-                if (isFirst) {
+                if (isFirst)
+                {
                     engineResult = unwrapResult;
                     isFirst = false;
                 }
 
-                if (unwrapResult.getStatus() == Status.OK) {
+                if (unwrapResult.getStatus() == Status.OK)
+                {
                     _netDataIn.flip();
                     _downstream.unwrap(_netDataIn, _appDataIn);
                     _netDataIn.compact();
@@ -297,7 +324,9 @@ public class SSLPipelinedChannel
                     _logger.trace("unwrap after transfer 4 dst " + dst.toString());
                     _logger.trace("unwrap after transfer 4 _appDataIn " + _appDataIn.toString());
                     needsUnwrap = src.remaining() > 0;
-                } else {
+                }
+                else
+                {
                     needsUnwrap = false;
                 }
             }
@@ -323,7 +352,8 @@ public class SSLPipelinedChannel
     {
         boolean rv = (_appDataIn.position() > 0) || (_netDataIn.position() > 0);
 
-        if (!rv && (_downstream != null)) {
+        if (!rv && (_downstream != null))
+        {
             rv = _downstream.hasBufferedInput();
         }
 
@@ -335,7 +365,8 @@ public class SSLPipelinedChannel
     {
         boolean rv = (_appDataOut.position() > 0) || (_netDataOut.position() > 0);
 
-        if (!rv && (_downstream != null)) {
+        if (!rv && (_downstream != null))
+        {
             rv = _downstream.hasBufferedOutput();
         }
 

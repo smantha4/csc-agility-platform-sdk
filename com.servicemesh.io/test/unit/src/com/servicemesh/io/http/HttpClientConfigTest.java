@@ -28,10 +28,10 @@ import com.servicemesh.io.proxy.ProxyType;
 public class HttpClientConfigTest
 {
     @Test
-    public void testHttpClientConfig()
-        throws Exception
+    public void testHttpClientConfig() throws Exception
     {
-        KeyManager keyMgr = new KeyManager() {};
+        KeyManager keyMgr = new KeyManager() {
+        };
         KeyManager[] keyMgrs = new KeyManager[] { keyMgr };
         Credentials creds = new Credentials(Credentials.CredentialsType.CREDENTIALS_TYPE_USERNAMEPASSORD);
         Proxy proxy = new Proxy("localhost", 1080, ProxyType.HTTP_PROXY, null);

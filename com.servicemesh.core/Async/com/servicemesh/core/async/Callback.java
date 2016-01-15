@@ -18,7 +18,8 @@
 package com.servicemesh.core.async;
 
 @FunctionalInterface
-public interface Callback<T> {
+public interface Callback<T>
+{
 
-	public void invoke(T arg);
+    public void invoke(T arg);
 }

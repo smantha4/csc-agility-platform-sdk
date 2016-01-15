@@ -18,7 +18,8 @@
 package com.servicemesh.core.async;
 
 @FunctionalInterface
-public interface Function<A,R> {
+public interface Function<A, R>
+{
 
-	public R invoke(A arg);
+    public R invoke(A arg);
 }

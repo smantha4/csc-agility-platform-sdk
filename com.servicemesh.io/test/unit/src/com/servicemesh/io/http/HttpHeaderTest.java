@@ -26,8 +26,7 @@ import org.junit.Test;
 public class HttpHeaderTest
 {
     @Test
-    public void testHttpRequestHeader()
-        throws Exception
+    public void testHttpRequestHeader() throws Exception
     {
         String headerName = "Accept";
         String headerValue = "text/html";
@@ -42,14 +41,17 @@ public class HttpHeaderTest
         Assert.assertEquals(1, values.size());
         Assert.assertEquals(headerValue, values.get(0));
 
-        try {
+        try
+        {
             values.add("text/plain");
             Assert.fail("Modified values list");
-        } catch (UnsupportedOperationException ex) {
+        }
+        catch (UnsupportedOperationException ex)
+        {
             // All is good
         }
 
-        header = HttpClientFactory.getInstance().createHeader(headerName, (String)null);
+        header = HttpClientFactory.getInstance().createHeader(headerName, (String) null);
         Assert.assertEquals(headerName, header.getName());
         Assert.assertEquals("", header.getValue());
         Assert.assertEquals(headerName + ": ", header.toString());
@@ -58,40 +60,47 @@ public class HttpHeaderTest
         Assert.assertEquals(1, values.size());
         Assert.assertEquals("", values.get(0));
 
-        try {
+        try
+        {
             values.add("text/plain");
             Assert.fail("Modified values list");
-        } catch (UnsupportedOperationException ex) {
+        }
+        catch (UnsupportedOperationException ex)
+        {
             // All is good
         }
     }
 
     @Test
-    public void testHttpRequestHeaderNegative()
-        throws Exception
+    public void testHttpRequestHeaderNegative() throws Exception
     {
         String headerValue = "text/html";
 
-        try {
+        try
+        {
             HttpClientFactory.getInstance().createHeader(null, headerValue);
             Assert.fail("HttpHeader constructed with invalid name");
-        } catch (IllegalArgumentException ex) {
+        }
+        catch (IllegalArgumentException ex)
+        {
             Assert.assertNotNull(ex.getMessage());
             Assert.assertTrue(ex.getMessage().contains("Invalid name parameter"));
         }
 
-        try {
+        try
+        {
             HttpClientFactory.getInstance().createHeader("", headerValue);
             Assert.fail("HttpHeader constructed with invalid name");
-        } catch (IllegalArgumentException ex) {
+        }
+        catch (IllegalArgumentException ex)
+        {
             Assert.assertNotNull(ex.getMessage());
             Assert.assertTrue(ex.getMessage().contains("Invalid name parameter"));
         }
     }
 
     @Test
-    public void testHttpRequestHeaderMultiValue()
-        throws Exception
+    public void testHttpRequestHeaderMultiValue() throws Exception
     {
         String headerName = "Accept";
         String headerValue1 = "text/html";
@@ -123,10 +132,13 @@ public class HttpHeaderTest
         Assert.assertEquals("", header.getValues().get(1));
         Assert.assertEquals("text/plain", header.getValues().get(2));
 
-        try {
+        try
+        {
             header.getValues().add("gzip");
             Assert.fail("Modified values list");
-        } catch (UnsupportedOperationException ex) {
+        }
+        catch (UnsupportedOperationException ex)
+        {
             // All is good
         }
 
@@ -137,10 +149,13 @@ public class HttpHeaderTest
         Assert.assertEquals("text/html", header.getValues().get(0));
         Assert.assertEquals("", header.getValues().get(1));
 
-        try {
+        try
+        {
             header.getValues().add("gzip");
             Assert.fail("Modified values list");
-        } catch (UnsupportedOperationException ex) {
+        }
+        catch (UnsupportedOperationException ex)
+        {
             // All is good
         }
 
@@ -151,10 +166,13 @@ public class HttpHeaderTest
         Assert.assertEquals("", header.getValues().get(0));
         Assert.assertEquals("text/plain", header.getValues().get(1));
 
-        try {
+        try
+        {
             header.getValues().add("gzip");
             Assert.fail("Modified values list");
-        } catch (UnsupportedOperationException ex) {
+        }
+        catch (UnsupportedOperationException ex)
+        {
             // All is good
         }
 
@@ -166,10 +184,13 @@ public class HttpHeaderTest
         Assert.assertEquals("text/plain", header.getValues().get(1));
         Assert.assertEquals("", header.getValues().get(2));
 
-        try {
+        try
+        {
             header.getValues().add("gzip");
             Assert.fail("Modified values list");
-        } catch (UnsupportedOperationException ex) {
+        }
+        catch (UnsupportedOperationException ex)
+        {
             // All is good
         }
 
@@ -181,10 +202,13 @@ public class HttpHeaderTest
         Assert.assertEquals("", header.getValues().get(1));
         Assert.assertEquals("text/plain", header.getValues().get(2));
 
-        try {
+        try
+        {
             header.getValues().add("gzip");
             Assert.fail("Modified values list");
-        } catch (UnsupportedOperationException ex) {
+        }
+        catch (UnsupportedOperationException ex)
+        {
             // All is good
         }
 
@@ -196,22 +220,28 @@ public class HttpHeaderTest
         Assert.assertEquals("text/json", header.getValues().get(1));
         Assert.assertEquals("", header.getValues().get(2));
 
-        try {
+        try
+        {
             header.getValues().add("gzip");
             Assert.fail("Modified values list");
-        } catch (UnsupportedOperationException ex) {
+        }
+        catch (UnsupportedOperationException ex)
+        {
             // All is good
         }
 
-        header = HttpClientFactory.getInstance().createHeader(headerName, (List<String>)null);
+        header = HttpClientFactory.getInstance().createHeader(headerName, (List<String>) null);
         Assert.assertEquals(headerName, header.getName());
         Assert.assertEquals("", header.getValue());
         Assert.assertEquals(0, header.getValues().size());
 
-        try {
+        try
+        {
             header.getValues().add("gzip");
             Assert.fail("Modified values list");
-        } catch (UnsupportedOperationException ex) {
+        }
+        catch (UnsupportedOperationException ex)
+        {
             // All is good
         }
 
@@ -220,10 +250,13 @@ public class HttpHeaderTest
         Assert.assertEquals("", header.getValue());
         Assert.assertEquals(0, header.getValues().size());
 
-        try {
+        try
+        {
             header.getValues().add("gzip");
             Assert.fail("Modified values list");
-        } catch (UnsupportedOperationException ex) {
+        }
+        catch (UnsupportedOperationException ex)
+        {
             // All is good
         }
 
@@ -251,8 +284,7 @@ public class HttpHeaderTest
     }
 
     @Test
-    public void testHttpRequstHeaderMultiValueNegative()
-        throws Exception
+    public void testHttpRequstHeaderMultiValueNegative() throws Exception
     {
         String headerValue1 = "text/html";
         String headerValue2 = "text/plain";
@@ -262,18 +294,24 @@ public class HttpHeaderTest
         headerValues.add(headerValue1);
         headerValues.add(headerValue2);
 
-        try {
+        try
+        {
             HttpClientFactory.getInstance().createHeader(null, headerValues);
             Assert.fail("HttpHeader constructed with invalid name");
-        } catch (IllegalArgumentException ex) {
+        }
+        catch (IllegalArgumentException ex)
+        {
             Assert.assertNotNull(ex.getMessage());
             Assert.assertTrue(ex.getMessage().contains("Invalid name parameter"));
         }
 
-        try {
+        try
+        {
             HttpClientFactory.getInstance().createHeader("", headerValues);
             Assert.fail("HttpHeader constructed with invalid name");
-        } catch (IllegalArgumentException ex) {
+        }
+        catch (IllegalArgumentException ex)
+        {
             Assert.assertNotNull(ex.getMessage());
             Assert.assertTrue(ex.getMessage().contains("Invalid name parameter"));
         }

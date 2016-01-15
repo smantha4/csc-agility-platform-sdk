@@ -19,9 +19,9 @@ package com.servicemesh.io.proxy;
 
 import java.nio.channels.ByteChannel;
 
-public interface ProxyByteChannel
-    extends ByteChannel
+public interface ProxyByteChannel extends ByteChannel
 {
     public boolean hasBufferedInput();
+
     public boolean hasBufferedOutput();
 }

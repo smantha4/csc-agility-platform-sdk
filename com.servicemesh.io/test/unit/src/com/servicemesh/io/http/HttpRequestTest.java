@@ -28,14 +28,12 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.servicemesh.io.http.impl.BaseHttpHeader;
 import com.servicemesh.io.http.impl.DefaultHttpRequest;
 
 public class HttpRequestTest
 {
     @Test
-    public void testHttpRequest()
-        throws Exception
+    public void testHttpRequest() throws Exception
     {
         String stringUri = "https://localhost:8443/agility/login.html";
         URI uri = new URI(stringUri);
@@ -62,72 +60,91 @@ public class HttpRequestTest
     }
 
     @Test
-    public void testHttpRequestNegative()
-        throws Exception
+    public void testHttpRequestNegative() throws Exception
     {
         String stringUri = "https://localhost:8443/agility/login.html";
         URI uri = new URI(stringUri);
 
-        try {
+        try
+        {
             new DefaultHttpRequest(null, stringUri);
             Assert.fail("Constructed with missing HttpMethod");
-        } catch (IllegalArgumentException ex) {
+        }
+        catch (IllegalArgumentException ex)
+        {
             Assert.assertNotNull(ex.getMessage());
             Assert.assertEquals("Missing HttpMethod", ex.getMessage());
         }
 
-        try {
-            new DefaultHttpRequest(HttpMethod.GET, (URI)null);
+        try
+        {
+            new DefaultHttpRequest(HttpMethod.GET, (URI) null);
             Assert.fail("Constructed with missing URI");
-        } catch (IllegalArgumentException ex) {
+        }
+        catch (IllegalArgumentException ex)
+        {
             Assert.assertNotNull(ex.getMessage());
             Assert.assertEquals("Missing URI", ex.getMessage());
         }
 
-        try {
-            new DefaultHttpRequest(HttpMethod.GET, (String)null);
+        try
+        {
+            new DefaultHttpRequest(HttpMethod.GET, (String) null);
             Assert.fail("Constructed with invalid URI");
-        } catch (IllegalArgumentException ex) {
+        }
+        catch (IllegalArgumentException ex)
+        {
             Assert.assertNotNull(ex.getMessage());
             Assert.assertTrue(ex.getMessage().contains("Invalid uri"));
         }
 
-        try {
+        try
+        {
             new DefaultHttpRequest(HttpMethod.GET, "");
             Assert.fail("Constructed with invalid URI");
-        } catch (IllegalArgumentException ex) {
+        }
+        catch (IllegalArgumentException ex)
+        {
             Assert.assertNotNull(ex.getMessage());
             Assert.assertTrue(ex.getMessage().contains("Invalid uri"));
         }
 
-        try {
+        try
+        {
             HttpClientFactory.getInstance().createRequest(null);
             Assert.fail("Constructed with missing HttpMethod");
-        } catch (IllegalArgumentException ex) {
+        }
+        catch (IllegalArgumentException ex)
+        {
             Assert.assertNotNull(ex.getMessage());
             Assert.assertEquals("Missing HttpMethod", ex.getMessage());
         }
 
-        try {
+        try
+        {
             HttpClientFactory.getInstance().createRequest(null, uri);
             Assert.fail("Constructed with missing HttpMethod");
-        } catch (IllegalArgumentException ex) {
+        }
+        catch (IllegalArgumentException ex)
+        {
             Assert.assertNotNull(ex.getMessage());
             Assert.assertEquals("Missing HttpMethod", ex.getMessage());
         }
 
-        try {
+        try
+        {
             HttpClientFactory.getInstance().createRequest(HttpMethod.GET, null);
             Assert.fail("Constructed with missing URI");
-        } catch (IllegalArgumentException ex) {
+        }
+        catch (IllegalArgumentException ex)
+        {
             Assert.assertNotNull(ex.getMessage());
             Assert.assertEquals("Missing URI", ex.getMessage());
         }
     }
 
     @Test
-    public void testHeaders()
-        throws Exception
+    public void testHeaders() throws Exception
     {
         final String nonHeaderName = "Author";
         String stringUri = "https://localhost:8443/agility/login.html";
@@ -188,12 +205,18 @@ public class HttpRequestTest
         boolean header2Found = false;
         boolean header3Found = false;
 
-        for (IHttpHeader nextHeader : returnedHeaders) {
-            if (headerName.equals(nextHeader.getName()) && headerValue.equals(nextHeader.getValue())) {
+        for (IHttpHeader nextHeader : returnedHeaders)
+        {
+            if (headerName.equals(nextHeader.getName()) && headerValue.equals(nextHeader.getValue()))
+            {
                 header1Found = true;
-            } else if (headerName2.equals(nextHeader.getName()) && headerValue2.equals(nextHeader.getValue())) {
-                    header2Found = true;
-            } else if (headerName3.equals(nextHeader.getName()) && headerValue3.equals(nextHeader.getValue())) {
+            }
+            else if (headerName2.equals(nextHeader.getName()) && headerValue2.equals(nextHeader.getValue()))
+            {
+                header2Found = true;
+            }
+            else if (headerName3.equals(nextHeader.getName()) && headerValue3.equals(nextHeader.getValue()))
+            {
                 header3Found = true;
             }
         }
@@ -222,12 +245,18 @@ public class HttpRequestTest
         header2Found = false;
         header3Found = false;
 
-        for (IHttpHeader nextHeader : returnedHeaders) {
-            if (headerName.equals(nextHeader.getName()) && headerValue.equals(nextHeader.getValue())) {
+        for (IHttpHeader nextHeader : returnedHeaders)
+        {
+            if (headerName.equals(nextHeader.getName()) && headerValue.equals(nextHeader.getValue()))
+            {
                 header1Found = true;
-            } else if (headerName2.equals(nextHeader.getName()) && headerValue2.equals(nextHeader.getValue())) {
-                    header2Found = true;
-            } else if (headerName3.equals(nextHeader.getName()) && headerValue3.equals(nextHeader.getValue())) {
+            }
+            else if (headerName2.equals(nextHeader.getName()) && headerValue2.equals(nextHeader.getValue()))
+            {
+                header2Found = true;
+            }
+            else if (headerName3.equals(nextHeader.getName()) && headerValue3.equals(nextHeader.getValue()))
+            {
                 header3Found = true;
             }
         }
@@ -237,8 +266,7 @@ public class HttpRequestTest
     }
 
     @Test
-    public void testAddRemoveHeaders()
-        throws Exception
+    public void testAddRemoveHeaders() throws Exception
     {
         final String nonHeaderName = "Author";
         final String stringUri = "https://localhost:8443/agility/login.html";
@@ -283,8 +311,7 @@ public class HttpRequestTest
     }
 
     @Test
-    public void testAddRemoveMultiHeaders()
-        throws Exception
+    public void testAddRemoveMultiHeaders() throws Exception
     {
         final String stringUri = "https://localhost:8443/agility/login.html";
         final URI uri = new URI(stringUri);
@@ -372,8 +399,7 @@ public class HttpRequestTest
     }
 
     @Test
-    public void testContent()
-        throws Exception
+    public void testContent() throws Exception
     {
         String stringContent = "String content";
         String byteContent = "Byte content";
@@ -402,14 +428,14 @@ public class HttpRequestTest
 
         request.setContent(new ByteArrayInputStream(streamContent.getBytes()));
         Assert.assertEquals(streamContent, request.getContent());
-        Assert.assertNull(request.getContent());        // Can't do this twice
+        Assert.assertNull(request.getContent()); // Can't do this twice
         Assert.assertNull(request.getContentAsByteArray());
         Assert.assertNull(request.getContentAsStream());
         Assert.assertEquals(-1, request.getContentLength());
 
         request.setContent(new ByteArrayInputStream(streamContent.getBytes()), streamContent.length());
         Assert.assertTrue(Arrays.equals(streamContent.getBytes(), request.getContentAsByteArray()));
-        Assert.assertNull(request.getContentAsByteArray());     // Can't do this twice
+        Assert.assertNull(request.getContentAsByteArray()); // Can't do this twice
         Assert.assertNull(request.getContent());
         Assert.assertNull(request.getContentAsStream());
         Assert.assertEquals(streamContent.length(), request.getContentLength());
@@ -420,21 +446,24 @@ public class HttpRequestTest
         Assert.assertEquals(-1, request.getContentLength());
     }
 
-    private String convertStreamToString(InputStream stream)
-        throws Exception
+    private String convertStreamToString(InputStream stream) throws Exception
     {
         String rv = null;
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         byte[] bytesIn = new byte[8192];
         int bytesRead = 0;
 
-        try {
-            while ((bytesRead = stream.read(bytesIn, 0, 8192)) != -1) {
+        try
+        {
+            while ((bytesRead = stream.read(bytesIn, 0, 8192)) != -1)
+            {
                 out.write(bytesIn, 0, bytesRead);
             }
 
             rv = new String(out.toByteArray());
-        } finally {
+        }
+        finally
+        {
             out.close();
         }
 

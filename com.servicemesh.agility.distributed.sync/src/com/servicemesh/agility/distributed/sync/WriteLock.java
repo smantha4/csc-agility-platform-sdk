@@ -17,34 +17,31 @@
  */
 package com.servicemesh.agility.distributed.sync;
 
-import org.apache.log4j.Logger;
-import org.apache.zookeeper.KeeperException;
-import org.apache.zookeeper.WatchedEvent;
-import org.apache.zookeeper.Watcher;
-import org.apache.zookeeper.Watcher.Event.EventType;
-
 import static org.apache.zookeeper.CreateMode.EPHEMERAL_SEQUENTIAL;
-
-import org.apache.zookeeper.ZooKeeper;
-import org.apache.zookeeper.data.ACL;
-import org.apache.zookeeper.data.Stat;
 
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import com.servicemesh.agility.distributed.sync.UIDGenerator;
+import org.apache.log4j.Logger;
+import org.apache.zookeeper.KeeperException;
+import org.apache.zookeeper.WatchedEvent;
+import org.apache.zookeeper.Watcher;
+import org.apache.zookeeper.Watcher.Event.EventType;
+import org.apache.zookeeper.ZooKeeper;
+import org.apache.zookeeper.data.ACL;
+import org.apache.zookeeper.data.Stat;
 
 /**
- * A <a href="package.html">protocol to implement an exclusive
- *  write lock or to elect a leader</a>. <p/> You invoke {@link #lock()} to 
- *  start the process of grabbing the lock; you may get the lock then or it may be 
- *  some time later. <p/> You can register a listener so that you are invoked 
- *  when you get the lock; otherwise you can ask if you have the lock
- *  by calling {@link #isOwner()}
- *
+ * A <a href="package.html">protocol to implement an exclusive write lock or to elect a leader</a>.
+ * <p/>
+ * You invoke {@link #lock()} to start the process of grabbing the lock; you may get the lock then or it may be some time later.
+ * <p/>
+ * You can register a listener so that you are invoked when you get the lock; otherwise you can ask if you have the lock by
+ * calling {@link #isOwner()}
  */
-public class WriteLock extends ProtocolSupport {
+public class WriteLock extends ProtocolSupport
+{
     private static final Logger LOG = Logger.getLogger(WriteLock.class);
 
     private final String dir;
@@ -53,215 +50,273 @@ public class WriteLock extends ProtocolSupport {
     private ZNodeName idName;
     private String ownerId;
     private String lastChildId;
-    private byte[] data = {0x12, 0x34};
+    private byte[] data = { 0x12, 0x34 };
     private LockListener callback;
     private LockZooKeeperOperation zop;
     private IsLockedZooKeeperOperation zopCheck;
 
     /**
      * zookeeper contructor for writelock
-     * @param zookeeper zookeeper client instance
-     * @param dir the parent path you want to use for locking
-     * @param acl the acls that you want to use for all the paths,
-     * if null world read/write is used.
+     * 
+     * @param zookeeper
+     *            zookeeper client instance
+     * @param dir
+     *            the parent path you want to use for locking
+     * @param acl
+     *            the acls that you want to use for all the paths, if null world read/write is used.
      */
-    public WriteLock(ZooKeeper zookeeper, String dir, List<ACL> acl) {
+    public WriteLock(ZooKeeper zookeeper, String dir, List<ACL> acl)
+    {
         super(zookeeper);
         this.dir = dir;
-        if (acl != null) {
+        if (acl != null)
+        {
             setAcl(acl);
         }
-        this.zop = new LockZooKeeperOperation();
+        zop = new LockZooKeeperOperation();
         zopCheck = new IsLockedZooKeeperOperation();
     }
-    
+
     /**
      * zookeeper contructor for writelock with callback
-     * @param zookeeper the zookeeper client instance
-     * @param dir the parent path you want to use for locking
-     * @param acl the acls that you want to use for all the paths
-     * @param callback the call back instance
+     * 
+     * @param zookeeper
+     *            the zookeeper client instance
+     * @param dir
+     *            the parent path you want to use for locking
+     * @param acl
+     *            the acls that you want to use for all the paths
+     * @param callback
+     *            the call back instance
      */
-    public WriteLock(ZooKeeper zookeeper, String dir, List<ACL> acl, 
-            LockListener callback) {
+    public WriteLock(ZooKeeper zookeeper, String dir, List<ACL> acl, LockListener callback)
+    {
         this(zookeeper, dir, acl);
         this.callback = callback;
     }
 
     /**
      * return the current locklistener
+     * 
      * @return the locklistener
      */
-    public LockListener getLockListener() {
-        return this.callback;
+    public LockListener getLockListener()
+    {
+        return callback;
     }
-    
+
     /**
      * register a different call back listener
-     * @param callback the call back instance
+     * 
+     * @param callback
+     *            the call back instance
      */
-    public void setLockListener(LockListener callback) {
+    public void setLockListener(LockListener callback)
+    {
         this.callback = callback;
     }
 
     /**
-     * Removes the lock or associated znode if 
-     * you no longer require the lock. this also 
-     * removes your request in the queue for locking
-     * in case you do not already hold the lock.
-     * @throws RuntimeException throws a runtime exception
-     * if it cannot connect to zookeeper.
+     * Removes the lock or associated znode if you no longer require the lock. this also removes your request in the queue for
+     * locking in case you do not already hold the lock.
+     * 
+     * @throws RuntimeException
+     *             throws a runtime exception if it cannot connect to zookeeper.
      */
-    public synchronized void unlock() throws RuntimeException {
-        
-        if (!isClosed() && id != null) {
-        	_unlock();
+    public synchronized void unlock() throws RuntimeException
+    {
+
+        if (!isClosed() && id != null)
+        {
+            _unlock();
         }
     }
-    
-    protected void doClose() {
-    	_unlock();
+
+    @Override
+    protected void doClose()
+    {
+        _unlock();
     }
-    
-    protected void _unlock() {
-        try {
+
+    protected void _unlock()
+    {
+        try
+        {
             ZooKeeperOperation zopdel = new ZooKeeperOperation() {
-                public boolean execute() throws KeeperException,
-                    InterruptedException {
-                    zookeeper.delete(id, -1);   
+                @Override
+                public boolean execute() throws KeeperException, InterruptedException
+                {
+                    zookeeper.delete(id, -1);
                     return Boolean.TRUE;
                 }
             };
-            // AP-16166 retry to handle timeout cases when agility VM is suspened for some reason so when back up it can reconnect 
-            this.retryOperation(zopdel);
-        } catch (InterruptedException e) {
+            // AP-16166 retry to handle timeout cases when agility VM is suspened for some reason so when back up it can reconnect
+            retryOperation(zopdel);
+        }
+        catch (InterruptedException e)
+        {
             LOG.warn("Caught: " + e, e);
             //set that we have been interrupted.
-           Thread.currentThread().interrupt();
-        } catch (KeeperException.NoNodeException e) {
-            // do nothing
-        } catch (KeeperException e) {
-            LOG.warn("Caught: " + e, e);
-            throw (RuntimeException) new RuntimeException(e.getMessage()).
-                initCause(e);
+            Thread.currentThread().interrupt();
         }
-        finally {
-            if (callback != null) {
+        catch (KeeperException.NoNodeException e)
+        {
+            // do nothing
+        }
+        catch (KeeperException e)
+        {
+            LOG.warn("Caught: " + e, e);
+            throw (RuntimeException) new RuntimeException(e.getMessage()).initCause(e);
+        }
+        finally
+        {
+            if (callback != null)
+            {
                 callback.lockReleased();
             }
             id = null;
         }
     }
 
-    /** 
-     * the watcher called on  
-     * getting watch while watching 
-     * my predecessor
+    /**
+     * the watcher called on getting watch while watching my predecessor
      */
-    private class LockWatcher implements Watcher {
-        public void process(WatchedEvent event) {
-        	
+    private class LockWatcher implements Watcher
+    {
+        @Override
+        public void process(WatchedEvent event)
+        {
+
             LOG.debug("Watcher fired on path: " + event.getPath() + " state: " + event.getState() + " type " + event.getType());
-            if(event.getType() == EventType.None)
+            if (event.getType() == EventType.None)
             {
-            	// if the connection is dropped and re-established, a session change event is sent 
-            	// to all registered watchers. have seen cases where a watcher was left registered
-            	// after lock appeared to be released and this causes the lock to be reaquired
-            	LOG.debug("Ignoring session state change event: " + event.getState());
-            	return;
+                // if the connection is dropped and re-established, a session change event is sent 
+                // to all registered watchers. have seen cases where a watcher was left registered
+                // after lock appeared to be released and this causes the lock to be reaquired
+                LOG.debug("Ignoring session state change event: " + event.getState());
+                return;
             }
-            
+
             // lets either become the leader or watch the new/updated node
-            try {
+            try
+            {
                 lock();
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 LOG.warn("Failed to acquire lock: " + e, e);
             }
         }
     }
-    
+
     /**
-     * a zoookeeper operation that is mainly responsible
-     * for all the magic required for locking.
+     * a zoookeeper operation that is mainly responsible for all the magic required for locking.
      */
-    private  class LockZooKeeperOperation implements ZooKeeperOperation {
-        
-        /** find if we have been created earler if not create our node
-         * 
-         * @param prefix the prefix node
-         * @param zookeeper teh zookeeper client
-         * @param dir the dir paretn
+    private class LockZooKeeperOperation implements ZooKeeperOperation
+    {
+
+        /**
+         * find if we have been created earler if not create our node
+         *
+         * @param prefix
+         *            the prefix node
+         * @param zookeeper
+         *            teh zookeeper client
+         * @param dir
+         *            the dir paretn
          * @throws KeeperException
          * @throws InterruptedException
          */
-        private void findPrefixInChildren(String prefix, ZooKeeper zookeeper, String dir) 
-            throws KeeperException, InterruptedException {
+        private void findPrefixInChildren(String prefix, ZooKeeper zookeeper, String dir)
+                throws KeeperException, InterruptedException
+        {
             List<String> names = zookeeper.getChildren(dir, false);
-            for (String name : names) {
-                if (name.startsWith(prefix)) {
+            for (String name : names)
+            {
+                if (name.startsWith(prefix))
+                {
                     id = dir + "/" + name;
-                    if (LOG.isDebugEnabled()) {
+                    if (LOG.isDebugEnabled())
+                    {
                         LOG.debug("Found id created last time: " + id);
                     }
                     break;
                 }
             }
-            if (id == null) {
-                id = zookeeper.create(dir + "/" + prefix, data, 
-                        getAcl(), EPHEMERAL_SEQUENTIAL);
+            if (id == null)
+            {
+                id = zookeeper.create(dir + "/" + prefix, data, getAcl(), EPHEMERAL_SEQUENTIAL);
 
-                if (LOG.isDebugEnabled()) {
+                if (LOG.isDebugEnabled())
+                {
                     LOG.debug("Created id: " + id);
                 }
             }
 
         }
-        
+
         /**
-         * the command that is run and retried for actually 
-         * obtaining the lock
+         * the command that is run and retried for actually obtaining the lock
+         * 
          * @return if the command was successful or not
          */
-        public boolean execute() throws KeeperException, InterruptedException {
-            do {
-                if (id == null) {
+        @Override
+        public boolean execute() throws KeeperException, InterruptedException
+        {
+            do
+            {
+                if (id == null)
+                {
                     String prefix = "x-" + uuid + "-";
-                    // lets try look up the current ID if we failed 
+                    // lets try look up the current ID if we failed
                     // in the middle of creating the znode
                     findPrefixInChildren(prefix, zookeeper, dir);
                     idName = new ZNodeName(id);
                 }
-                if (id != null) {
+                if (id != null)
+                {
                     List<String> names = zookeeper.getChildren(dir, false);
-                    if (names.isEmpty()) {
-                        LOG.warn("No children in: " + dir + " when we've just " +
-                        "created one! Lets recreate it...");
+                    if (names.isEmpty())
+                    {
+                        LOG.warn("No children in: " + dir + " when we've just " + "created one! Lets recreate it...");
                         // lets force the recreation of the id
                         id = null;
-                    } else {
+                    }
+                    else
+                    {
                         // lets sort them explicitly (though they do seem to come back in order ususally :)
                         SortedSet<ZNodeName> sortedNames = new TreeSet<ZNodeName>();
-                        for (String name : names) {
+                        for (String name : names)
+                        {
                             sortedNames.add(new ZNodeName(dir + "/" + name));
                         }
                         ownerId = sortedNames.first().getName();
                         SortedSet<ZNodeName> lessThanMe = sortedNames.headSet(idName);
-                        if (!lessThanMe.isEmpty()) {
+                        if (!lessThanMe.isEmpty())
+                        {
                             ZNodeName lastChildName = lessThanMe.last();
                             lastChildId = lastChildName.getName();
-                            if (LOG.isDebugEnabled()) {
+                            if (LOG.isDebugEnabled())
+                            {
                                 LOG.debug("watching less than me node: " + lastChildId);
                             }
                             Stat stat = zookeeper.exists(lastChildId, new LockWatcher());
-                            if (stat != null) {
+                            if (stat != null)
+                            {
                                 return Boolean.FALSE;
-                            } else {
+                            }
+                            else
+                            {
                                 id = null;
                                 LOG.warn("Could not find the stats for less than me: " + lastChildName.getName());
                             }
-                        } else {
-                            if (isOwner()) {
-                                if (callback != null) {
+                        }
+                        else
+                        {
+                            if (isOwner())
+                            {
+                                if (callback != null)
+                                {
                                     callback.lockAcquired();
                                 }
                                 return Boolean.TRUE;
@@ -269,8 +324,7 @@ public class WriteLock extends ProtocolSupport {
                         }
                     }
                 }
-            }
-            while (id == null);
+            } while (id == null);
             return Boolean.FALSE;
         }
     };
@@ -278,21 +332,20 @@ public class WriteLock extends ProtocolSupport {
     /**
      * a zookeeper operation to test if a path is locked
      */
-    private class IsLockedZooKeeperOperation
-        implements ZooKeeperOperation
+    private class IsLockedZooKeeperOperation implements ZooKeeperOperation
     {
         /**
-         * the command that is run and retried for actually 
-         * obtaining the lock
+         * the command that is run and retried for actually obtaining the lock
+         * 
          * @return if the command was successful or not
          */
         @Override
-        public boolean execute()
-            throws KeeperException, InterruptedException
+        public boolean execute() throws KeeperException, InterruptedException
         {
             boolean rv = false;
 
-            if (zookeeper.exists(dir, false) != null) {
+            if (zookeeper.exists(dir, false) != null)
+            {
                 List<String> names = zookeeper.getChildren(dir, false);
 
                 rv = !names.isEmpty();
@@ -303,12 +356,13 @@ public class WriteLock extends ProtocolSupport {
     };
 
     /**
-     * Attempts to acquire the exclusive write lock returning whether or not it was
-     * acquired. Note that the exclusive lock may be acquired some time later after
-     * this method has been invoked due to the current lock owner going away.
+     * Attempts to acquire the exclusive write lock returning whether or not it was acquired. Note that the exclusive lock may be
+     * acquired some time later after this method has been invoked due to the current lock owner going away.
      */
-    public synchronized boolean lock() throws KeeperException, InterruptedException {
-        if (isClosed()) {
+    public synchronized boolean lock() throws KeeperException, InterruptedException
+    {
+        if (isClosed())
+        {
             return false;
         }
         ensurePathExists(dir);
@@ -319,34 +373,36 @@ public class WriteLock extends ProtocolSupport {
     /**
      * Determines is a lock is held
      */
-    public synchronized boolean islocked()
-        throws KeeperException, InterruptedException
+    public synchronized boolean islocked() throws KeeperException, InterruptedException
     {
-        return (isClosed() || (Boolean)retryOperation(zopCheck));
+        return (isClosed() || (Boolean) retryOperation(zopCheck));
     }
 
     /**
      * return the parent dir for lock
+     * 
      * @return the parent dir used for locks.
      */
-    public String getDir() {
+    public String getDir()
+    {
         return dir;
     }
 
     /**
-     * Returns true if this node is the owner of the
-     *  lock (or the leader)
+     * Returns true if this node is the owner of the lock (or the leader)
      */
-    public boolean isOwner() {
+    public boolean isOwner()
+    {
         return id != null && ownerId != null && id.equals(ownerId);
     }
 
     /**
      * return the id for this lock
+     * 
      * @return the id for this lock
      */
-    public String getId() {
-       return this.id;
+    public String getId()
+    {
+        return id;
     }
 }
-

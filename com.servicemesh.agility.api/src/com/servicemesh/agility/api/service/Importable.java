@@ -15,12 +15,6 @@ import com.servicemesh.agility.api.ImportReport;
  */
 public interface Importable
 {
-	ImportReport validate(
-			String login, 
-			Asset parent, 
-			Map<String, Envelope> envelopeMap,
-			Context context,
-			Boolean create,
-			Boolean update,
-			String host) throws Exception;
+    ImportReport validate(String login, Asset parent, Map<String, Envelope> envelopeMap, Context context, Boolean create,
+            Boolean update, String host) throws Exception;
 }

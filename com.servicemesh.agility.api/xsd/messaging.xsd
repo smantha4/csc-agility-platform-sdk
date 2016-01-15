@@ -460,6 +460,74 @@ REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIB
       </xsd:restriction>
    </xsd:simpleType>
    
+   <xsd:complexType name="NetworkInterfaceUpdateRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>NetworkInterfaceUpdateRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Message to request an update to a NetworkInterface"
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:ApiRequest">
+            <xsd:sequence>
+                              
+               <xsd:element name="nic" type="agility:NetworkInterface" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Network interface with updated values." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <xsd:complexType name="NetworkInterfaceUpdateResponse">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>NetworkInterfaceUpdateResponse</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Response to a network interface update request"
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:ApiResponse">
+            <xsd:sequence>
+                              
+               <xsd:element name="nic" type="agility:NetworkInterface" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Updated network interface" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+
+   
    <xsd:complexType name="NetworkAddressRequest">
       <xsd:annotation>
          <xsd:appinfo>

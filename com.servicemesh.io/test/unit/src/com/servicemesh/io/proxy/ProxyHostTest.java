@@ -17,11 +17,11 @@ public class ProxyHostTest
     private final String HOST_TOSTRING1 = HOST + ":" + PORT;
     private final String HOST_TOSTRING2 = SCHEME + "//" + HOST + ":" + PORT;
     private final String PROXYHOST_TOSTRING1 = ProxyType.SOCKS5_PROXY.getScheme() + "//" + HOST + ":" + PORT;
-    private final String PROXYHOST_TOSTRING2 = ProxyType.HTTP_PROXY.getScheme() + "//" + PROXYHOST_CHAINED + ":" + PROXYPORT_CHAINED + "->" + PROXYHOST_TOSTRING1;
+    private final String PROXYHOST_TOSTRING2 =
+            ProxyType.HTTP_PROXY.getScheme() + "//" + PROXYHOST_CHAINED + ":" + PROXYPORT_CHAINED + "->" + PROXYHOST_TOSTRING1;
 
     @Test
-    public void testHost()
-        throws Exception
+    public void testHost() throws Exception
     {
         Host host = new Host(HOST, PORT);
         Assert.assertEquals(HOST, host.getHostname());
@@ -36,18 +36,16 @@ public class ProxyHostTest
         Assert.assertEquals(HOST_TOSTRING2, host.toString());
     }
 
-    @Test(expected=IllegalArgumentException.class)
-    public void testMissingHostname()
-        throws Exception
+    @Test(expected = IllegalArgumentException.class)
+    public void testMissingHostname() throws Exception
     {
-        new Host((String)null, PORT);
+        new Host((String) null, PORT);
     }
 
     @Test
-    public void testProxyHost()
-        throws Exception
+    public void testProxyHost() throws Exception
     {
-        Proxy proxy = new Proxy(HOST, PORT, PROXY_TYPE, (Host)null);
+        Proxy proxy = new Proxy(HOST, PORT, PROXY_TYPE, (Host) null);
         Assert.assertEquals(HOST, proxy.getHostname());
         Assert.assertEquals(PORT, proxy.getPort());
         Assert.assertNull(proxy.getScheme());
@@ -69,19 +67,24 @@ public class ProxyHostTest
     }
 
     @Test
-    public void testMissingArguments()
-        throws Exception
+    public void testMissingArguments() throws Exception
     {
-        try {
-            new Proxy((String)null, PORT, PROXY_TYPE, (Host)null);
+        try
+        {
+            new Proxy((String) null, PORT, PROXY_TYPE, (Host) null);
             Assert.fail("Passed test with missing hostname");
-        } catch (IllegalArgumentException ex) {
+        }
+        catch (IllegalArgumentException ex)
+        {
         }
 
-        try {
-            new Proxy(HOST, PORT, (ProxyType)null, (Host)null);
+        try
+        {
+            new Proxy(HOST, PORT, (ProxyType) null, (Host) null);
             Assert.fail("Passed test with missing proxy type");
-        } catch (IllegalArgumentException ex) {
+        }
+        catch (IllegalArgumentException ex)
+        {
         }
     }
 }

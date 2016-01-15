@@ -22,136 +22,145 @@ import com.servicemesh.agility.sdk.service.msgs.InstanceResponse;
 import com.servicemesh.core.async.Promise;
 
 /**
- * 
- * Defines a set of lifecycle callouts that can be implemented by a service provider to take action when
- * an instance bound to the service changes state. As an example, a workload connected to a load balancer 
- * service should be registered/deregistered to/from the load balancer as new instances of the workload 
- * are provisioned and/or released.
+ * Defines a set of lifecycle callouts that can be implemented by a service provider to take action when an instance bound to the
+ * service changes state. As an example, a workload connected to a load balancer service should be registered/deregistered to/from
+ * the load balancer as new instances of the workload are provisioned and/or released.
  */
-public interface IInstanceLifecycle {
+public interface IInstanceLifecycle
+{
 
-	/**
-	 * Called by the platform on initial provisioning of a VM. 
-	 * 	 
-	 * @param request Specifies the service binding and virtual machine settings 
+    /**
+     * Called by the platform on initial provisioning of a VM.
+     * 
+     * @param request
+     *            Specifies the service binding and virtual machine settings
      * @return Promise to results on completion.
-	 */
-	public Promise<InstanceResponse> preProvision(InstancePreProvisionRequest request);
+     */
+    public Promise<InstanceResponse> preProvision(InstancePreProvisionRequest request);
 
-	/**
-	 * Called by the platform after initial provisioning of a VM completes. Enables the service provider to 
-	 * register the instance with a service offering and/or allocate service resources for the virtual machine.
-	 * 	 
-	 * @param request Specifies the service binding and virtual machine settings
+    /**
+     * Called by the platform after initial provisioning of a VM completes. Enables the service provider to register the instance
+     * with a service offering and/or allocate service resources for the virtual machine.
+     * 
+     * @param request
+     *            Specifies the service binding and virtual machine settings
      * @return Promise to results on completion.
-	 */
-	public Promise<InstanceResponse> postProvision(InstancePostProvisionRequest request);
+     */
+    public Promise<InstanceResponse> postProvision(InstancePostProvisionRequest request);
 
-	/**
-	 * Called immediately prior to booting the instance. The VM has been cloned but not powered. Provides
-	 * a hook for network service providers to allocate network resources (e.g. IP address) for the 
-	 * virtual machine.
-	 * 
-	 * @param request Specifies the service binding and virtual machine to boot.
+    /**
+     * Called immediately prior to booting the instance. The VM has been cloned but not powered. Provides a hook for network
+     * service providers to allocate network resources (e.g. IP address) for the virtual machine.
+     * 
+     * @param request
+     *            Specifies the service binding and virtual machine to boot.
      * @return Promise to results on completion.
-	 */
-	public Promise<InstanceResponse> preBoot(InstancePreBootRequest request);
+     */
+    public Promise<InstanceResponse> preBoot(InstancePreBootRequest request);
 
-	/**
-	 * Called immediately after the instance boots. At this point in the lifecycle the VM has an IP address
-	 * but configuration management has not run.
-	 * 
-	 * @param request Specifies the service binding and virtual machine that completed boot.
+    /**
+     * Called immediately after the instance boots. At this point in the lifecycle the VM has an IP address but configuration
+     * management has not run.
+     * 
+     * @param request
+     *            Specifies the service binding and virtual machine that completed boot.
      * @return Promise to results on completion.
-	 */
-	public Promise<InstanceResponse> postBoot(InstancePostBootRequest request);
+     */
+    public Promise<InstanceResponse> postBoot(InstancePostBootRequest request);
 
-	/**
-	 * Called to stop a virtual machine without releasing underlying resources. This is the equivalent
-	 * of removing power from a physical server after an orderly shutdown by the O/S. 
-	 * 
-	 * @param request Specifies the service binding and virtual machine to stop.
+    /**
+     * Called to stop a virtual machine without releasing underlying resources. This is the equivalent of removing power from a
+     * physical server after an orderly shutdown by the O/S.
+     * 
+     * @param request
+     *            Specifies the service binding and virtual machine to stop.
      * @return Promise to results on completion.
-	 */
-	public Promise<InstanceResponse> preStop(InstancePreStopRequest request);
+     */
+    public Promise<InstanceResponse> preStop(InstancePreStopRequest request);
 
-	/**
-	 * Called to stop a virtual machine without releasing underlying resources. This is the equivalent
-	 * of removing power from a physical server after an orderly shutdown by the O/S. This provides the 
-	 * service provider the option to deregister/cleanup resources associated with a stopped instance.
-	 * 
-	 * @param request Specifies the service binding and virtual machine that was stopped.
+    /**
+     * Called to stop a virtual machine without releasing underlying resources. This is the equivalent of removing power from a
+     * physical server after an orderly shutdown by the O/S. This provides the service provider the option to deregister/cleanup
+     * resources associated with a stopped instance.
+     * 
+     * @param request
+     *            Specifies the service binding and virtual machine that was stopped.
      * @return Promise to results on completion.
-	 */
-	public Promise<InstanceResponse> postStop(InstancePostStopRequest request);
+     */
+    public Promise<InstanceResponse> postStop(InstancePostStopRequest request);
 
-	/**
-	 * Called to "power-on" a virtual machine that is in the stopped state. Provides the service
-	 * provider the option to validate the virtual machines settings are compatible with the service
-	 * offering.
-	 * 
-	 * @param request Specifies the service binding and virtual machine to start.
+    /**
+     * Called to "power-on" a virtual machine that is in the stopped state. Provides the service provider the option to validate
+     * the virtual machines settings are compatible with the service offering.
+     * 
+     * @param request
+     *            Specifies the service binding and virtual machine to start.
      * @return Promise to results on completion.
-	 */
-	public Promise<InstanceResponse> preStart(InstancePreStartRequest request);
+     */
+    public Promise<InstanceResponse> preStart(InstancePreStartRequest request);
 
-	/**
-	 * Called after "powering-on" a virtual machine that was in the stopped state. Proves the service
-	 * provider the option to register or provision services for the virtual machine instance.
-	 * 
-	 * @param request Specifies the service binding and virtual machine that was started.
+    /**
+     * Called after "powering-on" a virtual machine that was in the stopped state. Proves the service provider the option to
+     * register or provision services for the virtual machine instance.
+     * 
+     * @param request
+     *            Specifies the service binding and virtual machine that was started.
      * @return Promise to results on completion.
-	 */
-	public Promise<InstanceResponse> postStart(InstancePostStartRequest request);
+     */
+    public Promise<InstanceResponse> postStart(InstancePostStartRequest request);
 
-	/**
-	 * Called to initiate a hard reboot of the virtual machine. This should be the equivalent of power-cycling
-	 * a physical server.
-	 * 
-	 * @param request Specifies the service binding and virtual machine to reboot.
+    /**
+     * Called to initiate a hard reboot of the virtual machine. This should be the equivalent of power-cycling a physical server.
+     * 
+     * @param request
+     *            Specifies the service binding and virtual machine to reboot.
      * @return Promise to results on completion.
-	 */
-	public Promise<InstanceResponse> preRestart(InstancePreRestartRequest request);
+     */
+    public Promise<InstanceResponse> preRestart(InstancePreRestartRequest request);
 
-	/**
-	 * Called after a hard reboot of the virtual machine. This should be the equivalent of power-cycling
-	 * a physical server.
-	 * 
-	 * @param request Specifies the service binding and virtual machine that was restarted.
+    /**
+     * Called after a hard reboot of the virtual machine. This should be the equivalent of power-cycling a physical server.
+     * 
+     * @param request
+     *            Specifies the service binding and virtual machine that was restarted.
      * @return Promise to results on completion.
-	 */
-	public Promise<InstanceResponse> postRestart(InstancePostRestartRequest request);
+     */
+    public Promise<InstanceResponse> postRestart(InstancePostRestartRequest request);
 
-	/**
-	 * Called to destroy a virtual machine and release all associated resources. 
-	 * 
-	 * @param request Specifies the service binding and virtual machine to release.
+    /**
+     * Called to destroy a virtual machine and release all associated resources.
+     * 
+     * @param request
+     *            Specifies the service binding and virtual machine to release.
      * @return Promise to results on completion.
-	 */
-	public Promise<InstanceResponse> preRelease(InstancePreReleaseRequest request);
+     */
+    public Promise<InstanceResponse> preRelease(InstancePreReleaseRequest request);
 
-	/**
-	 * Called after the destruction of a virtual machine and release of all its associated resources.
-	 * 
-	 * @param request Specifies the service binding and virtual machine to release.
+    /**
+     * Called after the destruction of a virtual machine and release of all its associated resources.
+     * 
+     * @param request
+     *            Specifies the service binding and virtual machine to release.
      * @return Promise to results on completion.
-	 */
-	public Promise<InstanceResponse> postRelease(InstancePostReleaseRequest request);
+     */
+    public Promise<InstanceResponse> postRelease(InstancePostReleaseRequest request);
 
-	/**
-	 * Called on template resource change. 
-	 * 
-	 * @param request Specifies the service binding and virtual machine to reconfigure.
+    /**
+     * Called on template resource change.
+     * 
+     * @param request
+     *            Specifies the service binding and virtual machine to reconfigure.
      * @return Promise to results on completion.
-	 */
-	public Promise<InstanceResponse> preReconfigure(InstancePreReconfigureRequest request);
+     */
+    public Promise<InstanceResponse> preReconfigure(InstancePreReconfigureRequest request);
 
-	/**
-	 * Called after the completion of a template resource change.
-	 * 
-	 * @param request Specifies the service binding and virtual machine to reconfigure.
+    /**
+     * Called after the completion of a template resource change.
+     * 
+     * @param request
+     *            Specifies the service binding and virtual machine to reconfigure.
      * @return Promise to results on completion.
-	 */
-	public Promise<InstanceResponse> postReconfigure(InstancePostReconfigureRequest request);
+     */
+    public Promise<InstanceResponse> postReconfigure(InstancePostReconfigureRequest request);
 
 }
