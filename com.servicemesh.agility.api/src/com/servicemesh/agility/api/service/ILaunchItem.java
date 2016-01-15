@@ -24,56 +24,66 @@ import com.servicemesh.agility.api.LaunchItem;
 import com.servicemesh.agility.api.ServiceInstance;
 import com.servicemesh.agility.api.Task;
 
-public interface ILaunchItem
-    extends IWorkflow<LaunchItem>
+public interface ILaunchItem extends IWorkflow<LaunchItem>
 {
-	/**
-	 * Order product edition specifying location.  
-	 * @param item The launch item with relevant fields populated.
-	 * 	A Topology product requires edition and parent.
-	 *  A Project product requires edition, parent, name and description (optional if not set).
-	 *  A Blueprint product requires edition and parent.
-	 * @return LaunchItem which represents ordered product.  If workflow applies, then returned
-	 * launch item can be used to complete order once the order has been approved.
-	 * @throws Exception
-	 */
-	public LaunchItem order(LaunchItem item) throws Exception;
-	
-	/**
-	 * Request to start the specified launch item.
-	 * @param object An instance of [LaunchItem]
-	 * @return A task handle that can be polled for task completion.
-	 * @throws Exception
-	 */
-	public Task start(LaunchItem object) throws Exception;
+    /**
+     * Order product edition specifying location.
+     * 
+     * @param item
+     *            The launch item with relevant fields populated. A Topology product requires edition and parent. A Project
+     *            product requires edition, parent, name and description (optional if not set). A Blueprint product requires
+     *            edition and parent.
+     * @return LaunchItem which represents ordered product. If workflow applies, then returned launch item can be used to complete
+     *         order once the order has been approved.
+     * @throws Exception
+     */
+    public LaunchItem order(LaunchItem item) throws Exception;
 
-	/**
-	 * Request to stop the specified launch item.
-	 * @param object An instance of [LaunchItem]
-	 * @return A task handle that can be polled for task completion.
-	 * @throws Exception
-	 */
-	public Task stop(LaunchItem object) throws Exception;
+    /**
+     * Request to start the specified launch item.
+     * 
+     * @param object
+     *            An instance of [LaunchItem]
+     * @return A task handle that can be polled for task completion.
+     * @throws Exception
+     */
+    public Task start(LaunchItem object) throws Exception;
 
-	/**
-	 * Request to restart the specified launch item.
-	 * @param object An instance of [LaunchItem]
-	 * @return A task handle that can be polled for task completion.
-	 * @throws Exception
-	 */
-	public Task restart( LaunchItem object) throws Exception;
-	
-	/**
-	 * Request to release the specified launch item.
-	 * @param object An instance of [LaunchItem]
-	 * @return A task handle that can be polled for task completion.
-	 * @throws Exception
-	 */
-	public Task release(LaunchItem object) throws Exception;
+    /**
+     * Request to stop the specified launch item.
+     * 
+     * @param object
+     *            An instance of [LaunchItem]
+     * @return A task handle that can be polled for task completion.
+     * @throws Exception
+     */
+    public Task stop(LaunchItem object) throws Exception;
+
+    /**
+     * Request to restart the specified launch item.
+     * 
+     * @param object
+     *            An instance of [LaunchItem]
+     * @return A task handle that can be polled for task completion.
+     * @throws Exception
+     */
+    public Task restart(LaunchItem object) throws Exception;
+
+    /**
+     * Request to release the specified launch item.
+     * 
+     * @param object
+     *            An instance of [LaunchItem]
+     * @return A task handle that can be polled for task completion.
+     * @throws Exception
+     */
+    public Task release(LaunchItem object) throws Exception;
 
     /**
      * Request to retrieve the list of instances provisioned for the LaunchItem.
-     * @param launchItem An instance of [LaunchItem]
+     * 
+     * @param launchItem
+     *            An instance of [LaunchItem]
      * @return A list of the LaunchItem's instances.
      * @throws Exception
      */
@@ -81,9 +91,11 @@ public interface ILaunchItem
 
     /**
      * Request to retrieve the list of instances provisioned for the LaunchItem.
-     * @param launchItem An instance of [LaunchItem]
-     * @param context a Context optionally used to specify desired fields.  A null
-     * means to return all fields.
+     * 
+     * @param launchItem
+     *            An instance of [LaunchItem]
+     * @param context
+     *            a Context optionally used to specify desired fields. A null means to return all fields.
      * @return A list of the LaunchItem's instances.
      * @throws Exception
      */
@@ -91,7 +103,9 @@ public interface ILaunchItem
 
     /**
      * Request to retrieve the list of service instances provisioned for the LaunchItem.
-     * @param launchItem An instance of [LaunchItem]
+     * 
+     * @param launchItem
+     *            An instance of [LaunchItem]
      * @return A Linklist of Link objects referencing service instances.
      * @throws Exception
      */

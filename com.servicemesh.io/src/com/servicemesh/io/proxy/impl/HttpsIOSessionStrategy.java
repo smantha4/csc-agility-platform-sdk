@@ -33,12 +33,10 @@ import org.apache.http.nio.reactor.ssl.SSLMode;
 import org.apache.http.nio.reactor.ssl.SSLSetupHandler;
 
 import com.google.common.base.Preconditions;
-
 import com.servicemesh.io.proxy.PipelinedChannel;
 import com.servicemesh.io.proxy.ProxySetupHandler;
 
-public class HttpsIOSessionStrategy
-    extends SSLIOSessionStrategy
+public class HttpsIOSessionStrategy extends SSLIOSessionStrategy
 {
     private final SSLContext _sslContext;
 
@@ -54,20 +52,22 @@ public class HttpsIOSessionStrategy
     }
 
     @Override
-    public SSLIOSession upgrade(final HttpHost host, final IOSession ioSession)
-        throws IOException
+    public SSLIOSession upgrade(final HttpHost host, final IOSession ioSession) throws IOException
     {
         Preconditions.checkArgument(!(ioSession instanceof SSLIOSession), "I/O session is already upgraded to TLS/SSL");
 
-        if (host instanceof ProxyHost) {
-            ProxyHost proxyHost = (ProxyHost)host;
+        if (host instanceof ProxyHost)
+        {
+            ProxyHost proxyHost = (ProxyHost) host;
             PipelinedChannel firstChannel = null;
             PipelinedChannel channel = null;
 
-            while (proxyHost != null) {
+            while (proxyHost != null)
+            {
                 ProxySetupHandler handler;
 
-                switch (proxyHost.getProxyType()) {
+                switch (proxyHost.getProxyType())
+                {
                     case HTTP_PROXY:
                         handler = new HttpProxySetupHandler(proxyHost, ioSession, firstChannel);
                         break;
@@ -81,48 +81,52 @@ public class HttpsIOSessionStrategy
                         throw new RuntimeException("Unsupported proxy type: " + proxyHost.getProxyType().getScheme());
                 }
 
-                try {
+                try
+                {
                     PipelinedChannel newChannel = handler.initialize();
 
-                    if (firstChannel == null) {
+                    if (firstChannel == null)
+                    {
                         firstChannel = newChannel;
                     }
 
-                    if (channel != null) {
+                    if (channel != null)
+                    {
                         channel.setDownstream(newChannel);
                     }
 
                     channel = newChannel;
-                    proxyHost = (proxyHost.getTargetHost() instanceof ProxyHost) ? (ProxyHost)proxyHost.getTargetHost() : null;
-                } catch (IOException ex) {
+                    proxyHost = (proxyHost.getTargetHost() instanceof ProxyHost) ? (ProxyHost) proxyHost.getTargetHost() : null;
+                }
+                catch (IOException ex)
+                {
                     throw new RuntimeException(ex.getLocalizedMessage(), ex);
                 }
             }
 
             SSLSetupHandler setupHandler = new SSLSetupHandler() {
                 @Override
-                public void initalize(final SSLEngine sslengine)
-                    throws SSLException
+                public void initalize(final SSLEngine sslengine) throws SSLException
                 {
                     initializeEngine(sslengine);
                 }
 
                 @Override
-                public void verify(final IOSession ioSession, final SSLSession sslSession)
-                    throws SSLException
+                public void verify(final IOSession ioSession, final SSLSession sslSession) throws SSLException
                 {
-                    verifySession(((ProxyHost)host).getEndpoint(), ioSession, sslSession);
+                    verifySession(((ProxyHost) host).getEndpoint(), ioSession, sslSession);
                 }
             };
 
-            final SSLIOSession sslIOSession = new HttpsProxyIOSession(ioSession, SSLMode.CLIENT,
-                                                                      _sslContext, setupHandler,
-                                                                      firstChannel);
+            final SSLIOSession sslIOSession =
+                    new HttpsProxyIOSession(ioSession, SSLMode.CLIENT, _sslContext, setupHandler, firstChannel);
 
             ioSession.setAttribute(SSLIOSession.SESSION_KEY, sslIOSession);
             sslIOSession.initialize();
             return sslIOSession;
-        } else {
+        }
+        else
+        {
             return super.upgrade(host, ioSession);
         }
     }

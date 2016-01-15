@@ -32,8 +32,7 @@ import com.servicemesh.io.http.impl.DefaultHttpResponse;
 public class HttpResponseTest
 {
     @Test
-    public void testHttpResponse()
-        throws Exception
+    public void testHttpResponse() throws Exception
     {
         String value = "Success";
         HttpStatus status = new HttpStatus(HttpVersion.HTTP_1_1, 200, "");
@@ -43,8 +42,8 @@ public class HttpResponseTest
         Assert.assertEquals(-1, response.getStatusCode());
         Assert.assertNull(response.getContent());
         Assert.assertEquals(0, response.getHeaders().size());
-        ((DefaultHttpResponse)response).setStatus(status);
-        ((DefaultHttpResponse)response).setContent(value.getBytes());
+        ((DefaultHttpResponse) response).setStatus(status);
+        ((DefaultHttpResponse) response).setContent(value.getBytes());
         Assert.assertNotNull(response.getStatus());
         Assert.assertEquals(HttpVersion.HTTP_1_1, response.getStatus().getHttpVersion());
         Assert.assertEquals(200, response.getStatus().getStatusCode());
@@ -55,8 +54,7 @@ public class HttpResponseTest
     }
 
     @Test
-    public void testResponseHeaders()
-        throws Exception
+    public void testResponseHeaders() throws Exception
     {
         String headerName = "Accept";
         String headerValue = "text/html";
@@ -65,7 +63,7 @@ public class HttpResponseTest
         List<IHttpHeader> responseHeaders = response.getHeaders();
         Assert.assertEquals(0, responseHeaders.size());
 
-        ((DefaultHttpResponse)response).addHeader(header1);
+        ((DefaultHttpResponse) response).addHeader(header1);
         responseHeaders = response.getHeaders();
         Assert.assertEquals(1, responseHeaders.size());
         Assert.assertEquals(headerName, responseHeaders.get(0).getName());
@@ -74,7 +72,7 @@ public class HttpResponseTest
         String headerName2 = headerName;
         String headerValue2 = "text/plain";
         IHttpHeader header2 = new BaseHttpHeader(headerName2, headerValue2);
-        ((DefaultHttpResponse)response).addHeader(header2);
+        ((DefaultHttpResponse) response).addHeader(header2);
         responseHeaders = response.getHeaders();
         Assert.assertEquals(2, responseHeaders.size());
         Assert.assertEquals(headerName, responseHeaders.get(0).getName());
@@ -85,7 +83,7 @@ public class HttpResponseTest
         String headerName3 = "Connection";
         String headerValue3 = "keep-alive";
         IHttpHeader header3 = new BaseHttpHeader(headerName3, headerValue3);
-        ((DefaultHttpResponse)response).addHeader(header3);
+        ((DefaultHttpResponse) response).addHeader(header3);
         responseHeaders = response.getHeaders();
         Assert.assertEquals(3, responseHeaders.size());
 
@@ -93,13 +91,19 @@ public class HttpResponseTest
         int header2Found = 0;
         int header3Found = 0;
 
-        for (IHttpHeader nextHeader : responseHeaders) {
-            if (headerName.equals(nextHeader.getName()) && headerValue.equals(nextHeader.getValue())) {
+        for (IHttpHeader nextHeader : responseHeaders)
+        {
+            if (headerName.equals(nextHeader.getName()) && headerValue.equals(nextHeader.getValue()))
+            {
                 ++header1Found;
-            } else if (headerName2.equals(nextHeader.getName()) && headerValue2.equals(nextHeader.getValue())) {
+            }
+            else if (headerName2.equals(nextHeader.getName()) && headerValue2.equals(nextHeader.getValue()))
+            {
                 ++header2Found;
-            } else if (headerName3.equals(nextHeader.getName()) && headerValue3.equals(nextHeader.getValue())) {
-                ++header3Found ;
+            }
+            else if (headerName3.equals(nextHeader.getName()) && headerValue3.equals(nextHeader.getValue()))
+            {
+                ++header3Found;
             }
         }
         Assert.assertEquals("HttpHeader1 not found", 1, header1Found);
@@ -116,8 +120,7 @@ public class HttpResponseTest
     }
 
     @Test
-    public void testResponseMultiValueHeaders()
-        throws Exception
+    public void testResponseMultiValueHeaders() throws Exception
     {
         String headerName = "Accept";
         String headerValue1 = "text/html";
@@ -134,7 +137,7 @@ public class HttpResponseTest
         List<IHttpHeader> responseHeaders = response.getHeaders();
         Assert.assertEquals(0, responseHeaders.size());
 
-        ((DefaultHttpResponse)response).addHeader(header1);
+        ((DefaultHttpResponse) response).addHeader(header1);
         responseHeaders = response.getHeaders();
         Assert.assertEquals(1, responseHeaders.size());
         IHttpHeader responseHeader = responseHeaders.get(0);
@@ -148,7 +151,7 @@ public class HttpResponseTest
         IHttpResponse response2 = new DefaultHttpResponse();
         responseHeaders = response2.getHeaders();
         Assert.assertEquals(0, responseHeaders.size());
-        ((DefaultHttpResponse)response2).addHeader(header2);
+        ((DefaultHttpResponse) response2).addHeader(header2);
         responseHeaders = response2.getHeaders();
         Assert.assertEquals(1, responseHeaders.size());
         responseHeader = responseHeaders.get(0);
@@ -161,8 +164,7 @@ public class HttpResponseTest
     }
 
     @Test
-    public void testContent()
-        throws Exception
+    public void testContent() throws Exception
     {
         DefaultHttpResponse responseImpl = new DefaultHttpResponse();
         IHttpResponse response = responseImpl;
@@ -226,21 +228,24 @@ public class HttpResponseTest
         Assert.assertEquals(0, response.getContentLength());
     }
 
-    private String convertStreamToString(InputStream stream)
-        throws Exception
+    private String convertStreamToString(InputStream stream) throws Exception
     {
         String rv = null;
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         byte[] bytesIn = new byte[8192];
         int bytesRead = 0;
 
-        try {
-            while ((bytesRead = stream.read(bytesIn, 0, 8192)) != -1) {
+        try
+        {
+            while ((bytesRead = stream.read(bytesIn, 0, 8192)) != -1)
+            {
                 out.write(bytesIn, 0, bytesRead);
             }
 
             rv = new String(out.toByteArray());
-        } finally {
+        }
+        finally
+        {
             out.close();
         }
 

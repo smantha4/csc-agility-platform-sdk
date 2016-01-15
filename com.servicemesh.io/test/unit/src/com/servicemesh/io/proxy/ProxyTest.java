@@ -17,6 +17,11 @@
 
 package com.servicemesh.io.proxy;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.ServerSocket;
@@ -33,8 +38,6 @@ import org.littleshoot.proxy.HttpProxyServer;
 import org.littleshoot.proxy.extras.SelfSignedSslEngineSource;
 import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
 
-import socks.JSocksServer;
-
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import com.servicemesh.io.http.HttpClientFactory;
 import com.servicemesh.io.http.HttpMethod;
@@ -45,10 +48,7 @@ import com.servicemesh.io.http.IHttpRequest;
 import com.servicemesh.io.http.IHttpResponse;
 import com.servicemesh.io.util.JunitWireMockClassRule;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import socks.JSocksServer;
 
 public class ProxyTest
 {
@@ -72,16 +72,13 @@ public class ProxyTest
     public WireMockClassRule instanceRule = wireMockRule;
 
     @Test
-    public void testHttpProxy()
-        throws Exception
+    public void testHttpProxy() throws Exception
     {
         Proxy proxy = new Proxy("localhost", httpProxyServer.getPort(), ProxyType.HTTP_PROXY, null);
         Proxy badProxy = new Proxy("localhost", getBadProxyPort(), ProxyType.HTTP_PROXY, null);
         String responseBody = "<response>Some content</response>";
         stubFor(get(urlEqualTo("/agility/api/current/storeproducttype"))
-                .willReturn(aResponse().withStatus(200)
-                                       .withHeader("Content-Type", "text/xml")
-                                       .withBody(responseBody)));
+                .willReturn(aResponse().withStatus(200).withHeader("Content-Type", "text/xml").withBody(responseBody)));
 
         String stringUri = "https://localhost:" + instanceRule.httpsPort() + "/agility/api/current/storeproducttype";
         IHttpRequest request = HttpClientFactory.getInstance().createRequest(HttpMethod.GET, new URI(stringUri));
@@ -105,10 +102,13 @@ public class ProxyTest
         httpClient = HttpClientFactory.getInstance().getClient(builder.build());
         future = httpClient.execute(request);
 
-        try {
+        try
+        {
             future.get();
             Assert.fail("future.get succeeded when should have gotten connection exception");
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Assert.assertTrue(ex instanceof ExecutionException);
             Assert.assertTrue(ex.getCause() instanceof ConnectException);
         }
@@ -117,16 +117,13 @@ public class ProxyTest
     }
 
     @Test
-    public void testHttpProxyHttpEndpoint()
-        throws Exception
+    public void testHttpProxyHttpEndpoint() throws Exception
     {
         Proxy proxy = new Proxy("localhost", httpProxyServer.getPort(), ProxyType.HTTP_PROXY, null);
         Proxy badProxy = new Proxy("localhost", getBadProxyPort(), ProxyType.HTTP_PROXY, null);
         String responseBody = "<response>Some content</response>";
         stubFor(get(urlEqualTo("/agility/api/current/storeproducttype"))
-                .willReturn(aResponse().withStatus(200)
-                                       .withHeader("Content-Type", "text/xml")
-                                       .withBody(responseBody)));
+                .willReturn(aResponse().withStatus(200).withHeader("Content-Type", "text/xml").withBody(responseBody)));
 
         String stringUri = "http://localhost:" + instanceRule.port() + "/agility/api/current/storeproducttype";
         IHttpRequest request = HttpClientFactory.getInstance().createRequest(HttpMethod.GET, new URI(stringUri));
@@ -150,10 +147,13 @@ public class ProxyTest
         httpClient = HttpClientFactory.getInstance().getClient(builder.build());
         future = httpClient.execute(request);
 
-        try {
+        try
+        {
             future.get();
             Assert.fail("future.get succeeded when should have gotten connection exception");
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Assert.assertTrue(ex instanceof ExecutionException);
             Assert.assertTrue(ex.getCause() instanceof ConnectException);
         }
@@ -162,17 +162,14 @@ public class ProxyTest
     }
 
     @Test
-    public void testHttpsProxy()
-        throws Exception
+    public void testHttpsProxy() throws Exception
     {
         Proxy proxy = new Proxy("localhost", httpsProxyServer.getPort(), ProxyType.HTTPS_PROXY, null);
         Proxy badProxy = new Proxy("localhost", 3130, ProxyType.HTTPS_PROXY, null);
         //String responseBody = "<response>Some content</response>";
         String responseBody = createLongResponse(8300);
         stubFor(get(urlEqualTo("/agility/api/current/storeproducttype"))
-                .willReturn(aResponse().withStatus(200)
-                                       .withHeader("Content-Type", "text/xml")
-                                       .withBody(responseBody)));
+                .willReturn(aResponse().withStatus(200).withHeader("Content-Type", "text/xml").withBody(responseBody)));
 
         String stringUri = "https://localhost:" + instanceRule.httpsPort() + "/agility/api/current/storeproducttype";
         IHttpRequest request = HttpClientFactory.getInstance().createRequest(HttpMethod.GET, new URI(stringUri));
@@ -196,10 +193,13 @@ public class ProxyTest
         httpClient = HttpClientFactory.getInstance().getClient(builder.build());
         future = httpClient.execute(request);
 
-        try {
+        try
+        {
             future.get();
             Assert.fail("future.get succeeded when should have gotten connection exception");
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Assert.assertTrue(ex instanceof ExecutionException);
             Assert.assertTrue(ex.getCause() instanceof ConnectException);
         }
@@ -208,15 +208,12 @@ public class ProxyTest
     }
 
     @Test
-    public void testHttpsProxyHttpEndpoint()
-        throws Exception
+    public void testHttpsProxyHttpEndpoint() throws Exception
     {
         Proxy proxy = new Proxy("localhost", httpsProxyServer.getPort(), ProxyType.HTTPS_PROXY, null);
         String responseBody = createLongResponse(8300);
         stubFor(get(urlEqualTo("/agility/api/current/storeproducttype"))
-                .willReturn(aResponse().withStatus(200)
-                                       .withHeader("Content-Type", "text/xml")
-                                       .withBody(responseBody)));
+                .willReturn(aResponse().withStatus(200).withHeader("Content-Type", "text/xml").withBody(responseBody)));
 
         String stringUri = "http://localhost:" + instanceRule.port() + "/agility/api/current/storeproducttype";
         IHttpRequest request = HttpClientFactory.getInstance().createRequest(HttpMethod.GET, new URI(stringUri));
@@ -236,16 +233,13 @@ public class ProxyTest
     }
 
     @Test
-    public void testSocks5Proxy()
-        throws Exception
+    public void testSocks5Proxy() throws Exception
     {
         Proxy proxy = new Proxy("localhost", socks5ProxyServer.getPort(), ProxyType.SOCKS5_PROXY, null, "rsanchez", "M3sh@dmin!");
         Proxy badProxy = new Proxy("localhost", 1070, ProxyType.SOCKS5_PROXY, null, "rsanchez", "M3sh@dmin!");
         String responseBody = "<response>Some content</response>";
         stubFor(get(urlEqualTo("/agility/api/current/storeproducttype"))
-                .willReturn(aResponse().withStatus(200)
-                                       .withHeader("Content-Type", "text/xml")
-                                       .withBody(responseBody)));
+                .willReturn(aResponse().withStatus(200).withHeader("Content-Type", "text/xml").withBody(responseBody)));
 
         String stringUri = "https://localhost:" + instanceRule.httpsPort() + "/agility/api/current/storeproducttype";
         IHttpRequest request = HttpClientFactory.getInstance().createRequest(HttpMethod.GET, new URI(stringUri));
@@ -269,10 +263,13 @@ public class ProxyTest
         httpClient = HttpClientFactory.getInstance().getClient(builder.build());
         future = httpClient.execute(request);
 
-        try {
+        try
+        {
             future.get();
             Assert.fail("future.get succeeded when should have gotten connection exception");
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Assert.assertTrue(ex instanceof ExecutionException);
             Assert.assertTrue(ex.getCause() instanceof ConnectException);
         }
@@ -281,19 +278,17 @@ public class ProxyTest
     }
 
     @Test
-    public void testProxyChain()
-        throws Exception
+    public void testProxyChain() throws Exception
     {
         Proxy proxy3 = new Proxy("localhost", httpProxyServer.getPort(), ProxyType.HTTP_PROXY, null);
-        Proxy proxy2 = new Proxy("localhost", socks5ProxyServer.getPort(), ProxyType.SOCKS5_PROXY, proxy3, "rsanchez", "M3sh@dmin!");
+        Proxy proxy2 =
+                new Proxy("localhost", socks5ProxyServer.getPort(), ProxyType.SOCKS5_PROXY, proxy3, "rsanchez", "M3sh@dmin!");
         Proxy badProxy2 = new Proxy("localhost", getBadProxyPort(), ProxyType.HTTP_PROXY, null);
         Proxy proxy = new Proxy("localhost", httpsProxyServer.getPort(), ProxyType.HTTPS_PROXY, proxy2);
         Proxy badProxy = new Proxy("localhost", httpsProxyServer.getPort(), ProxyType.HTTPS_PROXY, badProxy2);
         String responseBody = "<response>Some content</response>";
         stubFor(get(urlEqualTo("/agility/api/current/storeproducttype"))
-                .willReturn(aResponse().withStatus(200)
-                                       .withHeader("Content-Type", "text/xml")
-                                       .withBody(responseBody)));
+                .willReturn(aResponse().withStatus(200).withHeader("Content-Type", "text/xml").withBody(responseBody)));
 
         String stringUri = "https://localhost:" + instanceRule.httpsPort() + "/agility/api/current/storeproducttype";
         IHttpRequest request = HttpClientFactory.getInstance().createRequest(HttpMethod.GET, new URI(stringUri));
@@ -347,10 +342,13 @@ public class ProxyTest
         httpClient = HttpClientFactory.getInstance().getClient(builder.build());
         future = httpClient.execute(request);
 
-        try {
+        try
+        {
             future.get();
             Assert.fail("future.get succeeded when should have gotten connection exception");
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Assert.assertTrue(ex instanceof ExecutionException);
             Assert.assertTrue(ex.getCause() instanceof RuntimeException);
             Assert.assertTrue(ex.getCause().getMessage().contains("Bad Gateway"));
@@ -360,19 +358,17 @@ public class ProxyTest
     }
 
     @Test
-    public void testProxyChainHttpEndpoint()
-        throws Exception
+    public void testProxyChainHttpEndpoint() throws Exception
     {
         Proxy proxy3 = new Proxy("localhost", httpProxyServer.getPort(), ProxyType.HTTP_PROXY, null);
-        Proxy proxy2 = new Proxy("localhost", socks5ProxyServer.getPort(), ProxyType.SOCKS5_PROXY, proxy3, "rsanchez", "M3sh@dmin!");
+        Proxy proxy2 =
+                new Proxy("localhost", socks5ProxyServer.getPort(), ProxyType.SOCKS5_PROXY, proxy3, "rsanchez", "M3sh@dmin!");
         Proxy badProxy2 = new Proxy("localhost", getBadProxyPort(), ProxyType.HTTP_PROXY, null);
         Proxy proxy = new Proxy("localhost", httpsProxyServer.getPort(), ProxyType.HTTPS_PROXY, proxy2);
         Proxy badProxy = new Proxy("localhost", httpsProxyServer.getPort(), ProxyType.HTTPS_PROXY, badProxy2);
         String responseBody = "<response>Some content</response>";
         stubFor(get(urlEqualTo("/agility/api/current/storeproducttype"))
-                .willReturn(aResponse().withStatus(200)
-                                       .withHeader("Content-Type", "text/xml")
-                                       .withBody(responseBody)));
+                .willReturn(aResponse().withStatus(200).withHeader("Content-Type", "text/xml").withBody(responseBody)));
 
         String stringUri = "http://localhost:" + instanceRule.port() + "/agility/api/current/storeproducttype";
         IHttpRequest request = HttpClientFactory.getInstance().createRequest(HttpMethod.GET, new URI(stringUri));
@@ -426,10 +422,13 @@ public class ProxyTest
         httpClient = HttpClientFactory.getInstance().getClient(builder.build());
         future = httpClient.execute(request);
 
-        try {
+        try
+        {
             future.get();
             Assert.fail("future.get succeeded when should have gotten connection exception");
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Assert.assertTrue(ex instanceof ExecutionException);
             Assert.assertTrue(ex.getCause() instanceof RuntimeException);
             Assert.assertTrue(ex.getCause().getMessage().contains("Bad Gateway"));
@@ -438,10 +437,10 @@ public class ProxyTest
         httpClient.close();
     }
 
-    private int getBadProxyPort()
-        throws IOException
+    private int getBadProxyPort() throws IOException
     {
-        try (ServerSocket serverSocket = new ServerSocket(0)) {
+        try (ServerSocket serverSocket = new ServerSocket(0))
+        {
             return serverSocket.getLocalPort();
         }
     }
@@ -450,37 +449,35 @@ public class ProxyTest
     {
         StringBuilder builder = new StringBuilder("<response>");
 
-        while (builder.length() < minSize) {
+        while (builder.length() < minSize)
+        {
             builder.append("RepeatingString");
         }
 
         return builder.append("</response>").toString();
     }
 
-    private static class JUnitHttpProxyServer
-        extends ExternalResource
+    private static class JUnitHttpProxyServer extends ExternalResource
     {
         private HttpProxyServer _server;
         private int _port = -1;
 
         @Override
-        protected void before()
-            throws Throwable
+        protected void before() throws Throwable
         {
-            try (ServerSocket serverSocket = new ServerSocket(0)) {
+            try (ServerSocket serverSocket = new ServerSocket(0))
+            {
                 _port = serverSocket.getLocalPort();
             }
 
-            _server = DefaultHttpProxyServer.bootstrap()
-                      .withAllowLocalOnly(true)
-                      .withPort(_port)
-                      .start();
+            _server = DefaultHttpProxyServer.bootstrap().withAllowLocalOnly(true).withPort(_port).start();
         }
 
         @Override
         protected void after()
         {
-            if (_server != null) {
+            if (_server != null)
+            {
                 _server.stop();
             }
         }
@@ -491,32 +488,29 @@ public class ProxyTest
         }
     }
 
-    private static class JUnitHttpsProxyServer
-        extends ExternalResource
+    private static class JUnitHttpsProxyServer extends ExternalResource
     {
         private HttpProxyServer _server;
         private int _port = -1;
 
         @Override
-        protected void before()
-            throws Throwable
+        protected void before() throws Throwable
         {
-            try (ServerSocket serverSocket = new ServerSocket(0)) {
+            try (ServerSocket serverSocket = new ServerSocket(0))
+            {
                 _port = serverSocket.getLocalPort();
             }
 
-            _server = DefaultHttpProxyServer.bootstrap()
-                      .withAllowLocalOnly(true)
-                      .withPort(_port)
-                      .withSslEngineSource(new SelfSignedSslEngineSource(true, true, "unittest.p12"))
-                      .withAuthenticateSslClients(false)
-                      .start();
+            _server = DefaultHttpProxyServer.bootstrap().withAllowLocalOnly(true).withPort(_port)
+                    .withSslEngineSource(new SelfSignedSslEngineSource(true, true, "unittest.p12"))
+                    .withAuthenticateSslClients(false).start();
         }
 
         @Override
         protected void after()
         {
-            if (_server != null) {
+            if (_server != null)
+            {
                 _server.stop();
             }
         }
@@ -527,17 +521,16 @@ public class ProxyTest
         }
     }
 
-    private static class JUnitSocks5ProxyServer
-        extends ExternalResource
+    private static class JUnitSocks5ProxyServer extends ExternalResource
     {
         private JSocksServer _server;
         private int _port = -1;
 
         @Override
-        protected void before()
-            throws Throwable
+        protected void before() throws Throwable
         {
-            try (ServerSocket serverSocket = new ServerSocket(0)) {
+            try (ServerSocket serverSocket = new ServerSocket(0))
+            {
                 _port = serverSocket.getLocalPort();
             }
 
@@ -548,7 +541,8 @@ public class ProxyTest
         @Override
         protected void after()
         {
-            if (_server != null) {
+            if (_server != null)
+            {
                 _server.stop();
             }
         }

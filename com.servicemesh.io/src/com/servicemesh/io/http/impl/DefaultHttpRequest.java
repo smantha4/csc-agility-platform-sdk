@@ -19,8 +19,8 @@ package com.servicemesh.io.http.impl;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -31,13 +31,12 @@ import org.apache.log4j.Logger;
 
 import com.google.common.io.ByteStreams;
 import com.google.common.io.CharStreams;
-import com.servicemesh.io.http.IHttpHeader;
 import com.servicemesh.io.http.HttpMethod;
-import com.servicemesh.io.http.IHttpRequest;
 import com.servicemesh.io.http.HttpVersion;
+import com.servicemesh.io.http.IHttpHeader;
+import com.servicemesh.io.http.IHttpRequest;
 
-public class DefaultHttpRequest
-    implements IHttpRequest
+public class DefaultHttpRequest implements IHttpRequest
 {
     private static final Logger _logger = Logger.getLogger(DefaultHttpRequest.class);
 
@@ -53,7 +52,8 @@ public class DefaultHttpRequest
 
     public DefaultHttpRequest(final HttpMethod method)
     {
-        if (method == null) {
+        if (method == null)
+        {
             throw new IllegalArgumentException("Missing HttpMethod");
         }
 
@@ -65,7 +65,8 @@ public class DefaultHttpRequest
     {
         this(method);
 
-        if (uri == null) {
+        if (uri == null)
+        {
             throw new IllegalArgumentException("Missing URI");
         }
 
@@ -76,13 +77,17 @@ public class DefaultHttpRequest
     {
         this(method);
 
-        if ((uri == null) || uri.isEmpty()) {
+        if ((uri == null) || uri.isEmpty())
+        {
             throw new IllegalArgumentException("Invalid uri: " + uri);
         }
 
-        try {
+        try
+        {
             _uri = new URI(uri);
-        } catch (URISyntaxException ex) {
+        }
+        catch (URISyntaxException ex)
+        {
             throw new IllegalArgumentException("Invalid uri: " + uri);
         }
     }
@@ -124,7 +129,8 @@ public class DefaultHttpRequest
     @Override
     public void setHeader(final IHttpHeader header)
     {
-        if (header != null) {
+        if (header != null)
+        {
             removeHeaders(header.getName());
             _headers.add(header);
         }
@@ -133,8 +139,10 @@ public class DefaultHttpRequest
     @Override
     public void setHeaders(final List<IHttpHeader> headers)
     {
-        if (headers != null) {
-            for (IHttpHeader header : headers) {
+        if (headers != null)
+        {
+            for (IHttpHeader header : headers)
+            {
                 setHeader(header);
             }
         }
@@ -163,7 +171,8 @@ public class DefaultHttpRequest
     {
         IHttpHeader current = findFirstHeader(name);
 
-        if (current != null) {
+        if (current != null)
+        {
             _headers.remove(current);
         }
 
@@ -175,7 +184,8 @@ public class DefaultHttpRequest
     {
         List<IHttpHeader> current = findHeaders(name);
 
-        for (IHttpHeader nextHeader : current) {
+        for (IHttpHeader nextHeader : current)
+        {
             _headers.remove(nextHeader);
         }
 
@@ -193,10 +203,13 @@ public class DefaultHttpRequest
     @Override
     public void setContent(final byte[] content)
     {
-        if ((content != null) && (content.length > 0)) {
+        if ((content != null) && (content.length > 0))
+        {
             _byteContent = new byte[content.length];
             System.arraycopy(content, 0, _byteContent, 0, content.length);
-        } else {
+        }
+        else
+        {
             _byteContent = content;
         }
 
@@ -210,9 +223,9 @@ public class DefaultHttpRequest
         _streamContent = content;
         _byteContent = null;
         _stringContent = null;
-        _contentLength = -1;  //  Correct setting for stream of unknown length
+        _contentLength = -1; //  Correct setting for stream of unknown length
     }
-    
+
     @Override
     public void setContent(final InputStream content, long size)
     {
@@ -227,16 +240,26 @@ public class DefaultHttpRequest
     {
         String content = null;
 
-        if (_stringContent != null) {
+        if (_stringContent != null)
+        {
             content = _stringContent;
-        } else if (_byteContent != null) {
+        }
+        else if (_byteContent != null)
+        {
             content = new String(_byteContent);
-        } else if (_streamContent != null) {
-            try {
+        }
+        else if (_streamContent != null)
+        {
+            try
+            {
                 content = convertInputStream(_streamContent);
-            } catch (IOException ex) {
+            }
+            catch (IOException ex)
+            {
                 throw new RuntimeException(ex.getLocalizedMessage(), ex);
-            } finally {
+            }
+            finally
+            {
                 // Can only do this once
                 _streamContent = null;
             }
@@ -250,19 +273,32 @@ public class DefaultHttpRequest
     {
         byte[] content = null;
 
-        if (_stringContent != null) {
+        if (_stringContent != null)
+        {
             content = _stringContent.getBytes();
-        } else if (_byteContent != null) {
+        }
+        else if (_byteContent != null)
+        {
             content = _byteContent;
-        } else if (_streamContent != null) {
-            try {
+        }
+        else if (_streamContent != null)
+        {
+            try
+            {
                 content = ByteStreams.toByteArray(_streamContent);
-            } catch (IOException ex) {
+            }
+            catch (IOException ex)
+            {
                 throw new RuntimeException(ex.getLocalizedMessage(), ex);
-            } finally {
-                try {
+            }
+            finally
+            {
+                try
+                {
                     _streamContent.close();
-                } catch (IOException ex) {
+                }
+                catch (IOException ex)
+                {
                     // Ignore
                 }
 
@@ -278,24 +314,32 @@ public class DefaultHttpRequest
     public InputStream getContentAsStream()
     {
         InputStream is = null;
-        
+
         if (_streamContent != null)
-        	is = _streamContent;
-        else if (_stringContent != null) {
+        {
+            is = _streamContent;
+        }
+        else if (_stringContent != null)
+        {
             byte[] stringBytes = _stringContent.getBytes();
 
             _contentLength = stringBytes.length;
-            is = new ByteArrayInputStream(stringBytes);        
-        } else if (_byteContent != null) {
+            is = new ByteArrayInputStream(stringBytes);
+        }
+        else if (_byteContent != null)
+        {
             _contentLength = _byteContent.length;
             is = new ByteArrayInputStream(_byteContent);
         }
 
         return is;
     }
-    
+
     @Override
-    public long getContentLength() { return _contentLength; }
+    public long getContentLength()
+    {
+        return _contentLength;
+    }
 
     /**
      * {@inheritDoc}
@@ -319,8 +363,10 @@ public class DefaultHttpRequest
     {
         IHttpHeader found = null;
 
-        for (IHttpHeader candidate : _headers) {
-            if (candidate.getName().equalsIgnoreCase(name)) {
+        for (IHttpHeader candidate : _headers)
+        {
+            if (candidate.getName().equalsIgnoreCase(name))
+            {
                 found = candidate;
                 break;
             }
@@ -333,8 +379,10 @@ public class DefaultHttpRequest
     {
         List<IHttpHeader> headersFound = new ArrayList<IHttpHeader>();
 
-        for (IHttpHeader candidate : _headers) {
-            if (candidate.getName().equalsIgnoreCase(name)) {
+        for (IHttpHeader candidate : _headers)
+        {
+            if (candidate.getName().equalsIgnoreCase(name))
+            {
                 headersFound.add(candidate);
             }
         }
@@ -342,17 +390,22 @@ public class DefaultHttpRequest
         return headersFound;
     }
 
-    private String convertInputStream(final InputStream stream)
-        throws IOException
+    private String convertInputStream(final InputStream stream) throws IOException
     {
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 
-        try {
+        try
+        {
             return CharStreams.toString(reader);
-        } finally {
-            try {
+        }
+        finally
+        {
+            try
+            {
                 reader.close();
-            } catch (IOException ex) {
+            }
+            catch (IOException ex)
+            {
                 // Ignore
             }
         }

@@ -7,9 +7,8 @@ public class Credentials
 {
     public enum CredentialsType
     {
-        CREDENTIALS_TYPE_USERNAMEPASSORD(0, "UsernamePassword"),
-        CREDENTIALS_TYPE_NTCREDS(1, "NTCredentials");
-        
+        CREDENTIALS_TYPE_USERNAMEPASSORD(0, "UsernamePassword"), CREDENTIALS_TYPE_NTCREDS(1, "NTCredentials");
+
         private final int _id;
         private final String _name;
 
@@ -49,7 +48,7 @@ public class Credentials
 
     public String getUsername()
     {
-        return (String)_properties.get(USERNAME_KEY);
+        return (String) _properties.get(USERNAME_KEY);
     }
 
     public void setPassword(String password)
@@ -59,7 +58,7 @@ public class Credentials
 
     public String getPassword()
     {
-        return (String)_properties.get(PASSWORD_KEY);
+        return (String) _properties.get(PASSWORD_KEY);
     }
 
     public void setDomain(String domain)
@@ -69,6 +68,6 @@ public class Credentials
 
     public String getDomain()
     {
-        return (String)_properties.get(DOMAIN_KEY);
+        return (String) _properties.get(DOMAIN_KEY);
     }
 }

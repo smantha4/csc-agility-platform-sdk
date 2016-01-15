@@ -1,20 +1,20 @@
 package com.servicemesh.agility.sdk.service;
 
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceEvent;
-import org.osgi.framework.ServiceReference;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceEvent;
+import org.osgi.framework.ServiceReference;
 import org.powermock.reflect.Whitebox;
 
 import com.servicemesh.agility.sdk.service.spi.ServiceRegistry;
@@ -32,9 +32,17 @@ public class ServiceRegistryTest
             _registry = registry;
         }
 
-        public ServiceRegistry getServiceRegistry() { return _registry; }
-        public AsyncService getApiService() { return _apiService; }
+        public ServiceRegistry getServiceRegistry()
+        {
+            return _registry;
+        }
 
+        public AsyncService getApiService()
+        {
+            return _apiService;
+        }
+
+        @Override
         public void run()
         {
             _apiService = _registry.lookupApiService();
@@ -42,7 +50,7 @@ public class ServiceRegistryTest
     }
 
     @Test
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testLookupApi() throws Exception
     {
         AsyncService mockAsync = mock(AsyncService.class);
@@ -52,13 +60,13 @@ public class ServiceRegistryTest
 
         final List<ServiceReference> references = new ArrayList<ServiceReference>();
 
-        when(mockContext.getServiceReferences(anyString(), anyString()))
-            .thenAnswer(new Answer<ServiceReference[]>() {
-                    @Override
-                    public ServiceReference[] answer(InvocationOnMock invocation) {
-                        return references.toArray(new ServiceReference[0]);
-                    }
-                });
+        when(mockContext.getServiceReferences(anyString(), anyString())).thenAnswer(new Answer<ServiceReference[]>() {
+            @Override
+            public ServiceReference[] answer(InvocationOnMock invocation)
+            {
+                return references.toArray(new ServiceReference[0]);
+            }
+        });
 
         ServiceRegistry registry = new ServiceRegistry(mockContext);
 
@@ -87,7 +95,7 @@ public class ServiceRegistryTest
         Assert.assertNull(apiClient.getApiService());
 
         ServiceEvent regEvent = new ServiceEvent(ServiceEvent.REGISTERED, mockReference);
-        Assert.assertTrue((Boolean)Whitebox.getInternalState(apiSvcRgstrObj, "_registered"));
+        Assert.assertTrue((Boolean) Whitebox.getInternalState(apiSvcRgstrObj, "_registered"));
 
         Whitebox.invokeMethod(apiSvcHldrObj, "serviceChanged", regEvent);
         verifyApiService(apiClient, t);
@@ -95,7 +103,7 @@ public class ServiceRegistryTest
         // Scenario 3 - API service unregisters and re-registers
         ServiceEvent unregEvent = new ServiceEvent(ServiceEvent.UNREGISTERING, mockReference);
         Whitebox.invokeMethod(apiSvcHldrObj, "serviceChanged", unregEvent);
-        asyncService = (AsyncService)Whitebox.invokeMethod(apiSvcHldrObj, "getApiService");
+        asyncService = (AsyncService) Whitebox.invokeMethod(apiSvcHldrObj, "getApiService");
         Assert.assertNull(asyncService);
 
         apiClient = new ApiClient(registry);
@@ -110,10 +118,12 @@ public class ServiceRegistryTest
 
     private void verifyApiService(ApiClient apiClient, Thread t) throws Exception
     {
-        try {
+        try
+        {
             t.join(5000);
         }
-        catch (Exception e) {
+        catch (Exception e)
+        {
             Assert.fail("Exception: " + e);
         }
         Assert.assertFalse(t.isAlive());

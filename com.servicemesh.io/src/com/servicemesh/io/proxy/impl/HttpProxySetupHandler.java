@@ -38,8 +38,7 @@ import org.apache.http.util.Args;
 import com.servicemesh.io.proxy.PipelinedChannel;
 import com.servicemesh.io.proxy.ProxySetupHandler;
 
-public class HttpProxySetupHandler
-    implements ProxySetupHandler
+public class HttpProxySetupHandler implements ProxySetupHandler
 {
     private final ProxyHost _proxyHost;
     private final IOSession _ioSession;
@@ -59,23 +58,27 @@ public class HttpProxySetupHandler
     }
 
     @Override
-    public PipelinedChannel initialize()
-        throws IOException
+    public PipelinedChannel initialize() throws IOException
     {
         HttpRequest request = generateConnectRequest();
 
-        if (request != null) {
+        if (request != null)
+        {
             writeRequest(request);
 
             HttpResponse response = readResponse();
 
-            if (response != null) {
+            if (response != null)
+            {
                 int status = response.getStatusLine().getStatusCode();
 
-                if ((status < 200) || (status > 299)) {
+                if ((status < 200) || (status > 299))
+                {
                     throw new RuntimeException("Proxy connect failed: " + response.getStatusLine().getReasonPhrase());
                 }
-            } else {
+            }
+            else
+            {
                 throw new RuntimeException("Proxy connect failed to return a valid response");
             }
         }
@@ -88,8 +91,7 @@ public class HttpProxySetupHandler
         return _proxyHost;
     }
 
-    protected HttpRequest generateConnectRequest()
-        throws IOException
+    protected HttpRequest generateConnectRequest() throws IOException
     {
         HttpRequest request = null;
 
@@ -97,10 +99,12 @@ public class HttpProxySetupHandler
         ProtocolVersion protocolVersion = new ProtocolVersion("HTTP", 1, 0);
         request = new BasicHttpRequest("CONNECT", uri, protocolVersion);
 
-        if ((_proxyHost.getPrincipal() != null) && !_proxyHost.getPrincipal().isEmpty()) {
+        if ((_proxyHost.getPrincipal() != null) && !_proxyHost.getPrincipal().isEmpty())
+        {
             StringBuilder builder = new StringBuilder(_proxyHost.getPrincipal());
 
-            if ((_proxyHost.getCredentials() != null) && !_proxyHost.getCredentials().isEmpty()) {
+            if ((_proxyHost.getCredentials() != null) && !_proxyHost.getCredentials().isEmpty())
+            {
                 builder.append(":");
                 builder.append(_proxyHost.getCredentials());
             }
@@ -116,8 +120,7 @@ public class HttpProxySetupHandler
         return request;
     }
 
-    private void writeRequest(final HttpRequest request)
-        throws IOException
+    private void writeRequest(final HttpRequest request) throws IOException
     {
         StringBuilder builder = new StringBuilder();
         RequestLine requestLine = request.getRequestLine();
@@ -129,7 +132,8 @@ public class HttpProxySetupHandler
         builder.append(requestLine.getProtocolVersion().toString());
         builder.append(CRLF);
 
-        for (Header header : request.getAllHeaders()) {
+        for (Header header : request.getAllHeaders())
+        {
             builder.append(header.toString());
             builder.append(CRLF);
         }
@@ -141,8 +145,7 @@ public class HttpProxySetupHandler
         write(byteBuffer);
     }
 
-    private HttpResponse readResponse()
-        throws IOException
+    private HttpResponse readResponse() throws IOException
     {
         StatusLine statusLine = processStatusLine();
         HttpResponse response = new BasicHttpResponse(statusLine);
@@ -152,12 +155,12 @@ public class HttpProxySetupHandler
         return response;
     }
 
-    private StatusLine processStatusLine()
-        throws IOException
+    private StatusLine processStatusLine() throws IOException
     {
         String statusLine = readLine();
 
-        while (statusLine.trim().length() == 0) {
+        while (statusLine.trim().length() == 0)
+        {
             statusLine = readLine();
         }
         statusLine = statusLine.trim();
@@ -174,8 +177,10 @@ public class HttpProxySetupHandler
     {
         StringBuilder builder = new StringBuilder();
 
-        if ((statusTokens != null) && (statusTokens.length > 2)) {
-            for (int i = 2; i < statusTokens.length; i++) {
+        if ((statusTokens != null) && (statusTokens.length > 2))
+        {
+            for (int i = 2; i < statusTokens.length; i++)
+            {
                 builder.append(statusTokens[i]);
                 builder.append(" ");
             }
@@ -194,14 +199,15 @@ public class HttpProxySetupHandler
         return new ProtocolVersion(tokens[0], major, minor);
     }
 
-    private void processHeaders(final HttpResponse response)
-        throws IOException
+    private void processHeaders(final HttpResponse response) throws IOException
     {
         String headerLine = readLine();
 
-        while (headerLine.length() > 0) {
+        while (headerLine.length() > 0)
+        {
             int index = headerLine.indexOf(":");
-            if (index == -1) {
+            if (index == -1)
+            {
                 throw new IOException("Corrupt header-field: '" + headerLine + "'");
             }
 
@@ -215,30 +221,35 @@ public class HttpProxySetupHandler
         read(buffer);
     }
 
-    private String readLine()
-        throws IOException
+    private String readLine() throws IOException
     {
         StringBuilder lineBuilder = new StringBuilder();
         int c;
         ByteBuffer buffer = ByteBuffer.allocate(1);
 
-        while (true) {
+        while (true)
+        {
             buffer.rewind();
             read(buffer);
             buffer.rewind();
             c = buffer.get() & 0xff;
 
-            if (c == -1) {
+            if (c == -1)
+            {
                 throw new IOException("HttpResponse corrupt, input stream closed from " + _proxyHost.getHostName());
             }
 
-            if (c == '\n') {
+            if (c == '\n')
+            {
                 continue;
             }
 
-            if (c != '\r') {
-                lineBuilder.append((char)c);
-            } else {
+            if (c != '\r')
+            {
+                lineBuilder.append((char) c);
+            }
+            else
+            {
                 break;
             }
         }
@@ -246,26 +257,33 @@ public class HttpProxySetupHandler
         return new String(lineBuilder);
     }
 
-    private int read(final ByteBuffer dst)
-        throws IOException
+    private int read(final ByteBuffer dst) throws IOException
     {
         int bytesRead = 0;
 
-        if (_pipelinedChannel == null) {
-            while (bytesRead == 0) {
+        if (_pipelinedChannel == null)
+        {
+            while (bytesRead == 0)
+            {
                 bytesRead = _ioSession.channel().read(dst);
             }
-        } else {
-            if (_netDataIn == null) {
+        }
+        else
+        {
+            if (_netDataIn == null)
+            {
                 _netDataIn = ByteBuffer.allocate(8192);
             }
 
-            if (_appDataIn == null) {
+            if (_appDataIn == null)
+            {
                 _appDataIn = ByteBuffer.allocate(8192);
             }
 
-            if (_appDataIn.position() == 0) {
-                while (bytesRead == 0) {
+            if (_appDataIn.position() == 0)
+            {
+                while (bytesRead == 0)
+                {
                     bytesRead = _ioSession.channel().read(_netDataIn);
                 }
 
@@ -274,11 +292,13 @@ public class HttpProxySetupHandler
                 _netDataIn.compact();
             }
 
-            if (_appDataIn.position() > 0) {
+            if (_appDataIn.position() > 0)
+            {
                 _appDataIn.flip();
 
                 int count = Math.min(dst.remaining(), _appDataIn.remaining());
-                for (int i = 0; i < count; i++) {
+                for (int i = 0; i < count; i++)
+                {
                     dst.put(_appDataIn.get());
                 }
 
@@ -290,20 +310,24 @@ public class HttpProxySetupHandler
         return bytesRead;
     }
 
-    private int write(final ByteBuffer src)
-        throws SSLException, IOException
+    private int write(final ByteBuffer src) throws SSLException, IOException
     {
         int bytesWritten = 0;
 
-        if (_pipelinedChannel == null) {
+        if (_pipelinedChannel == null)
+        {
             bytesWritten = _ioSession.channel().write(src);
-        } else {
-            if (_netDataOut == null) {
+        }
+        else
+        {
+            if (_netDataOut == null)
+            {
                 _netDataOut = ByteBuffer.allocate(8192);
             }
 
             _pipelinedChannel.wrap(src, _netDataOut);
-            if (_netDataOut.position() > 0) {
+            if (_netDataOut.position() > 0)
+            {
                 _netDataOut.flip();
                 bytesWritten = _ioSession.channel().write(_netDataOut);
                 _netDataOut.compact();

@@ -29,7 +29,7 @@ public class PipelinedChannelResult
 
     public PipelinedChannelResult(final ByteBuffer resultBuffer, final int byteCount)
     {
-        this(resultBuffer, (SSLEngineResult)null, byteCount);
+        this(resultBuffer, (SSLEngineResult) null, byteCount);
     }
 
     public PipelinedChannelResult(final ByteBuffer resultBuffer, final SSLEngineResult engineResult, final int byteCount)
@@ -61,12 +61,14 @@ public class PipelinedChannelResult
 
         sb.append(_byteCount);
 
-        if (_engineResult != null) {
+        if (_engineResult != null)
+        {
             sb.append(", ");
             sb.append(_engineResult.toString());
         }
 
-        if (_resultBuffer != null) {
+        if (_resultBuffer != null)
+        {
             sb.append(", ");
             sb.append(_resultBuffer.toString());
         }

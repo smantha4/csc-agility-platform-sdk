@@ -27,8 +27,7 @@ import com.servicemesh.io.proxy.PipelinedChannel;
 import com.servicemesh.io.proxy.PipelinedChannelResult;
 import com.servicemesh.io.util.ContentProducer;
 
-public class PipelinedChannelProducer
-    implements ContentProducer
+public class PipelinedChannelProducer implements ContentProducer
 {
     private final IOSession _ioSession;
     private final PipelinedChannel _pipelinedChannel;
@@ -44,11 +43,9 @@ public class PipelinedChannelProducer
 
     /**
      * {@inheritDoc}
-     * 
      */
     @Override
-    public int produce(ByteBuffer dst)
-        throws IOException
+    public int produce(ByteBuffer dst) throws IOException
     {
         Preconditions.checkNotNull(dst, "Missing destination buffer");
         PipelinedChannelResult result = _pipelinedChannel.read(dst, _ioSession.channel());
@@ -58,7 +55,6 @@ public class PipelinedChannelProducer
 
     /**
      * {@inheritDoc}
-     * 
      */
     @Override
     public int remaining()

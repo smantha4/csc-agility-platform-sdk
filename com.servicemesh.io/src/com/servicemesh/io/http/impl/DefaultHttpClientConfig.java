@@ -23,8 +23,7 @@ import com.servicemesh.io.http.Credentials;
 import com.servicemesh.io.http.IHttpClientConfig;
 import com.servicemesh.io.proxy.Proxy;
 
-public class DefaultHttpClientConfig
-    implements IHttpClientConfig
+public class DefaultHttpClientConfig implements IHttpClientConfig
 {
     private Integer connectionTimeout = null;
     private Integer socketTimeout = null;
@@ -38,8 +37,7 @@ public class DefaultHttpClientConfig
     private Proxy proxy = null;
 
     @Override
-    public Object clone()
-        throws CloneNotSupportedException
+    public Object clone() throws CloneNotSupportedException
     {
         DefaultHttpClientConfig clone = new DefaultHttpClientConfig();
 
@@ -102,12 +100,12 @@ public class DefaultHttpClientConfig
     @Override
     public Integer getRetries()
     {
-    	return retryValue;
+        return retryValue;
     }
 
     public void setRetries(final Integer retries)
     {
-    	retryValue = retries;
+        retryValue = retries;
     }
 
     /**

@@ -17,8 +17,7 @@
 
 package com.servicemesh.io.http;
 
-public abstract class BaseHttpCallback<V>
-    implements IHttpCallback<V>
+public abstract class BaseHttpCallback<V> implements IHttpCallback<V>
 {
     @Override
     public void onCancel()

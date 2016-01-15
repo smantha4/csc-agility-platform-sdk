@@ -15,96 +15,116 @@ import com.servicemesh.core.reactor.IOReactor;
 import com.servicemesh.core.reactor.Valve;
 import com.servicemesh.core.reactor.ValveHandler;
 
-
 /**
- * And example class that listens for connections on a port. It
- * receives any data sent over connected sockets and formats it to the
- * standard output. If any socket delivers the character 'EOT'
- * (ctrl-D), then the program will exit.
+ * And example class that listens for connections on a port. It receives any data sent over connected sockets and formats it to
+ * the standard output. If any socket delivers the character 'EOT' (ctrl-D), then the program will exit.
  */
-public class DumpServer {
+public class DumpServer
+{
     /** Class wide logger. */
-    private final static Logger s_logger =
-        Logger.getLogger(DumpServer.class);
+    private final static Logger s_logger = Logger.getLogger(DumpServer.class);
 
-    private static void usage(String msg) {
-        s_logger.error(msg + "\n" +
-                       "usage: java " + DumpServer.class.getName() +
-                       " [port=6789]");
+    private static void usage(String msg)
+    {
+        s_logger.error(msg + "\n" + "usage: java " + DumpServer.class.getName() + " [port=6789]");
     }
 
     private int m_port;
-    public int getPort() { return m_port; }
 
-    private IOReactor m_ioReactor;
-    public IOReactor getIOReactor() { return m_ioReactor; }
-
-    public DumpServer(int port) {
-    	m_port = port;
+    public int getPort()
+    {
+        return m_port;
     }
 
-    protected class DumpAcceptorAdapter
-    	extends AcceptorAdapter
-    	implements ValveHandler
+    private IOReactor m_ioReactor;
+
+    public IOReactor getIOReactor()
     {
-    	protected ByteBladder m_buf = new ByteBladder(true);
+        return m_ioReactor;
+    }
 
-    	protected DumpAcceptorAdapter(String name, int port) {
+    public DumpServer(int port)
+    {
+        m_port = port;
+    }
+
+    protected class DumpAcceptorAdapter extends AcceptorAdapter implements ValveHandler
+    {
+        protected ByteBladder m_buf = new ByteBladder(true);
+
+        protected DumpAcceptorAdapter(String name, int port)
+        {
             super(name, port);
-    	}
+        }
 
-    	public void peerCreate(IOReactor ioReactor, SocketChannel socketChannel) {
+        @Override
+        public void peerCreate(IOReactor ioReactor, SocketChannel socketChannel)
+        {
             Valve valve = ioReactor.valveCreate(socketChannel, this);
             valve.enable(SelectionKey.OP_READ);
-    	}
+        }
 
-    	public void valveFire(Valve valve, SelectionKey selectedKey) {
+        @Override
+        public void valveFire(Valve valve, SelectionKey selectedKey)
+        {
             int r = 0;
-            ReadableByteChannel channel = 
-                (ReadableByteChannel)valve.getChannel();
+            ReadableByteChannel channel = (ReadableByteChannel) valve.getChannel();
             m_buf.clear();
-            try {
+            try
+            {
                 r = m_buf.read(channel, 1024);
-            } catch (IOException e) {
+            }
+            catch (IOException e)
+            {
                 s_logger.error("Failed to read", e);
                 r = -1;
             }
-            if (r >= 0) {
-                s_logger.info(channel.toString() + '\n' +
-                              Ascii.dump(m_buf.getOutBuffer()));
+            if (r >= 0)
+            {
+                s_logger.info(channel.toString() + '\n' + Ascii.dump(m_buf.getOutBuffer()));
                 byte[] bytes = m_buf.getBytes(new byte[m_buf.getUsed()]);
-                for (int i = 0; i < bytes.length; i++) {
-                    if (bytes[i] == Ascii.EOT) {
+                for (int i = 0; i < bytes.length; i++)
+                {
+                    if (bytes[i] == Ascii.EOT)
+                    {
                         m_ioReactor.shutdown();
                     }
                 }
-            } else {
+            }
+            else
+            {
                 s_logger.info("EOF");
                 valve.close();
             }
-    	}
+        }
     }
 
-    public void init() {
-    	m_ioReactor = IOReactor.getDefaultIOReactor();
-    	Acceptor a = new Acceptor(m_ioReactor,
-                                  new DumpAcceptorAdapter("DumpServerAcceptor", m_port));
-    	a.listen();
+    public void init()
+    {
+        m_ioReactor = IOReactor.getDefaultIOReactor();
+        Acceptor a = new Acceptor(m_ioReactor, new DumpAcceptorAdapter("DumpServerAcceptor", m_port));
+        a.listen();
     }
 
     /** The main event. */
-    public static void main(String[] args) {
-        if (args.length > 1) {
+    public static void main(String[] args)
+    {
+        if (args.length > 1)
+        {
             usage("Too many arguments");
             System.exit(1);
         }
 
         int port = 6789;
 
-        if (args.length == 1) {
-            try {
+        if (args.length == 1)
+        {
+            try
+            {
                 port = Integer.parseInt(args[0]);
-            } catch (NumberFormatException e) {
+            }
+            catch (NumberFormatException e)
+            {
                 s_logger.error("Couldn't parse port number", e);
                 usage(e.getMessage());
                 System.exit(1);
@@ -113,15 +133,18 @@ public class DumpServer {
 
         DumpServer server = new DumpServer(port);
         server.init();
-        for (;;) {
-            try {
+        for (;;)
+        {
+            try
+            {
                 server.getIOReactor().getThread().join();
                 break;
-            } catch (InterruptedException e) {
+            }
+            catch (InterruptedException e)
+            {
             }
         }
-        s_logger.info("IOReactor has terminated: cycle count = " +
-                      server.getIOReactor().getCycleCount());
+        s_logger.info("IOReactor has terminated: cycle count = " + server.getIOReactor().getCycleCount());
         System.exit(0);
     }
 }

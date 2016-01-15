@@ -25,12 +25,13 @@ public class Host
 
     public Host(final String hostname, final int port)
     {
-        this(hostname, port, (String)null);
+        this(hostname, port, (String) null);
     }
 
     public Host(final String hostname, final int port, final String scheme)
     {
-        if ((hostname == null) || hostname.isEmpty()) {
+        if ((hostname == null) || hostname.isEmpty())
+        {
             throw new IllegalArgumentException("Missing hostname");
         }
 
@@ -57,20 +58,22 @@ public class Host
     @Override
     public String toString()
     {
-       StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
 
-       if ((_scheme != null) && !_scheme.isEmpty()) {
-           sb.append(_scheme);
-           sb.append("//");
-       }
+        if ((_scheme != null) && !_scheme.isEmpty())
+        {
+            sb.append(_scheme);
+            sb.append("//");
+        }
 
-       sb.append(getHostname());
+        sb.append(getHostname());
 
-       if (getPort() > 0) {
-           sb.append(":");
-           sb.append(getPort());
-       }
+        if (getPort() > 0)
+        {
+            sb.append(":");
+            sb.append(getPort());
+        }
 
-       return sb.toString();
+        return sb.toString();
     }
 }

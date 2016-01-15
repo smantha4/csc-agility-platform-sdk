@@ -27,12 +27,11 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.servicemesh.io.http.HttpStatus;
 import com.servicemesh.io.http.IHttpHeader;
 import com.servicemesh.io.http.IHttpResponse;
-import com.servicemesh.io.http.HttpStatus;
 
-public class DefaultHttpResponse
-    implements IHttpResponse
+public class DefaultHttpResponse implements IHttpResponse
 {
     private static final Logger _logger = Logger.getLogger(DefaultHttpResponse.class);
 
@@ -49,19 +48,29 @@ public class DefaultHttpResponse
     public void close()
     {
         // Make sure the stream is closed
-        if (_stream != null) {
+        if (_stream != null)
+        {
             byte[] bytes = new byte[4096];
 
-            try {
-                while (_stream.read(bytes) > 0) {
+            try
+            {
+                while (_stream.read(bytes) > 0)
+                {
                     // Nothing to do, just draining
                 }
-            } catch (IOException ex) {
+            }
+            catch (IOException ex)
+            {
                 // Ignore
-            } finally {
-                try {
+            }
+            finally
+            {
+                try
+                {
                     _stream.close();
-                } catch (IOException ex) {
+                }
+                catch (IOException ex)
+                {
                     // Ignore
                 }
 
@@ -100,7 +109,8 @@ public class DefaultHttpResponse
 
     public void addHeader(final IHttpHeader header)
     {
-        if (header != null) {
+        if (header != null)
+        {
             _headers.add(header);
         }
     }
@@ -125,50 +135,54 @@ public class DefaultHttpResponse
     @Override
     public String getContent()
     {
-    	//  First, convert from InputStream is that has not been done already:
-    	if (_stream != null)
-    	{
-    		try
-    		{
-	    		ByteArrayOutputStream os = new ByteArrayOutputStream();  // For large streams, this will blow up
-	    		int n;
-	    		byte[] data = new byte[16384];
-	    		while ((n = _stream.read(data, 0, data.length))!= -1) 
-	    			os.write(data, 0, n);
-	    		os.flush();
-	    		
-	    		_value = os.toByteArray();
-	    		_stream.close();
-	    		_stream = null;  //  Don't do this again...
-    		}
-    		catch (IOException ex)
-    		{
-    		}
-    	}
+        //  First, convert from InputStream is that has not been done already:
+        if (_stream != null)
+        {
+            try
+            {
+                ByteArrayOutputStream os = new ByteArrayOutputStream(); // For large streams, this will blow up
+                int n;
+                byte[] data = new byte[16384];
+                while ((n = _stream.read(data, 0, data.length)) != -1)
+                {
+                    os.write(data, 0, n);
+                }
+                os.flush();
+
+                _value = os.toByteArray();
+                _stream.close();
+                _stream = null; //  Don't do this again...
+            }
+            catch (IOException ex)
+            {
+            }
+        }
         return ((_value != null) && (_value.length > 0)) ? new String(_value) : null;
     }
 
     @Override
     public byte[] getContentAsByteArray()
     {
-    	getContent();
+        getContent();
         return _value;
     }
 
     @Override
     public InputStream getContentAsStream()
     {
-    	if (_stream != null)
-    		return _stream;
-    	
-    	getContent();
+        if (_stream != null)
+        {
+            return _stream;
+        }
+
+        getContent();
         return ((_value != null) && (_value.length > 0)) ? new ByteArrayInputStream(_value) : null;
     }
 
     @Override
     public long getContentLength()
     {
-    	getContent();
+        getContent();
         return (_value != null) ? _value.length : 0;
     }
 
@@ -177,7 +191,7 @@ public class DefaultHttpResponse
         _stream = stream;
         _value = null;
     }
-    
+
     //  Preserved for junit testing
     public void setContent(byte[] content)
     {
@@ -195,8 +209,10 @@ public class DefaultHttpResponse
     {
         IHttpHeader found = null;
 
-        for (IHttpHeader candidate : _headers) {
-            if (candidate.getName().equalsIgnoreCase(name)) {
+        for (IHttpHeader candidate : _headers)
+        {
+            if (candidate.getName().equalsIgnoreCase(name))
+            {
                 found = candidate;
                 break;
             }
@@ -209,8 +225,10 @@ public class DefaultHttpResponse
     {
         List<IHttpHeader> found = new ArrayList<IHttpHeader>();
 
-        for (IHttpHeader candidate : _headers) {
-            if (candidate.getName().equalsIgnoreCase(name)) {
+        for (IHttpHeader candidate : _headers)
+        {
+            if (candidate.getName().equalsIgnoreCase(name))
+            {
                 found.add(candidate);
             }
         }

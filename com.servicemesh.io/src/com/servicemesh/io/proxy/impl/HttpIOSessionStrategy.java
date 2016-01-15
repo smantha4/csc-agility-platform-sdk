@@ -27,8 +27,7 @@ import org.apache.http.nio.reactor.IOSession;
 import com.servicemesh.io.proxy.PipelinedChannel;
 import com.servicemesh.io.proxy.ProxySetupHandler;
 
-public class HttpIOSessionStrategy
-    implements SchemeIOSessionStrategy
+public class HttpIOSessionStrategy implements SchemeIOSessionStrategy
 {
     private NHttpClientConnectionManager _connectionMgr;
 
@@ -44,20 +43,22 @@ public class HttpIOSessionStrategy
     }
 
     @Override
-    public IOSession upgrade(final HttpHost host, final IOSession ioSession)
-        throws IOException
+    public IOSession upgrade(final HttpHost host, final IOSession ioSession) throws IOException
     {
         IOSession rv = ioSession;
 
-        if (host instanceof ProxyHost) {
-            ProxyHost proxyHost = (ProxyHost)host;
+        if (host instanceof ProxyHost)
+        {
+            ProxyHost proxyHost = (ProxyHost) host;
             PipelinedChannel firstChannel = null;
             PipelinedChannel channel = null;
 
-            while (proxyHost != null) {
+            while (proxyHost != null)
+            {
                 ProxySetupHandler handler;
 
-                switch (proxyHost.getProxyType()) {
+                switch (proxyHost.getProxyType())
+                {
                     case HTTP_PROXY:
                         handler = new HttpProxySetupHandler(proxyHost, ioSession, firstChannel);
                         break;
@@ -71,20 +72,25 @@ public class HttpIOSessionStrategy
                         throw new RuntimeException("Unsupported proxy type: " + proxyHost.getProxyType().getScheme());
                 }
 
-                try {
+                try
+                {
                     PipelinedChannel newChannel = handler.initialize();
 
-                    if (firstChannel == null) {
+                    if (firstChannel == null)
+                    {
                         firstChannel = newChannel;
                     }
 
-                    if (channel != null) {
+                    if (channel != null)
+                    {
                         channel.setDownstream(newChannel);
                     }
 
                     channel = newChannel;
-                    proxyHost = (proxyHost.getTargetHost() instanceof ProxyHost) ? (ProxyHost)proxyHost.getTargetHost() : null;
-                } catch (IOException ex) {
+                    proxyHost = (proxyHost.getTargetHost() instanceof ProxyHost) ? (ProxyHost) proxyHost.getTargetHost() : null;
+                }
+                catch (IOException ex)
+                {
                     throw new RuntimeException(ex.getLocalizedMessage(), ex);
                 }
             }

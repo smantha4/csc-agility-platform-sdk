@@ -24,8 +24,7 @@ import com.servicemesh.io.http.IHttpClientConfig;
 import com.servicemesh.io.http.IHttpClientConfigBuilder;
 import com.servicemesh.io.proxy.Proxy;
 
-public class DefaultHttpClientConfigBuilder
-    implements IHttpClientConfigBuilder
+public class DefaultHttpClientConfigBuilder implements IHttpClientConfigBuilder
 {
     final DefaultHttpClientConfig _config;
 
@@ -75,13 +74,14 @@ public class DefaultHttpClientConfigBuilder
     @Override
     public IHttpClientConfigBuilder setRetries(int retries)
     {
-    	_config.setRetries(retries);
-    	return this;
+        _config.setRetries(retries);
+        return this;
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public IHttpClientConfigBuilder setServerBusyRetries(final int retries)
     {
         _config.setBusyRetries(retries);
@@ -91,6 +91,7 @@ public class DefaultHttpClientConfigBuilder
     /**
      * {@inheritDoc}
      */
+    @Override
     public IHttpClientConfigBuilder setServerBusyRetryInterval(final long interval)
     {
         _config.setBusyRetryInterval(interval);
@@ -154,9 +155,12 @@ public class DefaultHttpClientConfigBuilder
     {
         IHttpClientConfigBuilder adapted = null;
 
-        try {
-            adapted = new DefaultHttpClientConfigBuilder((DefaultHttpClientConfig)_config.clone());
-        } catch (CloneNotSupportedException ex) {
+        try
+        {
+            adapted = new DefaultHttpClientConfigBuilder((DefaultHttpClientConfig) _config.clone());
+        }
+        catch (CloneNotSupportedException ex)
+        {
             // Ignore, clone is supported
         }
 

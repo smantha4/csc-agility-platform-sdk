@@ -17,11 +17,11 @@
 
 package com.servicemesh.io.http.impl;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 import com.servicemesh.io.http.IHttpResponse;
 

@@ -23,8 +23,7 @@ import com.servicemesh.io.proxy.Host;
 import com.servicemesh.io.proxy.Proxy;
 import com.servicemesh.io.proxy.ProxyType;
 
-public class ProxyHost
-    extends HttpHost
+public class ProxyHost extends HttpHost
 {
     private static final long serialVersionUID = -6644556465101928281L;
 
@@ -35,11 +34,11 @@ public class ProxyHost
 
     public ProxyHost(final String hostname, final int port, final String scheme, final HttpHost targetHost)
     {
-        this(hostname, port, scheme, (String)null, (String)null, targetHost);
+        this(hostname, port, scheme, (String) null, (String) null, targetHost);
     }
 
-    public ProxyHost(final String hostname, final int port, final String scheme,
-                     final String principal, final String credentials, final HttpHost targetHost)
+    public ProxyHost(final String hostname, final int port, final String scheme, final String principal, final String credentials,
+            final HttpHost targetHost)
     {
         super(hostname, port, scheme);
         _targetHost = targetHost;
@@ -56,10 +55,14 @@ public class ProxyHost
         _type = proxy.getType();
 
         Host targetHost = proxy.getTargetHost();
-        if (targetHost != null) {
-            if (targetHost instanceof Proxy) {
-                _targetHost = new ProxyHost((Proxy)targetHost);
-            } else {
+        if (targetHost != null)
+        {
+            if (targetHost instanceof Proxy)
+            {
+                _targetHost = new ProxyHost((Proxy) targetHost);
+            }
+            else
+            {
                 _targetHost = new HttpHost(targetHost.getHostname(), targetHost.getPort(), targetHost.getScheme());
             }
         }
@@ -82,16 +85,19 @@ public class ProxyHost
 
     public void setEndpoint(final HttpHost host)
     {
-        if (_targetHost instanceof ProxyHost) {
-            ((ProxyHost)_targetHost).setEndpoint(host);
-        } else {
+        if (_targetHost instanceof ProxyHost)
+        {
+            ((ProxyHost) _targetHost).setEndpoint(host);
+        }
+        else
+        {
             _targetHost = host;
         }
     }
 
     public HttpHost getEndpoint()
     {
-        return (_targetHost instanceof ProxyHost) ? ((ProxyHost)_targetHost).getEndpoint() : _targetHost;
+        return (_targetHost instanceof ProxyHost) ? ((ProxyHost) _targetHost).getEndpoint() : _targetHost;
     }
 
     public ProxyType getProxyType()
@@ -104,8 +110,9 @@ public class ProxyHost
     {
         HttpHost endpoint = _targetHost;
 
-        while (endpoint instanceof ProxyHost) {
-            endpoint = ((ProxyHost)endpoint).getTargetHost();
+        while (endpoint instanceof ProxyHost)
+        {
+            endpoint = ((ProxyHost) endpoint).getTargetHost();
         }
 
         return endpoint.getSchemeName();
@@ -114,22 +121,24 @@ public class ProxyHost
     @Override
     public String toString()
     {
-       StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
 
-       sb.append(_type.getScheme());
-       sb.append("//");
-       sb.append(getHostName());
+        sb.append(_type.getScheme());
+        sb.append("//");
+        sb.append(getHostName());
 
-       if (getPort() > 0) {
-           sb.append(":");
-           sb.append(getPort());
-       }
+        if (getPort() > 0)
+        {
+            sb.append(":");
+            sb.append(getPort());
+        }
 
-       if (_targetHost != null) {
-           sb.append("->");
-           sb.append(_targetHost.toString());
-       }
+        if (_targetHost != null)
+        {
+            sb.append("->");
+            sb.append(_targetHost.toString());
+        }
 
-       return sb.toString();
+        return sb.toString();
     }
 }

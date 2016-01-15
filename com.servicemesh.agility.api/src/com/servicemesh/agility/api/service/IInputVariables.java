@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Set;
 
 import com.servicemesh.agility.api.InputVariable;
-import com.servicemesh.agility.api.PropertyDefinition;
 
-public interface IInputVariables<T> {
+public interface IInputVariables<T>
+{
 
-	public void getVariables(T asset, Set<String> visited, List<InputVariable> variables) throws Exception;
+    public void getVariables(T asset, Set<String> visited, List<InputVariable> variables) throws Exception;
 }

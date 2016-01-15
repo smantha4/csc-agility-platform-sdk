@@ -24,36 +24,40 @@ public interface IHttpResponse
 {
     /**
      * Returns all the headers for the response.
-     * 
+     *
      * @return The list of headers in the response.
      */
     public List<IHttpHeader> getHeaders();
 
     /**
-     * Returns the first header with the matching name or null if a matching
-     * name is not found. 
-     * 
-     * @param name The name of the header to search for.
-     * 
+     * Returns the first header with the matching name or null if a matching name is not found.
+     *
+     * @param name
+     *            The name of the header to search for.
      * @return The first header with the matching name.
      */
     public IHttpHeader getHeader(final String name);
 
     /**
-     * Returns all the headers with the matching name or null if a matching
-     * name is not found. 
-     * 
-     * @param name The name of the headers to search for.
-     * 
+     * Returns all the headers with the matching name or null if a matching name is not found.
+     *
+     * @param name
+     *            The name of the headers to search for.
      * @return The list of headers with matching names.
      */
     public List<IHttpHeader> getHeaders(final String name);
 
     public HttpStatus getStatus();
+
     public int getStatusCode();
+
     public String getContent();
+
     public byte[] getContentAsByteArray();
+
     public InputStream getContentAsStream();
+
     public long getContentLength();
+
     public void close();
 }

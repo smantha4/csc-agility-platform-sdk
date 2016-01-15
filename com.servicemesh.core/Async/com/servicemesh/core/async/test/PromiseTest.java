@@ -44,8 +44,7 @@ import com.servicemesh.core.reactor.WorkReactor;
 public class PromiseTest
 {
     @Test
-    public void testComplete()
-        throws Throwable
+    public void testComplete() throws Throwable
     {
         final CompletablePromise<Integer> promise = PromiseFactory.create();
         Assert.assertFalse(promise.isCompleted());
@@ -69,10 +68,13 @@ public class PromiseTest
         Assert.assertFalse(promise.isFailed());
 
         // Test second complete
-        try {
+        try
+        {
             promise.complete(-1);
             Assert.fail("Did not throw expected IllegalStateException after second complete");
-        } catch (IllegalStateException ex) {
+        }
+        catch (IllegalStateException ex)
+        {
             // Ignore, expected
         }
         Assert.assertTrue(promise.isCompleted());
@@ -82,10 +84,13 @@ public class PromiseTest
         Assert.assertEquals(Integer.valueOf(100), promise.get(100, TimeUnit.MILLISECONDS));
 
         // Test setting failure after completion
-        try {
+        try
+        {
             promise.failure(new Exception("Test"));
             Assert.fail("Did not throw expected IllegalStateException for failure() after complete()");
-        } catch (IllegalStateException ex) {
+        }
+        catch (IllegalStateException ex)
+        {
             // Ignore, expected
         }
         Assert.assertTrue(promise.isCompleted());
@@ -95,10 +100,13 @@ public class PromiseTest
         Assert.assertEquals(Integer.valueOf(100), promise.get(100, TimeUnit.MILLISECONDS));
 
         // Test cancel after completion
-        try {
+        try
+        {
             promise.cancel();
             Assert.fail("Did not throw expected IllegalStateException for cancel() after complete()");
-        } catch (IllegalStateException ex) {
+        }
+        catch (IllegalStateException ex)
+        {
             // Ignore, expected
         }
         Assert.assertTrue(promise.isCompleted());
@@ -109,8 +117,7 @@ public class PromiseTest
     }
 
     @Test
-    public void testFailure()
-        throws Throwable
+    public void testFailure() throws Throwable
     {
         final CompletablePromise<Integer> promise = PromiseFactory.create();
         Assert.assertFalse(promise.isCompleted());
@@ -128,17 +135,23 @@ public class PromiseTest
         completeThread.setDaemon(true);
         completeThread.start();
 
-        try {
+        try
+        {
             promise.get();
             Assert.fail("Succeeded when exception set");
-        } catch (IllegalArgumentException ex) {
+        }
+        catch (IllegalArgumentException ex)
+        {
             Assert.assertTrue("Test".equals(ex.getMessage()));
         }
 
-        try {
+        try
+        {
             promise.get(100, TimeUnit.MILLISECONDS);
             Assert.fail("Succeeded when exception set");
-        } catch (IllegalArgumentException ex) {
+        }
+        catch (IllegalArgumentException ex)
+        {
             Assert.assertTrue("Test".equals(ex.getMessage()));
         }
 
@@ -147,24 +160,33 @@ public class PromiseTest
         Assert.assertTrue(promise.isFailed());
 
         // Test second failure
-        try {
+        try
+        {
             promise.failure(new IndexOutOfBoundsException("Test part 2"));
             Assert.fail("Did not throw expected IllegalStateException after second failure");
-        } catch (IllegalStateException ex) {
+        }
+        catch (IllegalStateException ex)
+        {
             // Ignore, expected
         }
 
-        try {
+        try
+        {
             promise.get();
             Assert.fail("Succeeded when exception set");
-        } catch (IllegalArgumentException ex) {
+        }
+        catch (IllegalArgumentException ex)
+        {
             Assert.assertTrue("Test".equals(ex.getMessage()));
         }
 
-        try {
+        try
+        {
             promise.get(100, TimeUnit.MILLISECONDS);
             Assert.fail("Succeeded when exception set");
-        } catch (IllegalArgumentException ex) {
+        }
+        catch (IllegalArgumentException ex)
+        {
             Assert.assertTrue("Test".equals(ex.getMessage()));
         }
 
@@ -173,24 +195,33 @@ public class PromiseTest
         Assert.assertTrue(promise.isFailed());
 
         // Test completion after failure
-        try {
+        try
+        {
             promise.complete(100);
             Assert.fail("Did not throw expected IllegalStateException on complete after failure");
-        } catch (IllegalStateException ex) {
+        }
+        catch (IllegalStateException ex)
+        {
             // Ignore, expected
         }
 
-        try {
+        try
+        {
             promise.get();
             Assert.fail("Succeeded when exception set");
-        } catch (IllegalArgumentException ex) {
+        }
+        catch (IllegalArgumentException ex)
+        {
             Assert.assertTrue("Test".equals(ex.getMessage()));
         }
 
-        try {
+        try
+        {
             promise.get(100, TimeUnit.MILLISECONDS);
             Assert.fail("Succeeded when exception set");
-        } catch (IllegalArgumentException ex) {
+        }
+        catch (IllegalArgumentException ex)
+        {
             Assert.assertTrue("Test".equals(ex.getMessage()));
         }
 
@@ -199,24 +230,33 @@ public class PromiseTest
         Assert.assertTrue(promise.isFailed());
 
         // Test cancel after failure
-        try {
+        try
+        {
             promise.cancel();
             Assert.fail("Did not throw expected IllegalStateException on cancel() after failure");
-        } catch (IllegalStateException ex) {
+        }
+        catch (IllegalStateException ex)
+        {
             // Ignore, expected
         }
 
-        try {
+        try
+        {
             promise.get();
             Assert.fail("Succeeded when exception set");
-        } catch (IllegalArgumentException ex) {
+        }
+        catch (IllegalArgumentException ex)
+        {
             Assert.assertTrue("Test".equals(ex.getMessage()));
         }
 
-        try {
+        try
+        {
             promise.get(100, TimeUnit.MILLISECONDS);
             Assert.fail("Succeeded when exception set");
-        } catch (IllegalArgumentException ex) {
+        }
+        catch (IllegalArgumentException ex)
+        {
             Assert.assertTrue("Test".equals(ex.getMessage()));
         }
 
@@ -226,8 +266,7 @@ public class PromiseTest
     }
 
     @Test
-    public void testCancel()
-        throws Throwable
+    public void testCancel() throws Throwable
     {
         final CompletablePromise<Integer> promise = PromiseFactory.create();
         Assert.assertFalse(promise.isCompleted());
@@ -245,21 +284,31 @@ public class PromiseTest
         completeThread.setDaemon(true);
         completeThread.start();
 
-        try {
+        try
+        {
             promise.get();
             Assert.fail("Succeeded when promise cancelled");
-        } catch (CancellationException ex) {
+        }
+        catch (CancellationException ex)
+        {
             Assert.assertTrue("Promise was cancelled".equals(ex.getMessage()));
-        } catch (Throwable th) {
+        }
+        catch (Throwable th)
+        {
             Assert.fail("Wrong exception thrown");
         }
 
-        try {
+        try
+        {
             promise.get(100, TimeUnit.MILLISECONDS);
             Assert.fail("Succeeded when promise cancelled");
-        } catch (CancellationException ex) {
+        }
+        catch (CancellationException ex)
+        {
             Assert.assertTrue("Promise was cancelled".equals(ex.getMessage()));
-        } catch (Throwable th) {
+        }
+        catch (Throwable th)
+        {
             Assert.fail("Wrong exception thrown");
         }
 
@@ -268,19 +317,27 @@ public class PromiseTest
         Assert.assertFalse(promise.isFailed());
 
         // Test second cancel
-        try {
+        try
+        {
             promise.cancel();
             Assert.fail("Did not throw expected IllegalStateException after second cancel");
-        } catch (IllegalStateException ex) {
+        }
+        catch (IllegalStateException ex)
+        {
             // Ignore, expected
         }
 
-        try {
+        try
+        {
             promise.get();
             Assert.fail("Succeeded when exception set");
-        } catch (CancellationException ex) {
+        }
+        catch (CancellationException ex)
+        {
             Assert.assertTrue("Promise was cancelled".equals(ex.getMessage()));
-        } catch (Throwable th) {
+        }
+        catch (Throwable th)
+        {
             Assert.fail("Wrong exception thrown");
         }
 
@@ -289,28 +346,41 @@ public class PromiseTest
         Assert.assertFalse(promise.isFailed());
 
         // Test completion after cancel
-        try {
+        try
+        {
             promise.complete(100);
             Assert.fail("Did not throw expected IllegalStateException on complete after cancel");
-        } catch (IllegalStateException ex) {
+        }
+        catch (IllegalStateException ex)
+        {
             // Ignore, expected
         }
 
-        try {
+        try
+        {
             promise.get();
             Assert.fail("Succeeded when promise cancelled");
-        } catch (CancellationException ex) {
+        }
+        catch (CancellationException ex)
+        {
             Assert.assertTrue("Promise was cancelled".equals(ex.getMessage()));
-        } catch (Throwable th) {
+        }
+        catch (Throwable th)
+        {
             Assert.fail("Wrong exception thrown");
         }
 
-        try {
+        try
+        {
             promise.get(100, TimeUnit.MILLISECONDS);
             Assert.fail("Succeeded when promise cancelled");
-        } catch (CancellationException ex) {
+        }
+        catch (CancellationException ex)
+        {
             Assert.assertTrue("Promise was cancelled".equals(ex.getMessage()));
-        } catch (Throwable th) {
+        }
+        catch (Throwable th)
+        {
             Assert.fail("Wrong exception thrown");
         }
 
@@ -319,28 +389,41 @@ public class PromiseTest
         Assert.assertFalse(promise.isFailed());
 
         // Test failure after cancel
-        try {
+        try
+        {
             promise.failure(new NullPointerException("Test"));
             Assert.fail("Did not throw expected IllegalStateException on complete after cancel");
-        } catch (IllegalStateException ex) {
+        }
+        catch (IllegalStateException ex)
+        {
             // Ignore, expected
         }
 
-        try {
+        try
+        {
             promise.get();
             Assert.fail("Succeeded when promise cancelled");
-        } catch (CancellationException ex) {
+        }
+        catch (CancellationException ex)
+        {
             Assert.assertTrue("Promise was cancelled".equals(ex.getMessage()));
-        } catch (Throwable th) {
+        }
+        catch (Throwable th)
+        {
             Assert.fail("Wrong exception thrown");
         }
 
-        try {
+        try
+        {
             promise.get(100, TimeUnit.MILLISECONDS);
             Assert.fail("Succeeded when promise cancelled");
-        } catch (CancellationException ex) {
+        }
+        catch (CancellationException ex)
+        {
             Assert.assertTrue("Promise was cancelled".equals(ex.getMessage()));
-        } catch (Throwable th) {
+        }
+        catch (Throwable th)
+        {
             Assert.fail("Wrong exception thrown");
         }
 
@@ -350,15 +433,17 @@ public class PromiseTest
     }
 
     @Test
-    public void testGetTimeout()
-        throws Throwable
+    public void testGetTimeout() throws Throwable
     {
         final CompletablePromise<Integer> promise = PromiseFactory.create();
 
-        try {
+        try
+        {
             promise.get(100, TimeUnit.MILLISECONDS);
             Assert.fail("Expected timeout exception");
-        } catch (TimeoutException ex) {
+        }
+        catch (TimeoutException ex)
+        {
             // Ignore, expected
         }
 
@@ -367,8 +452,7 @@ public class PromiseTest
     }
 
     @Test
-    public void testGetReactor()
-        throws Throwable
+    public void testGetReactor() throws Throwable
     {
         final CompletablePromise<Integer> promise = PromiseFactory.create();
         final CompletablePromise<Integer> reactorPromise = PromiseFactory.create();
@@ -376,10 +460,14 @@ public class PromiseTest
 
         reactor.workCreate(new WorkHandler() {
             @Override
-            public boolean workFire() {
-                try {
+            public boolean workFire()
+            {
+                try
+                {
                     reactorPromise.complete(promise.get(reactor) * 3);
-                } catch (Throwable th) {
+                }
+                catch (Throwable th)
+                {
                     reactorPromise.failure(th);
                 }
 
@@ -400,15 +488,14 @@ public class PromiseTest
 
         // Specify timeout large enough for thread switching but not too large
         // to hang the test
-        Integer firstValue = promise.get(10, TimeUnit.SECONDS);  // Give the reactor time to fire
+        Integer firstValue = promise.get(10, TimeUnit.SECONDS); // Give the reactor time to fire
         Integer reactorValue = reactorPromise.get(1, TimeUnit.SECONDS);
         Assert.assertEquals(111, firstValue.intValue());
         Assert.assertEquals(333, reactorValue.intValue());
     }
 
     @Test
-    public void testGetReactorFailure()
-        throws Throwable
+    public void testGetReactorFailure() throws Throwable
     {
         final CompletablePromise<Integer> promise = PromiseFactory.create();
         final CompletablePromise<Integer> reactorPromise = PromiseFactory.create();
@@ -416,10 +503,14 @@ public class PromiseTest
 
         reactor.workCreate(new WorkHandler() {
             @Override
-            public boolean workFire() {
-                try {
+            public boolean workFire()
+            {
+                try
+                {
                     reactorPromise.complete(promise.get(reactor) * 3);
-                } catch (Throwable th) {
+                }
+                catch (Throwable th)
+                {
                     reactorPromise.failure(th);
                 }
 
@@ -439,26 +530,31 @@ public class PromiseTest
         completeThread.start();
 
         // Give the reactor time to fire
-        try {
+        try
+        {
             // Specify timeout large enough for thread switching but not too large
             // to hang the test
             promise.get(10, TimeUnit.SECONDS);
             Assert.fail("Initial promise.get() succeeded when the promise failed");
-        } catch (Throwable th) {
+        }
+        catch (Throwable th)
+        {
             Assert.assertTrue(th instanceof IllegalArgumentException);
         }
 
-        try {
+        try
+        {
             reactorPromise.get(1, TimeUnit.SECONDS);
             Assert.fail("Reactor promise.get() succeeded when the promise failed");
-        } catch (Throwable th) {
+        }
+        catch (Throwable th)
+        {
             Assert.assertTrue(th instanceof IllegalArgumentException);
         }
     }
 
     @Test
-    public void testGetReactorCancel()
-        throws Throwable
+    public void testGetReactorCancel() throws Throwable
     {
         final Promise<Integer> promise = PromiseFactory.create();
         final CompletablePromise<Integer> reactorPromise = PromiseFactory.create();
@@ -466,10 +562,14 @@ public class PromiseTest
 
         reactor.workCreate(new WorkHandler() {
             @Override
-            public boolean workFire() {
-                try {
+            public boolean workFire()
+            {
+                try
+                {
                     reactorPromise.complete(promise.get(reactor) * 3);
-                } catch (Throwable th) {
+                }
+                catch (Throwable th)
+                {
                     reactorPromise.failure(th);
                 }
 
@@ -489,26 +589,31 @@ public class PromiseTest
         completeThread.start();
 
         // Give the reactor time to fire
-        try {
+        try
+        {
             // Specify timeout large enough for thread switching but not too large
             // to hang the test
             promise.get(10, TimeUnit.SECONDS);
             Assert.fail("Initial promise.get() succeeded when the promise was cancelled");
-        } catch (Throwable th) {
+        }
+        catch (Throwable th)
+        {
             Assert.assertTrue(th instanceof CancellationException);
         }
 
-        try {
+        try
+        {
             reactorPromise.get(1, TimeUnit.SECONDS);
             Assert.fail("Reactor promise.get() succeeded when the promise cancelled");
-        } catch (Throwable th) {
+        }
+        catch (Throwable th)
+        {
             Assert.assertTrue(th instanceof CancellationException);
         }
     }
 
     @Test
-    public void testCompletionCallback()
-        throws Throwable
+    public void testCompletionCallback() throws Throwable
     {
         final CompletablePromise<Integer> promise = PromiseFactory.create();
         final CompletablePromise<Boolean> promiseCompletionCallback1 = PromiseFactory.create();
@@ -561,8 +666,7 @@ public class PromiseTest
     }
 
     @Test
-    public void testCompletionCallbackLambdas()
-        throws Throwable
+    public void testCompletionCallbackLambdas() throws Throwable
     {
         final CompletablePromise<Integer> promise = PromiseFactory.create();
         final CompletionValue<Integer> completion1 = new CompletionValue<>();
@@ -605,8 +709,7 @@ public class PromiseTest
     }
 
     @Test
-    public void testFailureCallback()
-        throws Throwable
+    public void testFailureCallback() throws Throwable
     {
         final CompletablePromise<Integer> promise = PromiseFactory.create();
         final CompletablePromise<Boolean> promiseFailureCallback1 = PromiseFactory.create();
@@ -638,12 +741,15 @@ public class PromiseTest
         completeThread.setDaemon(true);
         completeThread.start();
 
-        try {
+        try
+        {
             // Specify timeout large enough for thread switching but not too large
             // to hang the test
             promise.get(5, TimeUnit.SECONDS);
             Assert.fail("Exception had been set");
-        } catch (IllegalArgumentException ex) {
+        }
+        catch (IllegalArgumentException ex)
+        {
             // Ignore, expected
         }
 
@@ -668,8 +774,7 @@ public class PromiseTest
     }
 
     @Test
-    public void testFailureCallbackLambdas()
-        throws Throwable
+    public void testFailureCallbackLambdas() throws Throwable
     {
         final CompletablePromise<Integer> promise = PromiseFactory.create();
         final CompletionValue<Throwable> failure1 = new CompletionValue<>();
@@ -697,12 +802,15 @@ public class PromiseTest
         completeThread.setDaemon(true);
         completeThread.start();
 
-        try {
+        try
+        {
             // Specify timeout large enough for thread switching but not too large
             // to hang the test
             promise.get(5, TimeUnit.SECONDS);
             Assert.fail("Exception had been set");
-        } catch (IllegalArgumentException ex) {
+        }
+        catch (IllegalArgumentException ex)
+        {
             // Ignore, expected
         }
 
@@ -721,8 +829,7 @@ public class PromiseTest
     }
 
     @Test
-    public void testCancelCallback()
-        throws Throwable
+    public void testCancelCallback() throws Throwable
     {
         final Promise<Integer> promise = PromiseFactory.create();
         final CompletablePromise<Boolean> promiseCancelCallback1 = PromiseFactory.create();
@@ -754,12 +861,15 @@ public class PromiseTest
         completeThread.setDaemon(true);
         completeThread.start();
 
-        try {
+        try
+        {
             // Specify timeout large enough for thread switching but not too large
             // to hang the test
             promise.get(5, TimeUnit.SECONDS);
             Assert.fail("Promise had been cancelled");
-        } catch (CancellationException ex) {
+        }
+        catch (CancellationException ex)
+        {
             // Ignore, expected
         }
 
@@ -781,8 +891,7 @@ public class PromiseTest
     }
 
     @Test
-    public void testCancelCallbackLambdas()
-        throws Throwable
+    public void testCancelCallbackLambdas() throws Throwable
     {
         final Promise<Integer> promise = PromiseFactory.create();
         final CompletionValue<Integer> completion1 = new CompletionValue<>();
@@ -810,12 +919,15 @@ public class PromiseTest
         completeThread.setDaemon(true);
         completeThread.start();
 
-        try {
+        try
+        {
             // Specify timeout large enough for thread switching but not too large
             // to hang the test
             promise.get(5, TimeUnit.SECONDS);
             Assert.fail("Promise had been cancelled");
-        } catch (CancellationException ex) {
+        }
+        catch (CancellationException ex)
+        {
             // Ignore, expected
         }
 
@@ -831,8 +943,7 @@ public class PromiseTest
     }
 
     @Test
-    public void testMapComplete()
-        throws Throwable
+    public void testMapComplete() throws Throwable
     {
         final CompletablePromise<Integer> promise = PromiseFactory.create();
         final Promise<Long> promise2 = promise.map(new Function<Integer, Long>() {
@@ -848,8 +959,7 @@ public class PromiseTest
     }
 
     @Test
-    public void testMapCompleteLambda()
-        throws Throwable
+    public void testMapCompleteLambda() throws Throwable
     {
         final CompletablePromise<Integer> promise = PromiseFactory.create();
         final Promise<Long> promise2 = promise.map(value -> new Long(value.longValue() * -1));
@@ -859,8 +969,7 @@ public class PromiseTest
     }
 
     @Test
-    public void testMapList()
-        throws Throwable
+    public void testMapList() throws Throwable
     {
         final List<Integer> intList = Arrays.asList(1, 2, 3, 4, 5);
         final CompletablePromise<List<Integer>> promise = PromiseFactory.create();
@@ -870,7 +979,8 @@ public class PromiseTest
             {
                 final List<List<Integer>> rv = new ArrayList<>();
 
-                for (final Integer value : result) {
+                for (final Integer value : result)
+                {
                     final List<Integer> entry = new ArrayList<>();
                     final int intValue = value.intValue();
 
@@ -889,7 +999,8 @@ public class PromiseTest
         Assert.assertNotNull(result);
         Assert.assertEquals(5, result.size());
 
-        for (int i = 1; i < 6; i++) {
+        for (int i = 1; i < 6; i++)
+        {
             final List<Integer> entryList = result.get(i - 1);
 
             Assert.assertNotNull(entryList);
@@ -900,9 +1011,8 @@ public class PromiseTest
         }
     }
 
-    @Test(expected=NullPointerException.class)
-    public void testMapFailure()
-        throws Throwable
+    @Test(expected = NullPointerException.class)
+    public void testMapFailure() throws Throwable
     {
         final CompletablePromise<Integer> promise = PromiseFactory.create();
         final Promise<Long> promise2 = promise.map(new Function<Integer, Long>() {
@@ -917,9 +1027,8 @@ public class PromiseTest
         promise2.get(1, TimeUnit.SECONDS);
     }
 
-    @Test(expected=CancellationException.class)
-    public void testMapCancel()
-        throws Throwable
+    @Test(expected = CancellationException.class)
+    public void testMapCancel() throws Throwable
     {
         final Promise<Integer> promise = PromiseFactory.create();
         final Promise<Long> promise2 = promise.map(new Function<Integer, Long>() {
@@ -936,8 +1045,7 @@ public class PromiseTest
     }
 
     @Test
-    public void testFlatmap()
-        throws Throwable
+    public void testFlatmap() throws Throwable
     {
         final CompletablePromise<List<String>> promise1 = PromiseFactory.create();
         final CompletablePromise<List<String>> promise2 = PromiseFactory.create();
@@ -985,25 +1093,20 @@ public class PromiseTest
     }
 
     @Test
-    public void testFlatmapLambdas()
-        throws Throwable
+    public void testFlatmapLambdas() throws Throwable
     {
         final CompletablePromise<List<String>> promise1 = PromiseFactory.create();
         final CompletablePromise<List<String>> promise2 = PromiseFactory.create();
         final CompletablePromise<List<String>> promise3 = PromiseFactory.create();
-        final Promise<Set<String>> flattened = promise1.flatMap(result1 ->
-            promise2.flatMap(result2 ->
-                promise3.map(result3 -> {
-                    Set<String> collected = new TreeSet<String>();
+        final Promise<Set<String>> flattened = promise1.flatMap(result1 -> promise2.flatMap(result2 -> promise3.map(result3 -> {
+            Set<String> collected = new TreeSet<String>();
 
-                    collected.addAll(result1);
-                    collected.addAll(result2);
-                    collected.addAll(result3);
+            collected.addAll(result1);
+            collected.addAll(result2);
+            collected.addAll(result3);
 
-                    return collected;
-                })
-            )
-        );
+            return collected;
+        })));
 
         Assert.assertFalse(flattened.isCompleted());
         String[] array1 = { "one", "two", "three" };
@@ -1021,9 +1124,8 @@ public class PromiseTest
         Assert.assertTrue(allTogether.containsAll(Arrays.asList(array3)));
     }
 
-    @Test(expected=NullPointerException.class)
-    public void testFlatmapFailure()
-        throws Throwable
+    @Test(expected = NullPointerException.class)
+    public void testFlatmapFailure() throws Throwable
     {
         final CompletablePromise<List<String>> promise1 = PromiseFactory.create();
         final CompletablePromise<List<String>> promise2 = PromiseFactory.create();
@@ -1058,9 +1160,8 @@ public class PromiseTest
         flattened.get(1, TimeUnit.SECONDS);
     }
 
-    @Test(expected=NullPointerException.class)
-    public void testFlatmapFailureInner()
-        throws Throwable
+    @Test(expected = NullPointerException.class)
+    public void testFlatmapFailureInner() throws Throwable
     {
         final CompletablePromise<List<String>> promise1 = PromiseFactory.create();
         final CompletablePromise<List<String>> promise2 = PromiseFactory.create();
@@ -1097,9 +1198,8 @@ public class PromiseTest
         flattened.get(1, TimeUnit.SECONDS);
     }
 
-    @Test(expected=CancellationException.class)
-    public void testFlatmapCancel()
-        throws Throwable
+    @Test(expected = CancellationException.class)
+    public void testFlatmapCancel() throws Throwable
     {
         final CompletablePromise<List<String>> promise1 = PromiseFactory.create();
         final CompletablePromise<List<String>> promise2 = PromiseFactory.create();
@@ -1130,15 +1230,13 @@ public class PromiseTest
             }
         });
 
-
         // Cancels propagate in
         flattened.cancel();
         promise1.get(1, TimeUnit.SECONDS);
     }
 
     @Test
-    public void testFlatmapCancelWrapped()
-        throws Throwable
+    public void testFlatmapCancelWrapped() throws Throwable
     {
         final CompletablePromise<List<String>> promise1 = PromiseFactory.create();
         final CompletablePromise<List<String>> promise2 = PromiseFactory.create();
@@ -1171,10 +1269,13 @@ public class PromiseTest
 
         // Cancels propagate in
         promise1.cancel();
-        try {
+        try
+        {
             flattened.get(1, TimeUnit.SECONDS);
             Assert.fail("Succeeded when wrapped promise was cancelled");
-        } catch (CancellationException ex) {
+        }
+        catch (CancellationException ex)
+        {
             // Expected
         }
 
@@ -1183,15 +1284,15 @@ public class PromiseTest
     }
 
     @Test
-    public void testRecover()
-        throws Throwable
+    public void testRecover() throws Throwable
     {
         final CompletablePromise<Integer> promise = PromiseFactory.create();
         final Promise<Integer> promise2 = promise.recover(new Function<Throwable, Integer>() {
             @Override
             public Integer invoke(final Throwable th)
             {
-                if (th instanceof ArithmeticException) {
+                if (th instanceof ArithmeticException)
+                {
                     return 0;
                 }
 
@@ -1204,15 +1305,15 @@ public class PromiseTest
     }
 
     @Test
-    public void testRecoverComplete()
-        throws Throwable
+    public void testRecoverComplete() throws Throwable
     {
         final CompletablePromise<Integer> promise = PromiseFactory.create();
         final Promise<Integer> promise2 = promise.recover(new Function<Throwable, Integer>() {
             @Override
             public Integer invoke(final Throwable th)
             {
-                if (th instanceof ArithmeticException) {
+                if (th instanceof ArithmeticException)
+                {
                     return 0;
                 }
 
@@ -1224,16 +1325,16 @@ public class PromiseTest
         Assert.assertEquals(Integer.valueOf(99), promise2.get(1, TimeUnit.SECONDS));
     }
 
-    @Test(expected=CancellationException.class)
-    public void testRecoverCancel()
-        throws Throwable
+    @Test(expected = CancellationException.class)
+    public void testRecoverCancel() throws Throwable
     {
         final Promise<Integer> promise = PromiseFactory.create();
         final Promise<Integer> promise2 = promise.recover(new Function<Throwable, Integer>() {
             @Override
             public Integer invoke(final Throwable th)
             {
-                if (th instanceof ArithmeticException) {
+                if (th instanceof ArithmeticException)
+                {
                     return 0;
                 }
 
@@ -1245,31 +1346,34 @@ public class PromiseTest
         promise2.cancel();
         promise.get(1, TimeUnit.SECONDS);
     }
-    
+
     @Test
-    public void testRecoverException() 
-    	throws Throwable
+    public void testRecoverException() throws Throwable
     {
-    	String errMsg = "Test Exception";
-    	final CompletablePromise<Integer> promise = PromiseFactory.create();
+        String errMsg = "Test Exception";
+        final CompletablePromise<Integer> promise = PromiseFactory.create();
         final Promise<Integer> promise2 = promise.recover(new Function<Throwable, Integer>() {
             @Override
             public Integer invoke(final Throwable th)
             {
-                if (th instanceof ArithmeticException) {
+                if (th instanceof ArithmeticException)
+                {
                     return 0;
                 }
 
                 throw new IllegalArgumentException(th);
             }
         });
-        
+
         promise.failure(new IllegalArgumentException(errMsg));
-        try {
-        	promise2.get(1, TimeUnit.SECONDS);
-        } catch(Throwable t) {
-        	assertNotNull(t);
-        	assertTrue(t.getMessage().contains(errMsg));
+        try
+        {
+            promise2.get(1, TimeUnit.SECONDS);
+        }
+        catch (Throwable t)
+        {
+            assertNotNull(t);
+            assertTrue(t.getMessage().contains(errMsg));
         }
     }
 
@@ -1288,8 +1392,7 @@ public class PromiseTest
         }
     }
 
-    private static class CompletionCallback
-        implements Callback<Integer>
+    private static class CompletionCallback implements Callback<Integer>
     {
         private Integer _value = null;
         final private CompletablePromise<Boolean> _promise;
@@ -1312,8 +1415,7 @@ public class PromiseTest
         }
     }
 
-    private static class FailureCallback
-        implements Callback<Throwable>
+    private static class FailureCallback implements Callback<Throwable>
     {
         private Throwable _value = null;
         final private CompletablePromise<Boolean> _promise;
@@ -1336,8 +1438,7 @@ public class PromiseTest
         }
     }
 
-    private static class CancelCallback
-        implements Callback<Void>
+    private static class CancelCallback implements Callback<Void>
     {
         private boolean _isCancelled = false;
         final private CompletablePromise<Boolean> _promise;

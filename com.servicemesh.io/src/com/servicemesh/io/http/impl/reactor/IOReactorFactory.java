@@ -20,9 +20,9 @@ package com.servicemesh.io.http.impl.reactor;
 import java.io.IOException;
 
 import org.apache.http.impl.nio.reactor.DefaultConnectingIOReactor;
-import org.apache.http.nio.reactor.ConnectingIOReactor;
 import org.apache.http.impl.nio.reactor.IOReactorConfig;
 import org.apache.http.impl.nio.reactor.IOReactorConfig.Builder;
+import org.apache.http.nio.reactor.ConnectingIOReactor;
 import org.apache.log4j.Logger;
 
 public class IOReactorFactory
@@ -34,15 +34,16 @@ public class IOReactorFactory
         private static final IOReactorFactory factoryInstance = new IOReactorFactory();
     }
 
-    private IOReactorFactory() {}
+    private IOReactorFactory()
+    {
+    }
 
     public static IOReactorFactory getInstance()
     {
         return FactoryHolder.factoryInstance;
     }
 
-    public ConnectingIOReactor createConnectingReactor()
-        throws IOException
+    public ConnectingIOReactor createConnectingReactor() throws IOException
     {
         Builder configBuilder = IOReactorConfig.copy(IOReactorConfig.DEFAULT);
 

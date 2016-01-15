@@ -17,8 +17,7 @@
 
 package com.servicemesh.io.proxy;
 
-public class Proxy
-    extends Host
+public class Proxy extends Host
 {
     private final ProxyType _type;
     private final String _admin;
@@ -27,14 +26,16 @@ public class Proxy
 
     public Proxy(final String hostname, final int port, final ProxyType type, final Host targetHost)
     {
-        this(hostname, port, type, targetHost, (String)null, (String)null);
+        this(hostname, port, type, targetHost, (String) null, (String) null);
     }
 
-    public Proxy(final String hostname, final int port, final ProxyType type, final Host targetHost, final String admin, final String password)
+    public Proxy(final String hostname, final int port, final ProxyType type, final Host targetHost, final String admin,
+            final String password)
     {
         super(hostname, port);
 
-        if (type == null) {
+        if (type == null)
+        {
             throw new IllegalArgumentException("Missing proxy type");
         }
 
@@ -72,22 +73,24 @@ public class Proxy
     @Override
     public String toString()
     {
-       StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
 
-       sb.append(_type.getScheme());
-       sb.append("//");
-       sb.append(getHostname());
+        sb.append(_type.getScheme());
+        sb.append("//");
+        sb.append(getHostname());
 
-       if (getPort() > 0) {
-           sb.append(":");
-           sb.append(getPort());
-       }
+        if (getPort() > 0)
+        {
+            sb.append(":");
+            sb.append(getPort());
+        }
 
-       if (_targetHost != null) {
-           sb.append("->");
-           sb.append(_targetHost.toString());
-       }
+        if (_targetHost != null)
+        {
+            sb.append("->");
+            sb.append(_targetHost.toString());
+        }
 
-       return sb.toString();
+        return sb.toString();
     }
 }

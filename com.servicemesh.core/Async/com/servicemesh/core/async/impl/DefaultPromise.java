@@ -19,8 +19,7 @@ package com.servicemesh.core.async.impl;
 
 import com.servicemesh.core.async.Promise;
 
-public class DefaultPromise<T>
-    extends Promise<T>
+public class DefaultPromise<T> extends Promise<T>
 {
     public DefaultPromise()
     {

@@ -4,6 +4,6 @@ import com.servicemesh.agility.api.AssetType;
 
 public interface IBeanAssetType
 {
-	public AssetType getBeanAssetType(int id) throws Exception;
+    public AssetType getBeanAssetType(int id) throws Exception;
 
 }

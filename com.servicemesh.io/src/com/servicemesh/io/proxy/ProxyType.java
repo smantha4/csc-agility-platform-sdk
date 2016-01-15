@@ -19,9 +19,7 @@ package com.servicemesh.io.proxy;
 
 public enum ProxyType
 {
-    HTTP_PROXY(0, "http"),
-    HTTPS_PROXY(1, "https"),
-    SOCKS5_PROXY(2, "socks5");
+    HTTP_PROXY(0, "http"), HTTPS_PROXY(1, "https"), SOCKS5_PROXY(2, "socks5");
 
     private final int _id;
     private final String _scheme;
@@ -46,8 +44,10 @@ public enum ProxyType
     {
         ProxyType proxyType = null;
 
-        for (ProxyType nextProxyType : ProxyType.values()) {
-            if (nextProxyType.getScheme().equalsIgnoreCase(scheme)) {
+        for (ProxyType nextProxyType : ProxyType.values())
+        {
+            if (nextProxyType.getScheme().equalsIgnoreCase(scheme))
+            {
                 proxyType = nextProxyType;
                 break;
             }

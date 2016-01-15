@@ -20,10 +20,10 @@ package com.servicemesh.io.http.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import com.servicemesh.io.http.IHttpHeader;
 
-public class BaseHttpHeader
-    implements IHttpHeader
+public class BaseHttpHeader implements IHttpHeader
 {
     final private String name;
     final private String value;
@@ -31,7 +31,8 @@ public class BaseHttpHeader
 
     public BaseHttpHeader(final String name, final String value)
     {
-        if ((name == null) || name.isEmpty()) {
+        if ((name == null) || name.isEmpty())
+        {
             throw new IllegalArgumentException("Invalid name parameter: " + name);
         }
 
@@ -45,16 +46,19 @@ public class BaseHttpHeader
 
     public BaseHttpHeader(final String name, final List<String> values)
     {
-        if ((name == null) || name.isEmpty()) {
+        if ((name == null) || name.isEmpty())
+        {
             throw new IllegalArgumentException("Invalid name parameter: " + name);
         }
 
         this.name = name;
 
-        if ((values != null) && !values.isEmpty()) {
+        if ((values != null) && !values.isEmpty())
+        {
             final List<String> valuesList = new ArrayList<String>();
 
-            for (final String nextValue : values) {
+            for (final String nextValue : values)
+            {
                 final String workValue = (nextValue != null) ? nextValue : " ";
                 final List<String> multiValues = processMultiValueString(workValue, "Invalid values parameter: " + values);
 
@@ -64,18 +68,22 @@ public class BaseHttpHeader
             this.values = Collections.unmodifiableList(valuesList);
 
             StringBuilder valueBuilder = new StringBuilder();
-            for (String nextValue : valuesList) {
-                if (valueBuilder.length() > 0) {
+            for (String nextValue : valuesList)
+            {
+                if (valueBuilder.length() > 0)
+                {
                     valueBuilder.append(",");
                 }
 
                 valueBuilder.append(nextValue);
             }
 
-            this.value = valueBuilder.toString();
-        } else {
+            value = valueBuilder.toString();
+        }
+        else
+        {
             this.values = Collections.emptyList();
-            this.value = "";
+            value = "";
         }
     }
 
@@ -107,13 +115,17 @@ public class BaseHttpHeader
     {
         final List<String> values = new ArrayList<String>();
 
-        if (value != null) {
+        if (value != null)
+        {
             String workValue = (value.endsWith(",")) ? value + " " : value;
 
-            for (final String nextValue : workValue.split(",")) {
+            for (final String nextValue : workValue.split(","))
+            {
                 values.add((nextValue != null) ? nextValue.trim() : "");
             }
-        } else {
+        }
+        else
+        {
             values.add("");
         }
 

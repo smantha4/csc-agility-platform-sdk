@@ -29,20 +29,11 @@ import org.apache.http.util.Args;
 import com.servicemesh.io.proxy.PipelinedChannel;
 import com.servicemesh.io.proxy.ProxySetupHandler;
 
-public class Socks5ProxySetupHandler
-    implements ProxySetupHandler
+public class Socks5ProxySetupHandler implements ProxySetupHandler
 {
-    private final static String[] STATUS_MESSAGE = {
-        "Success",
-        "General SOCKS server failure",
-        "Connection not allowed by ruleset",
-        "Network unreachable",
-        "Host unreachable",
-        "Connection refused",
-        "TTL expired",
-        "Command not supported",
-        "Address type not supported"
-    };
+    private final static String[] STATUS_MESSAGE = { "Success", "General SOCKS server failure",
+            "Connection not allowed by ruleset", "Network unreachable", "Host unreachable", "Connection refused", "TTL expired",
+            "Command not supported", "Address type not supported" };
 
     private final ProxyHost _proxyHost;
     private final IOSession _ioSession;
@@ -60,12 +51,12 @@ public class Socks5ProxySetupHandler
     }
 
     @Override
-    public PipelinedChannel initialize()
-        throws IOException
+    public PipelinedChannel initialize() throws IOException
     {
         int authMethod = initiateConnect();
 
-        switch (authMethod) {
+        switch (authMethod)
+        {
             case 0x00:
                 break;
             case 0x02:
@@ -80,26 +71,29 @@ public class Socks5ProxySetupHandler
         return (_proxyHost.getTargetHost() instanceof ProxyHost) ? new PassThroughChannel() : null;
     }
 
-    private int initiateConnect()
-        throws IOException
+    private int initiateConnect() throws IOException
     {
         ByteArrayOutputStream outBuf = new ByteArrayOutputStream();
         ByteBuffer inBuffer = ByteBuffer.allocate(1);
 
         outBuf.reset();
-        outBuf.write((byte)0x05);      // Version
+        outBuf.write((byte) 0x05); // Version
 
-        if ((_proxyHost.getPrincipal() != null) && !_proxyHost.getPrincipal().isEmpty()) {
-            outBuf.write((byte)0x02);      // Number of methods
-            outBuf.write((byte)0x00);      // Support noauth
-            outBuf.write((byte)0x02);      // Support username auth
-        } else {
-            outBuf.write((byte)0x01);      // Number of methods
-            outBuf.write((byte)0x00);      // Support no auth
+        if ((_proxyHost.getPrincipal() != null) && !_proxyHost.getPrincipal().isEmpty())
+        {
+            outBuf.write((byte) 0x02); // Number of methods
+            outBuf.write((byte) 0x00); // Support noauth
+            outBuf.write((byte) 0x02); // Support username auth
+        }
+        else
+        {
+            outBuf.write((byte) 0x01); // Number of methods
+            outBuf.write((byte) 0x00); // Support no auth
         }
 
         ByteBuffer outBuffer = ByteBuffer.wrap(outBuf.toByteArray());
-        if (write(outBuffer) <= 0) {
+        if (write(outBuffer) <= 0)
+        {
             throw new RuntimeException("Write failed, unable to initiate connection");
         }
 
@@ -108,11 +102,13 @@ public class Socks5ProxySetupHandler
         inBuffer.rewind();
 
         int inByte = inBuffer.get() & 0xff;
-        if (inByte == -1) {
+        if (inByte == -1)
+        {
             throw new IOException("Socks5 input stream closed from " + _proxyHost.getHostName());
         }
 
-        if (inByte != 0x05) {
+        if (inByte != 0x05)
+        {
             throw new IOException("Invalid response '" + inByte + "' from Socks5 server " + _proxyHost.getHostName());
         }
 
@@ -124,8 +120,7 @@ public class Socks5ProxySetupHandler
         return inBuffer.get() & 0xff;
     }
 
-    private void authenticate()
-        throws IOException
+    private void authenticate() throws IOException
     {
         String principal = _proxyHost.getPrincipal();
         String password = _proxyHost.getCredentials();
@@ -140,7 +135,8 @@ public class Socks5ProxySetupHandler
 
         ByteBuffer outBuffer = ByteBuffer.wrap(buf.toByteArray());
 
-        if (write(outBuffer) <= 0) {
+        if (write(outBuffer) <= 0)
+        {
             throw new RuntimeException("Write failed, unable to authenticate connection");
         }
 
@@ -156,7 +152,8 @@ public class Socks5ProxySetupHandler
          * is the right response but some buggy servers will respond with 0x05
          * (i.e. not complying with rfc1929).
          */
-        if ((response != 0x01) && (response != 0x05)) {
+        if ((response != 0x01) && (response != 0x05))
+        {
             throw new IOException("Invalid response '" + response + "' from SOCKS5 server " + _proxyHost.getHostName());
         }
 
@@ -164,23 +161,23 @@ public class Socks5ProxySetupHandler
         read(inBuffer);
         inBuffer.rewind();
 
-        if ((inBuffer.get() & 0xff) != 0x00) {
+        if ((inBuffer.get() & 0xff) != 0x00)
+        {
             throw new IOException("Proxy authentication failed");
         }
     }
 
-    private void connectToTarget()
-        throws IOException
+    private void connectToTarget() throws IOException
     {
         String targetHost = _proxyHost.getTargetHost().getHostName();
         int targetPort = _proxyHost.getTargetHost().getPort();
         ByteArrayOutputStream buf = new ByteArrayOutputStream();
 
         buf.reset();
-        buf.write((byte)0x05);
-        buf.write((byte)0x01);
-        buf.write((byte)0x00);
-        buf.write((byte)0x03);
+        buf.write((byte) 0x05);
+        buf.write((byte) 0x01);
+        buf.write((byte) 0x00);
+        buf.write((byte) 0x03);
         buf.write(targetHost.length());
         buf.write(targetHost.getBytes());
         buf.write((targetPort >>> 8) & 0xff);
@@ -188,7 +185,8 @@ public class Socks5ProxySetupHandler
 
         ByteBuffer outBuffer = ByteBuffer.wrap(buf.toByteArray());
 
-        if (write(outBuffer) <= 0) {
+        if (write(outBuffer) <= 0)
+        {
             throw new RuntimeException("Write failed, unable to initiate connection");
         }
 
@@ -198,7 +196,8 @@ public class Socks5ProxySetupHandler
         inBuffer.rewind();
 
         int response = inBuffer.get() & 0xff;
-        if (response != 0x05) {
+        if (response != 0x05)
+        {
             throw new IOException("Invalid response '" + response + "' from SOCKS5 server " + _proxyHost.getHostName());
         }
 
@@ -208,10 +207,14 @@ public class Socks5ProxySetupHandler
         inBuffer.rewind();
 
         int status = inBuffer.get() & 0xff;
-        if (status != 0x00) {
-            if ((status > 0) && (status < 9)) {
+        if (status != 0x00)
+        {
+            if ((status > 0) && (status < 9))
+            {
                 throw new IOException("SOCKS5 server unable to connect, reason: " + STATUS_MESSAGE[status]);
-            } else {
+            }
+            else
+            {
                 throw new IOException("SOCKS5 server unable to connect, reason: " + status);
             }
         }
@@ -229,9 +232,11 @@ public class Socks5ProxySetupHandler
 
         int addressType = inBuffer.get() & 0xff;
         // Read address in but we don't currently do anything with this
-        switch (addressType) {
+        switch (addressType)
+        {
             case 0x01:
-                for (int i = 0; i < 4; i++) {
+                for (int i = 0; i < 4; i++)
+                {
                     inBuffer.rewind();
                     read(inBuffer);
                     inBuffer.rewind();
@@ -244,14 +249,18 @@ public class Socks5ProxySetupHandler
                 inBuffer.rewind();
 
                 int size = inBuffer.get() & 0xff;
-                if (size > 0) {
-                    for (int i = 0; i < size; i++) {
+                if (size > 0)
+                {
+                    for (int i = 0; i < size; i++)
+                    {
                         inBuffer.rewind();
                         read(inBuffer);
                         inBuffer.rewind();
                         inBuffer.get();
                     }
-                } else {
+                }
+                else
+                {
                     throw new IOException("Error reading address");
                 }
                 break;
@@ -260,7 +269,8 @@ public class Socks5ProxySetupHandler
         }
 
         // Two more bytes
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 2; i++)
+        {
             inBuffer.rewind();
             read(inBuffer);
             inBuffer.rewind();
@@ -268,26 +278,33 @@ public class Socks5ProxySetupHandler
         }
     }
 
-    private int read(final ByteBuffer dst)
-        throws IOException
+    private int read(final ByteBuffer dst) throws IOException
     {
         int bytesRead = 0;
 
-        if (_pipelinedChannel == null) {
-            while (bytesRead == 0) {
+        if (_pipelinedChannel == null)
+        {
+            while (bytesRead == 0)
+            {
                 bytesRead = _ioSession.channel().read(dst);
             }
-        } else {
-            if (_netDataIn == null) {
+        }
+        else
+        {
+            if (_netDataIn == null)
+            {
                 _netDataIn = ByteBuffer.allocate(8192);
             }
 
-            if (_appDataIn == null) {
+            if (_appDataIn == null)
+            {
                 _appDataIn = ByteBuffer.allocate(8192);
             }
 
-            if (_appDataIn.position() == 0) {
-                while (bytesRead == 0) {
+            if (_appDataIn.position() == 0)
+            {
+                while (bytesRead == 0)
+                {
                     bytesRead = _ioSession.channel().read(_netDataIn);
                 }
 
@@ -296,11 +313,13 @@ public class Socks5ProxySetupHandler
                 _netDataIn.compact();
             }
 
-            if (_appDataIn.position() > 0) {
+            if (_appDataIn.position() > 0)
+            {
                 _appDataIn.flip();
 
                 int count = Math.min(dst.remaining(), _appDataIn.remaining());
-                for (int i = 0; i < count; i++) {
+                for (int i = 0; i < count; i++)
+                {
                     dst.put(_appDataIn.get());
                 }
 
@@ -312,20 +331,24 @@ public class Socks5ProxySetupHandler
         return bytesRead;
     }
 
-    private int write(final ByteBuffer src)
-        throws SSLException, IOException
+    private int write(final ByteBuffer src) throws SSLException, IOException
     {
         int bytesWritten = 0;
 
-        if (_pipelinedChannel == null) {
+        if (_pipelinedChannel == null)
+        {
             bytesWritten = _ioSession.channel().write(src);
-        } else {
-            if (_netDataOut == null) {
+        }
+        else
+        {
+            if (_netDataOut == null)
+            {
                 _netDataOut = ByteBuffer.allocate(8192);
             }
 
             _pipelinedChannel.wrap(src, _netDataOut);
-            if (_netDataOut.position() > 0) {
+            if (_netDataOut.position() > 0)
+            {
                 _netDataOut.flip();
                 bytesWritten = _ioSession.channel().write(_netDataOut);
                 _netDataOut.compact();

@@ -25,17 +25,16 @@ import com.servicemesh.io.http.IHttpResponse;
 public class DefaultServerBusyRetryStrategy
 {
     private final static int HTTP_SERVICE_UNAVAILABLE = HttpStatus.SC_SERVICE_UNAVAILABLE;
-    private final static int HTTP_TOO_MANY_REQUESTS = 429;      // Apache doesn't have this defined yet
+    private final static int HTTP_TOO_MANY_REQUESTS = 429; // Apache doesn't have this defined yet
     private final static int DEFAULT_RETRIES = 3;
-    protected static final long DEFAULT_BUSY_RETRY_INTERVAL = 10000;  // In milliseconds
+    protected static final long DEFAULT_BUSY_RETRY_INTERVAL = 10000; // In milliseconds
 
-    private final long _retryInterval;      // In milliseconds
+    private final long _retryInterval; // In milliseconds
 
     private int _retries;
 
     /**
-     * Default constructor. Will create a strategy object with three retries
-     * and a ten second retry interval configured.
+     * Default constructor. Will create a strategy object with three retries and a ten second retry interval configured.
      */
     public DefaultServerBusyRetryStrategy()
     {
@@ -43,11 +42,13 @@ public class DefaultServerBusyRetryStrategy
     }
 
     /**
-     * Strategy constructor with the specified retries and retry interval. Retries
-     * will be attempted for HTTP status codes 429 and 503.
-     * 
-     * @param retries The number of retries to attempt.
-     * @param retryInterval The retry interval in milliseconds.
+     * Strategy constructor with the specified retries and retry interval. Retries will be attempted for HTTP status codes 429 and
+     * 503.
+     *
+     * @param retries
+     *            The number of retries to attempt.
+     * @param retryInterval
+     *            The retry interval in milliseconds.
      */
     public DefaultServerBusyRetryStrategy(final int retries, final long retryInterval)
     {
@@ -60,8 +61,9 @@ public class DefaultServerBusyRetryStrategy
 
     /**
      * Reports if a retry can be attempted.
-     * 
-     * @param response The response from the HTTP request.
+     *
+     * @param response
+     *            The response from the HTTP request.
      * @return Returns true if a retry could be attempted, otherwise, false.
      */
     public boolean retry(final IHttpResponse response)
@@ -71,7 +73,8 @@ public class DefaultServerBusyRetryStrategy
         boolean rv = false;
         final int status = response.getStatusCode();
 
-        if ((_retries > 0) && ((status == HTTP_SERVICE_UNAVAILABLE) || (status == HTTP_TOO_MANY_REQUESTS))) {
+        if ((_retries > 0) && ((status == HTTP_SERVICE_UNAVAILABLE) || (status == HTTP_TOO_MANY_REQUESTS)))
+        {
             _retries--;
             rv = true;
         }
@@ -81,7 +84,7 @@ public class DefaultServerBusyRetryStrategy
 
     /**
      * Returns the configured retry interval.
-     * 
+     *
      * @return The retry interval in milliseconds.
      */
     public long retryInterval()

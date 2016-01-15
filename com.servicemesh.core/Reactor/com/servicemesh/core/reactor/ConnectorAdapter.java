@@ -9,13 +9,12 @@ import java.util.Random;
 import org.apache.log4j.Logger;
 
 /**
- * Convenient abstract implementation of ConnectorListener that
- * provides useful behavior.
+ * Convenient abstract implementation of ConnectorListener that provides useful behavior.
  */
-public abstract class ConnectorAdapter implements ConnectorListener {
+public abstract class ConnectorAdapter implements ConnectorListener
+{
     /** Logger for this class. */
-    private final static Logger s_logger =
-        Logger.getLogger(ConnectorAdapter.class);
+    private final static Logger s_logger = Logger.getLogger(ConnectorAdapter.class);
 
     /** The host to connect to. */
     protected String m_host;
@@ -36,14 +35,17 @@ public abstract class ConnectorAdapter implements ConnectorListener {
     protected BackOff m_backOff;
 
     /**
-     * Constructor for a named instance that will handle the process of
-     * connecting to a specific host and port.
+     * Constructor for a named instance that will handle the process of connecting to a specific host and port.
      *
-     * @param name the name of this instance.
-     * @param host the host to connect to.
-     * @param port the port to connect to.
+     * @param name
+     *            the name of this instance.
+     * @param host
+     *            the host to connect to.
+     * @param port
+     *            the port to connect to.
      */
-    public ConnectorAdapter(String name, String host, int port) {
+    public ConnectorAdapter(String name, String host, int port)
+    {
         m_name = name;
         m_host = host;
         m_port = port;
@@ -56,46 +58,49 @@ public abstract class ConnectorAdapter implements ConnectorListener {
     protected String m_name;
 
     /** Gets the name of this instance. */
-    public String getName() {
+    public String getName()
+    {
         return m_name;
     }
 
     /** Gets the host to connect to. */
-    public String getHost() {
+    public String getHost()
+    {
         return m_host;
     }
 
     /** Gets the port to connect to. */
-    public int getPort() {
+    public int getPort()
+    {
         return m_port;
     }
 
     /**
-     * Sets the min and max retry intervals for exponential backoff on
-     * listening attempts.
+     * Sets the min and max retry intervals for exponential backoff on listening attempts.
      *
-     * @param min the minimum retry interval.
-     * @param max the maximum retry interval.
-     * @param randomness the max number of random milliseconds to add
-     *                   to the retry interval.  The number of random
-     *                   milliseconds will always be between 0 and
-     *                   randomness (non-inclusive).  A value of 0
-     *                   will produce no randomness (more efficiently
-     *                   than a value of 1).
+     * @param min
+     *            the minimum retry interval.
+     * @param max
+     *            the maximum retry interval.
+     * @param randomness
+     *            the max number of random milliseconds to add to the retry interval. The number of random milliseconds will
+     *            always be between 0 and randomness (non-inclusive). A value of 0 will produce no randomness (more efficiently
+     *            than a value of 1).
      */
-    public void setRetryParams(long min, long max, int randomness) {
+    public void setRetryParams(long min, long max, int randomness)
+    {
         // Argument checking
-        if (min <= 0) {
-            throw new IllegalArgumentException("min == " + min +
-                                               " needs to be > 0");
+        if (min <= 0)
+        {
+            throw new IllegalArgumentException("min == " + min + " needs to be > 0");
         }
-        if (max < min) {
-            throw new IllegalArgumentException("max < min, max == " +
-                                               max + ", min == " + min);
+        if (max < min)
+        {
+            throw new IllegalArgumentException("max < min, max == " + max + ", min == " + min);
         }
-        if (randomness < 0) {
-            throw new IllegalArgumentException("randomness < 0, randomness == "
-                                               + randomness);
+        if (randomness < 0)
+        {
+            throw new IllegalArgumentException("randomness < 0, randomness == " + randomness);
         }
         m_minRetryInterval = min;
         m_maxRetryInterval = max;
@@ -105,48 +110,61 @@ public abstract class ConnectorAdapter implements ConnectorListener {
     // ConnectorListener methods start here
 
     // Javadoc from interface
-    public SocketAddress getSocketAddress() {
+    @Override
+    public SocketAddress getSocketAddress()
+    {
         return new InetSocketAddress(m_host, m_port);
     }
 
     /**
-     * This method is invoked right after the socketChannel is created
-     * and set to non-blocking and before connection is initiated to
-     * allow customization of socket options.  This implementation turns
-     * on SO_KEEPALIVE.
+     * This method is invoked right after the socketChannel is created and set to non-blocking and before connection is initiated
+     * to allow customization of socket options. This implementation turns on SO_KEEPALIVE.
      *
-     * @param socketChannel the SocketChannel to set up.
+     * @param socketChannel
+     *            the SocketChannel to set up.
      */
-    public void setup(SocketChannel socketChannel) {
+    @Override
+    public void setup(SocketChannel socketChannel)
+    {
         Socket socket = socketChannel.socket();
-        try {
+        try
+        {
             socket.setKeepAlive(true);
-        } catch (Throwable t) {
+        }
+        catch (Throwable t)
+        {
             s_logger.warn("Couldn't enable SO_KEEPALIVE", t);
         }
     }
 
     // Javadoc from interface.
-    public void connecting() {
+    @Override
+    public void connecting()
+    {
         s_logger.info("Connector " + m_name + " connecting.");
     }
 
     // Javadoc from interface.
-    public long connectionFailed(Throwable t) {
-        if (m_backOff == null) {
+    @Override
+    public long connectionFailed(Throwable t)
+    {
+        if (m_backOff == null)
+        {
             m_backOff = new BackOff(m_minRetryInterval, m_maxRetryInterval);
         }
         long nextDelay = m_backOff.getNext();
-        if (m_randomness != 0) {
+        if (m_randomness != 0)
+        {
             nextDelay += s_rnd.nextInt(m_randomness);
         }
-        s_logger.info("Connector " + m_name +
-                      " connection failed - trying again in " + nextDelay + " ms.", t);
+        s_logger.info("Connector " + m_name + " connection failed - trying again in " + nextDelay + " ms.", t);
         return nextDelay;
     }
 
     // Javadoc from interface.
-    public void connected(IOReactor ioReactor, SocketChannel socketChannel) {
+    @Override
+    public void connected(IOReactor ioReactor, SocketChannel socketChannel)
+    {
         m_backOff = null;
         s_logger.info("Connector " + m_name + " connected: " + socketChannel);
         peerCreate(ioReactor, socketChannel);
@@ -155,12 +173,12 @@ public abstract class ConnectorAdapter implements ConnectorListener {
     // ConnectorListener methods end here
 
     /**
-     * Invoked to allow subclasses to do something useful with the
-     * socketChannel after a successful connection.
+     * Invoked to allow subclasses to do something useful with the socketChannel after a successful connection.
      *
-     * @param ioReactor the IOReactor used for event dispatch.
-     * @param socketChannel the successfully connected socketChannel.
+     * @param ioReactor
+     *            the IOReactor used for event dispatch.
+     * @param socketChannel
+     *            the successfully connected socketChannel.
      */
-    protected abstract void peerCreate(IOReactor ioReactor,
-                                       SocketChannel socketChannel);
+    protected abstract void peerCreate(IOReactor ioReactor, SocketChannel socketChannel);
 }

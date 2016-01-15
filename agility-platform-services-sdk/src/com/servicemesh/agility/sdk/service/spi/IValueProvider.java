@@ -10,15 +10,18 @@ import com.servicemesh.core.async.Promise;
 
 /**
  * Provides a hook for retrieving a property type value.
+ * 
  * @see ServiceAdapter#registerValueProvider(String, IValueProvider)
  */
-public interface IValueProvider {
+public interface IValueProvider
+{
 
     /**
      * Property type value retriever exposed by the service adapter
      *
-     * @param request Specifies the requested property type
+     * @param request
+     *            Specifies the requested property type
      * @return Promise to results on completion.
      */
-	public Promise<PropertyTypeValueResponse> getRootValues(PropertyTypeValueRequest request);
+    public Promise<PropertyTypeValueResponse> getRootValues(PropertyTypeValueRequest request);
 }

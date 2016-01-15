@@ -11,12 +11,18 @@ import com.servicemesh.core.async.ResponseHandler;
 /**
  * Defines basic instance operations expected to be supported by all adapters:
  */
-public interface ISnapshot {
-	
-	public ICancellable createSnapshot(InstanceCreateSnapshotRequest request, ResponseHandler<InstanceSnapshotResponse> handler);
-	public ICancellable updateSnapshot(InstanceUpdateSnapshotRequest request, ResponseHandler<InstanceSnapshotResponse> handler);
-	public ICancellable removeSnapshot(InstanceRemoveSnapshotRequest request, ResponseHandler<InstanceSnapshotResponse> handler);
-	public ICancellable removeAllSnapshots(InstanceRemoveAllSnapshotRequest request, ResponseHandler<InstanceSnapshotResponse> handler);
-	public ICancellable revertSnapshot(InstanceRevertSnapshotRequest request, ResponseHandler<InstanceSnapshotResponse> handler);
+public interface ISnapshot
+{
+
+    public ICancellable createSnapshot(InstanceCreateSnapshotRequest request, ResponseHandler<InstanceSnapshotResponse> handler);
+
+    public ICancellable updateSnapshot(InstanceUpdateSnapshotRequest request, ResponseHandler<InstanceSnapshotResponse> handler);
+
+    public ICancellable removeSnapshot(InstanceRemoveSnapshotRequest request, ResponseHandler<InstanceSnapshotResponse> handler);
+
+    public ICancellable removeAllSnapshots(InstanceRemoveAllSnapshotRequest request,
+            ResponseHandler<InstanceSnapshotResponse> handler);
+
+    public ICancellable revertSnapshot(InstanceRevertSnapshotRequest request, ResponseHandler<InstanceSnapshotResponse> handler);
 
 }

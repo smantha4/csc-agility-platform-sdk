@@ -23,8 +23,7 @@ import org.junit.Test;
 public class HttpStatusTest
 {
     @Test
-    public void testHttpStatus()
-        throws Exception
+    public void testHttpStatus() throws Exception
     {
         String reason = "Good to go";
         HttpStatus status = new HttpStatus(HttpVersion.HTTP_1_0, 200, reason);
@@ -32,18 +31,24 @@ public class HttpStatusTest
         Assert.assertEquals(200, status.getStatusCode());
         Assert.assertEquals(reason, status.getReason());
 
-        try {
+        try
+        {
             new HttpStatus(null, 200, reason);
             Assert.fail("Constructed with missing HttpVersion");
-        } catch (IllegalArgumentException ex) {
+        }
+        catch (IllegalArgumentException ex)
+        {
             Assert.assertNotNull(ex.getMessage());
             Assert.assertEquals("Missing version", ex.getMessage());
         }
 
-        try {
+        try
+        {
             new HttpStatus(HttpVersion.HTTP_1_0, -1, reason);
             Assert.fail("Constructed with invalid status code");
-        } catch (IllegalArgumentException ex) {
+        }
+        catch (IllegalArgumentException ex)
+        {
             Assert.assertNotNull(ex.getMessage());
             Assert.assertEquals("Invalid status code", ex.getMessage());
         }

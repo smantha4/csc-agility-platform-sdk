@@ -23,8 +23,7 @@ import java.nio.ByteBuffer;
 import com.google.common.base.Preconditions;
 
 /**
- * A buffer used to transfer data. Internally, this class is backed by an
- * instance of {@link ByteBuffer}.
+ * A buffer used to transfer data. Internally, this class is backed by an instance of {@link ByteBuffer}.
  * <p>
  * This class is not thread safe.
  */
@@ -34,8 +33,9 @@ public class TransferByteBuffer
 
     /**
      * Allocates a buffer of the specified size.
-     * 
-     * @param bufSize The size of the buffer to allocate.
+     *
+     * @param bufSize
+     *            The size of the buffer to allocate.
      */
     public TransferByteBuffer(int bufSize)
     {
@@ -46,7 +46,7 @@ public class TransferByteBuffer
 
     /**
      * Returns the backing buffer.
-     * 
+     *
      * @return Backing buffer.
      */
     public ByteBuffer getBuffer()
@@ -56,7 +56,7 @@ public class TransferByteBuffer
 
     /**
      * Returns the remaining capacity.
-     * 
+     *
      * @return The remaining capacity.
      */
     public int remaining()
@@ -66,7 +66,7 @@ public class TransferByteBuffer
 
     /**
      * Queries if the buffer has data ready for reading.
-     * 
+     *
      * @return True if the buffer contains readable data, false otherwise.
      */
     public boolean hasData()
@@ -76,19 +76,20 @@ public class TransferByteBuffer
 
     /**
      * Invokes producer to read data into the buffer.
-     * 
-     * @param producer Producer that will read content.
+     *
+     * @param producer
+     *            Producer that will read content.
      * @return The number of bytes read.
      * @throws IOException
      */
-    public int fill(ContentProducer producer)
-        throws IOException
+    public int fill(ContentProducer producer) throws IOException
     {
         Preconditions.checkNotNull(producer, "Missing producer");
         int bytesRead = 0;
         int totalRead = 0;
 
-        while ((bytesRead = producer.produce(_buffer)) > 0) {
+        while ((bytesRead = producer.produce(_buffer)) > 0)
+        {
             totalRead += bytesRead;
         }
 
@@ -97,18 +98,19 @@ public class TransferByteBuffer
 
     /**
      * Invokes the consumer to output data from the buffer.
-     * 
-     * @param consumer Consumer that will output data.
+     *
+     * @param consumer
+     *            Consumer that will output data.
      * @return The number of bytes written.
      * @throws IOException
      */
-    public int flush(ContentConsumer consumer)
-        throws IOException
+    public int flush(ContentConsumer consumer) throws IOException
     {
         Preconditions.checkNotNull(consumer, "Missing consumer");
         int bytesWritten = 0;
 
-        if (hasData()) {
+        if (hasData())
+        {
             _buffer.flip();
             bytesWritten += consumer.consume(_buffer);
             _buffer.compact();

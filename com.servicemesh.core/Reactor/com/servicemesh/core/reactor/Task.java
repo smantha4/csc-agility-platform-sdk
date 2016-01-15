@@ -5,8 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.servicemesh.core.collections.list.Yoke;
 
 /**
- * An abstract superclass for all types of tasks that can be handed to
- * the reactor loop (e.g. Valves, Timers, Works).
+ * An abstract superclass for all types of tasks that can be handed to the reactor loop (e.g. Valves, Timers, Works).
  */
 public abstract class Task<T extends Task<T>> extends Yoke<T>
 {
@@ -25,12 +24,11 @@ public abstract class Task<T extends Task<T>> extends Yoke<T>
     /**
      * Cancels this task.
      *
-     * @return true if the Task was able to be canceled or it was
-     * already canceled.
+     * @return true if the Task was able to be canceled or it was already canceled.
      */
-    public boolean cancel() {
-        return (m_state.compareAndSet(STATE_PENDING, STATE_CANCELED) ||
-                (m_state.get() == STATE_CANCELED));
+    public boolean cancel()
+    {
+        return (m_state.compareAndSet(STATE_PENDING, STATE_CANCELED) || (m_state.get() == STATE_CANCELED));
     }
 
     /**
@@ -38,7 +36,8 @@ public abstract class Task<T extends Task<T>> extends Yoke<T>
      *
      * @return true if the Task was able to be activated.
      */
-    protected boolean activate() {
+    protected boolean activate()
+    {
         return m_state.compareAndSet(STATE_PENDING, STATE_ACTIVE);
     }
 
@@ -47,47 +46,51 @@ public abstract class Task<T extends Task<T>> extends Yoke<T>
      *
      * @return true if the task was able to be made pending
      */
-    protected boolean complete() {
+    protected boolean complete()
+    {
         return m_state.compareAndSet(STATE_ACTIVE, STATE_PENDING);
     }
 
     /**
-     * Sets this task to the Pending state.  This should be invoked
-     * when it is being resubmitted.
+     * Sets this task to the Pending state. This should be invoked when it is being resubmitted.
      */
-    protected void setToPending() {
+    protected void setToPending()
+    {
         m_state.set(STATE_PENDING);
     }
 
     /**
-     * Sets this task to the Active state.  This should be invoked
-     * when it it is in progress.
+     * Sets this task to the Active state. This should be invoked when it it is in progress.
      */
-    protected void setToActive() {
+    protected void setToActive()
+    {
         m_state.set(STATE_ACTIVE);
     }
 
     /**
-     * Sets this task to the Canceled state.  This should be invoked
-     * when it has been canceled.  A public interface is provided by
+     * Sets this task to the Canceled state. This should be invoked when it has been canceled. A public interface is provided by
      * subclasses that validates the cancelation.
      */
-    protected void setToCanceled() {
+    protected void setToCanceled()
+    {
         m_state.set(STATE_CANCELED);
     }
 
     /** Determines if this task is pending. */
-    public boolean isPending() {
+    public boolean isPending()
+    {
         return m_state.get() == STATE_PENDING;
     }
 
     /** Determines if this task is active. */
-    public boolean isActive() {
+    public boolean isActive()
+    {
         return m_state.get() == STATE_ACTIVE;
     }
 
     /** Determines if this task has been cancelled. */
-    public boolean isCanceled() {
+    public boolean isCanceled()
+    {
         return m_state.get() == STATE_CANCELED;
     }
 }

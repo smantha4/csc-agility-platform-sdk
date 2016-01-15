@@ -29,8 +29,7 @@ public class IOUtil
     }
 
     /**
-     * Provided as a lazy initialization holder for the timer reactor to be used
-     * by the IO bundle.
+     * Provided as a lazy initialization holder for the timer reactor to be used by the IO bundle.
      */
     private static class IOTimerReactor
     {

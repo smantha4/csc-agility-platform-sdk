@@ -1,12 +1,9 @@
 package com.servicemesh.core.reactor;
 
 /**
- * A Timer represents a unit of work to be done during a pass through
- * a TimerReactor or IOReactor duty cycle.
+ * A Timer represents a unit of work to be done during a pass through a TimerReactor or IOReactor duty cycle.
  */
-public abstract class Timer
-    extends Task<Timer>
-    implements TimerHandler
+public abstract class Timer extends Task<Timer> implements TimerHandler
 {
     /** The reactor that manages this timer. */
     protected TimerReactor m_timerReactor;
@@ -15,51 +12,54 @@ public abstract class Timer
     protected long m_time;
 
     /**
-     * The entry number of this Timer in the heap of timers owned by
-     * the TimerReactor.
+     * The entry number of this Timer in the heap of timers owned by the TimerReactor.
      */
     protected int m_entry;
 
     /**
-     * The TimerHandler that will be invoked the next time through
-     * the main reactor.
+     * The TimerHandler that will be invoked the next time through the main reactor.
      */
     protected TimerHandler m_handler;
 
     /**
-     * This is a stub method that should be overridden in a subclass,
-     * or the Timer class can be provided a TimerHandler as a target
-     * (much like Thread can be either be subclassed with run()
-     * overridden or it can be provided a Runnable).
+     * This is a stub method that should be overridden in a subclass, or the Timer class can be provided a TimerHandler as a
+     * target (much like Thread can be either be subclassed with run() overridden or it can be provided a Runnable).
      *
-     * @param scheduledTime at which the timer was scheduled.
-     * @param actualTime the time at which the timer actually fired.
-     * @return the absolute time at which the timer should fire again.
-     *         Return 0 if the timer should not fire again.
+     * @param scheduledTime
+     *            at which the timer was scheduled.
+     * @param actualTime
+     *            the time at which the timer actually fired.
+     * @return the absolute time at which the timer should fire again. Return 0 if the timer should not fire again.
      */
+    @Override
     public abstract long timerFire(long scheduledTime, long actualTime);
 
     /**
      * Constructor for an empty Timer.
      */
-    public Timer() {}
+    public Timer()
+    {
+    }
 
     /**
      * Constructor for a Timer with a handler.
      *
-     * @param handler the TimerHandler that will be invoked when the timer is
-     *	ripe.
+     * @param handler
+     *            the TimerHandler that will be invoked when the timer is ripe.
      */
-    public Timer(TimerHandler handler) {
+    public Timer(TimerHandler handler)
+    {
         m_handler = handler;
     }
 
     /**
      * Sets the TimerHandler that will be invoked via this Timer.
      *
-     * @param handler the TimerHandler that will be invoked via this Timer.
+     * @param handler
+     *            the TimerHandler that will be invoked via this Timer.
      */
-    public void setHandler(TimerHandler handler) {
+    public void setHandler(TimerHandler handler)
+    {
         m_handler = handler;
     }
 
@@ -68,7 +68,8 @@ public abstract class Timer
      *
      * @return the TimerHandler that will be invoked via this Timer.
      */
-    public TimerHandler getHandler() {
+    public TimerHandler getHandler()
+    {
         return m_handler;
     }
 
@@ -77,15 +78,17 @@ public abstract class Timer
      *
      * @return the reactor that is controlling this timer.
      */
-    public TimerReactor getTimerReactor() {
+    public TimerReactor getTimerReactor()
+    {
         return m_timerReactor;
     }
 
     /**
-     * Sets the reactor that is controlling this timer.  This is used internally
-     * in case somebody resubmits a timer to a different reactor.
+     * Sets the reactor that is controlling this timer. This is used internally in case somebody resubmits a timer to a different
+     * reactor.
      */
-    protected void setTimerReactor(TimerReactor timerReactor) {
+    protected void setTimerReactor(TimerReactor timerReactor)
+    {
         m_timerReactor = timerReactor;
     }
 
@@ -94,25 +97,28 @@ public abstract class Timer
      *
      * @return the time at which this Timer is scheduled to fire.
      */
-    public long getTime() {
+    public long getTime()
+    {
         return m_time;
     }
 
     /**
-     * Sets time at which the Timer is scheduled to fire.  This is used
-     * internally when the timer is submitted.
+     * Sets time at which the Timer is scheduled to fire. This is used internally when the timer is submitted.
      */
-    protected void setTime(long time) {
+    protected void setTime(long time)
+    {
         m_time = time;
     }
 
     /** XXX - javadoc */
-    public void setEntry(int entry) {
+    public void setEntry(int entry)
+    {
         m_entry = entry;
     }
 
     /** XXX - javadoc */
-    public int getEntry() {
+    public int getEntry()
+    {
         return m_entry;
     }
 }

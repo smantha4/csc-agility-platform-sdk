@@ -25,8 +25,7 @@ import com.servicemesh.io.proxy.PipelinedChannel;
 import com.servicemesh.io.proxy.PipelinedChannelResult;
 import com.servicemesh.io.util.ContentConsumer;
 
-public class PipelinedSSLConsumer
-    implements ContentConsumer
+public class PipelinedSSLConsumer implements ContentConsumer
 {
     private final ByteBuffer _dest;
     private final PipelinedChannel _pipelinedChannel;
@@ -42,11 +41,9 @@ public class PipelinedSSLConsumer
 
     /**
      * {@inheritDoc}
-     * 
      */
     @Override
-    public int consume(ByteBuffer src)
-        throws IOException
+    public int consume(ByteBuffer src) throws IOException
     {
         Preconditions.checkNotNull(src, "Missing source buffer");
 

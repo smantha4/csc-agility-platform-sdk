@@ -24,13 +24,10 @@ import java.util.concurrent.ExecutionException;
 import org.apache.log4j.Logger;
 
 import com.google.common.util.concurrent.AbstractFuture;
-
 import com.servicemesh.io.http.IHttpCallback;
 import com.servicemesh.io.http.IHttpResponseFuture;
 
-public class DefaultHttpResponseFuture<T>
-    extends AbstractFuture<T>
-    implements IHttpResponseFuture<T>
+public class DefaultHttpResponseFuture<T> extends AbstractFuture<T> implements IHttpResponseFuture<T>
 {
     private static final Logger logger = Logger.getLogger(DefaultHttpResponseFuture.class);
 
@@ -48,10 +45,12 @@ public class DefaultHttpResponseFuture<T>
     {
         boolean rv = super.set(result);
 
-        if (rv) {
+        if (rv)
+        {
             invokeListenerSuccess(firstListener, result);
 
-            for (IHttpCallback<T> listener : listeners) {
+            for (IHttpCallback<T> listener : listeners)
+            {
                 invokeListenerSuccess(listener, result);
             }
         }
@@ -64,10 +63,12 @@ public class DefaultHttpResponseFuture<T>
     {
         boolean rv = super.cancel(mayInterruptIfRunning);
 
-        if (rv) {
+        if (rv)
+        {
             invokeListenerCancel(firstListener);
 
-            for (IHttpCallback<T> listener : listeners) {
+            for (IHttpCallback<T> listener : listeners)
+            {
                 invokeListenerCancel(listener);
             }
         }
@@ -80,10 +81,12 @@ public class DefaultHttpResponseFuture<T>
     {
         boolean rv = super.setException(th);
 
-        if (rv) {
+        if (rv)
+        {
             invokeListenerFailed(firstListener, th);
 
-            for (IHttpCallback<T> listener : listeners) {
+            for (IHttpCallback<T> listener : listeners)
+            {
                 invokeListenerFailed(listener, th);
             }
         }
@@ -93,32 +96,40 @@ public class DefaultHttpResponseFuture<T>
 
     /**
      * {@inheritDoc}
-     * 
      */
     @Override
-    public void addListener(final IHttpCallback<T> listener)
-        throws IllegalArgumentException
+    public void addListener(final IHttpCallback<T> listener) throws IllegalArgumentException
     {
-        if (listener == null) {
+        if (listener == null)
+        {
             throw new IllegalArgumentException("Emtpy listener");
         }
 
-        if (listeners.contains(listener)) {
+        if (listeners.contains(listener))
+        {
             throw new IllegalArgumentException("Listener already registered");
         }
 
         listeners.add(listener);
 
-        if (isCancelled()) {
+        if (isCancelled())
+        {
             invokeListenerCancel(listener);
-        } else if (isDone()) {
-            try {
+        }
+        else if (isDone())
+        {
+            try
+            {
                 T value = super.get();
 
                 invokeListenerSuccess(listener, value);
-            } catch (ExecutionException ex) {
+            }
+            catch (ExecutionException ex)
+            {
                 invokeListenerFailed(listener, ex.getCause());
-            } catch (InterruptedException ex) {
+            }
+            catch (InterruptedException ex)
+            {
                 logger.error("Error retrieving result: " + ex.getMessage());
             }
         }
@@ -131,28 +142,37 @@ public class DefaultHttpResponseFuture<T>
 
     private void invokeListenerSuccess(final IHttpCallback<T> listener, final T result)
     {
-        try {
+        try
+        {
             listener.onCompletion(result);
-        } catch (RuntimeException ex) {
-        	ex.printStackTrace();
+        }
+        catch (RuntimeException ex)
+        {
+            ex.printStackTrace();
             logger.error("Error executing onSuccess callback: " + ex.getMessage());
         }
     }
 
     private void invokeListenerCancel(final IHttpCallback<T> listener)
     {
-        try {
+        try
+        {
             listener.onCancel();
-        } catch (RuntimeException ex) {
+        }
+        catch (RuntimeException ex)
+        {
             logger.error("Error executing onCancel callback: " + ex.getMessage());
         }
     }
 
     private void invokeListenerFailed(final IHttpCallback<T> listener, final Throwable failure)
     {
-        try {
+        try
+        {
             listener.onFailure(failure);
-        } catch (RuntimeException ex) {
+        }
+        catch (RuntimeException ex)
+        {
             logger.error("Error executing onFailure callback: " + ex.getMessage());
         }
     }

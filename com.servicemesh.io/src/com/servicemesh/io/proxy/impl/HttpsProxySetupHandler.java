@@ -50,8 +50,7 @@ import org.apache.log4j.Logger;
 
 import com.servicemesh.io.proxy.PipelinedChannel;
 
-public class HttpsProxySetupHandler
-    extends HttpProxySetupHandler
+public class HttpsProxySetupHandler extends HttpProxySetupHandler
 {
     private static final Logger _logger = Logger.getLogger(HttpsProxySetupHandler.class);
 
@@ -68,30 +67,31 @@ public class HttpsProxySetupHandler
     private SSLEngineResult _engineResult = null;
 
     public HttpsProxySetupHandler(final ProxyHost proxyHost, final IOSession ioSession, final PipelinedChannel pipelinedChannel)
-        throws IOException
+            throws IOException
     {
         super(proxyHost, ioSession, pipelinedChannel);
 
-        if (!(ioSession instanceof IOSessionImpl)) {
+        if (!(ioSession instanceof IOSessionImpl))
+        {
             throw new RuntimeException("Unsupported IOSession type: " + ioSession.getClass().getName());
         }
 
-        _ioSession = (IOSessionImpl)ioSession;
+        _ioSession = (IOSessionImpl) ioSession;
         _pipelinedChannel = pipelinedChannel;
     }
 
     @Override
-    public PipelinedChannel initialize()
-        throws IOException
+    public PipelinedChannel initialize() throws IOException
     {
         SelectionKey key = _ioSession.getSelectionKey();
         int ops = key.interestOps();
         Selector selector = key.selector();
-        SocketChannel socketChannel = (SocketChannel)_ioSession.channel();
+        SocketChannel socketChannel = (SocketChannel) _ioSession.channel();
 
         key.cancel();
 
-        try {
+        try
+        {
             socketChannel.configureBlocking(true);
             createSSLEngine();
 
@@ -110,29 +110,39 @@ public class HttpsProxySetupHandler
 
             HttpRequest request = generateConnectRequest();
 
-            if (request != null) {
+            if (request != null)
+            {
                 writeRequest(request);
 
                 HttpResponse response = readResponse();
 
-                if (response != null) {
+                if (response != null)
+                {
                     int status = response.getStatusLine().getStatusCode();
 
-                    if ((status < 200) || (status > 299)) {
+                    if ((status < 200) || (status > 299))
+                    {
                         throw new RuntimeException("Proxy connect failed: " + response.getStatusLine().getReasonPhrase());
                     }
-                } else {
+                }
+                else
+                {
                     throw new RuntimeException("Proxy connect failed to return a valid response");
                 }
             }
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             _logger.error("Error initializing proxy", ex);
             throw ex;
-        } finally {
+        }
+        finally
+        {
             socketChannel.configureBlocking(false);
 
             HandshakeStatus handshakeStatus = _sslEngine.getHandshakeStatus();
-            if ((handshakeStatus == HandshakeStatus.NOT_HANDSHAKING) || (handshakeStatus == HandshakeStatus.FINISHED)) {
+            if ((handshakeStatus == HandshakeStatus.NOT_HANDSHAKING) || (handshakeStatus == HandshakeStatus.FINISHED))
+            {
                 selector.select();
 
                 SelectionKey newKey = socketChannel.register(selector, ops);
@@ -151,31 +161,30 @@ public class HttpsProxySetupHandler
         return new SSLPipelinedChannel(_sslEngine);
     }
 
-    private void createSSLEngine()
-        throws IOException
+    private void createSSLEngine() throws IOException
     {
         SSLEngine engine = null;
 
-        TrustManager easyTrustManager =
-            new X509TrustManager() {
-                @Override
-                public void checkClientTrusted(X509Certificate[] chain, String authType)
-                    throws CertificateException
-                {}
+        TrustManager easyTrustManager = new X509TrustManager() {
+            @Override
+            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException
+            {
+            }
 
-                @Override
-                public void checkServerTrusted(X509Certificate[] chain,String authType)
-                    throws CertificateException
-                {}
+            @Override
+            public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException
+            {
+            }
 
-                @Override
-                public X509Certificate[] getAcceptedIssuers()
-                {
-                    return null;
-                }
+            @Override
+            public X509Certificate[] getAcceptedIssuers()
+            {
+                return null;
+            }
         };
 
-        try {
+        try
+        {
             SSLContext sslContext = SSLContext.getInstance("TLS");
             String host = getProxyHost().getHostName();
             int port = getProxyHost().getPort();
@@ -183,27 +192,33 @@ public class HttpsProxySetupHandler
             sslContext.init(null, new TrustManager[] { easyTrustManager }, null);
             engine = sslContext.createSSLEngine(host, port);
             engine.setUseClientMode(true);
-        } catch (NoSuchAlgorithmException ex) {
+        }
+        catch (NoSuchAlgorithmException ex)
+        {
             throw new IOException(ex.getMessage(), ex);
-        } catch (KeyManagementException ex) {
+        }
+        catch (KeyManagementException ex)
+        {
             throw new IOException(ex.getMessage(), ex);
         }
 
         _sslEngine = engine;
     }
 
-    private void doHandshake()
-        throws SSLException, IOException
+    private void doHandshake() throws SSLException, IOException
     {
         boolean handshaking = true;
 
-        while (handshaking) {
-            switch (_sslEngine.getHandshakeStatus()) {
+        while (handshaking)
+        {
+            switch (_sslEngine.getHandshakeStatus())
+            {
                 case NEED_WRAP:
                     sendEncryptedData();
                     int bytesOut = writePlain(ByteBuffer.allocate(0));
                     sendEncryptedData();
-                    if (_engineResult.getStatus() != Status.OK) {
+                    if (_engineResult.getStatus() != Status.OK)
+                    {
                         handshaking = false;
                     }
                     break;
@@ -211,33 +226,47 @@ public class HttpsProxySetupHandler
                     // Process incoming handshake data
                     ByteBuffer handshakeData = ByteBuffer.allocate(_sslEngine.getSession().getApplicationBufferSize());
 
-                    if (_pipelinedChannel == null) {
-                        if (_inEncrypted.position() < 1) {
+                    if (_pipelinedChannel == null)
+                    {
+                        if (_inEncrypted.position() < 1)
+                        {
                             receiveEncryptedData();
                         }
 
                         decryptData();
                         readPlain(handshakeData);
 
-                        if (!_inEncrypted.hasRemaining() && _engineResult.getHandshakeStatus() == HandshakeStatus.NEED_UNWRAP) {
+                        if (!_inEncrypted.hasRemaining() && _engineResult.getHandshakeStatus() == HandshakeStatus.NEED_UNWRAP)
+                        {
                             throw new SSLException("Input buffer is full");
                         }
-                    } else {
-                        if (_inEncrypted.position() < 1) {
+                    }
+                    else
+                    {
+                        if (_inEncrypted.position() < 1)
+                        {
                             receiveEncryptedData();
-                        } else {
+                        }
+                        else
+                        {
                             // First try to decrypt
-                            if (!decryptData()) {
-                                if (_engineResult.getHandshakeStatus() == HandshakeStatus.NEED_UNWRAP) {
+                            if (!decryptData())
+                            {
+                                if (_engineResult.getHandshakeStatus() == HandshakeStatus.NEED_UNWRAP)
+                                {
                                     receiveEncryptedData();
                                 }
-                            } else {
+                            }
+                            else
+                            {
                                 readPlain(handshakeData);
                             }
                         }
 
-                        if (_sslEngine.getHandshakeStatus() == HandshakeStatus.NEED_UNWRAP) {
-                            if (decryptData()) {
+                        if (_sslEngine.getHandshakeStatus() == HandshakeStatus.NEED_UNWRAP)
+                        {
+                            if (decryptData())
+                            {
                                 readPlain(handshakeData);
                             }
                         }
@@ -250,7 +279,8 @@ public class HttpsProxySetupHandler
                     */
 
                     Status resultStatus = _engineResult.getStatus();
-                    if ((resultStatus != Status.BUFFER_UNDERFLOW) && (_engineResult.getStatus() != Status.OK)) {
+                    if ((resultStatus != Status.BUFFER_UNDERFLOW) && (_engineResult.getStatus() != Status.OK))
+                    {
                         handshaking = false;
                     }
 
@@ -281,45 +311,60 @@ public class HttpsProxySetupHandler
     {
         Throwable cause = ex.getCause();
 
-        if (cause == null) {
+        if (cause == null)
+        {
             cause = ex;
         }
 
         return new SSLException(cause);
     }
 
-    private SSLEngineResult doWrap(final ByteBuffer src, final ByteBuffer dst)
-        throws SSLException
+    private SSLEngineResult doWrap(final ByteBuffer src, final ByteBuffer dst) throws SSLException
     {
         SSLEngineResult result;
 
-        if (_pipelinedChannel == null) {
-            try {
+        if (_pipelinedChannel == null)
+        {
+            try
+            {
                 _engineResult = _sslEngine.wrap(src, dst);
                 result = _engineResult;
-            } catch (final RuntimeException ex) {
+            }
+            catch (final RuntimeException ex)
+            {
                 throw convert(ex);
             }
-        } else {
-            if (_pipelinedOutEncrypted == null) {
-                _pipelinedOutEncrypted = ByteBuffer.allocate(_sslEngine.getSession().getPacketBufferSize()); 
-            } else if (_pipelinedOutEncrypted.position() > 0) {
-                try {
+        }
+        else
+        {
+            if (_pipelinedOutEncrypted == null)
+            {
+                _pipelinedOutEncrypted = ByteBuffer.allocate(_sslEngine.getSession().getPacketBufferSize());
+            }
+            else if (_pipelinedOutEncrypted.position() > 0)
+            {
+                try
+                {
                     _pipelinedOutEncrypted.flip();
                     _engineResult = _sslEngine.wrap(_pipelinedOutEncrypted, dst);
                     _pipelinedOutEncrypted.compact();
-                } catch (final RuntimeException ex) {
+                }
+                catch (final RuntimeException ex)
+                {
                     throw convert(ex);
                 }
             }
 
             _pipelinedChannel.wrap(src, _pipelinedOutEncrypted);
-            try {
+            try
+            {
                 _pipelinedOutEncrypted.flip();
                 _engineResult = _sslEngine.wrap(_pipelinedOutEncrypted, dst);
                 _pipelinedOutEncrypted.compact();
                 result = _engineResult;
-            } catch (final RuntimeException ex) {
+            }
+            catch (final RuntimeException ex)
+            {
                 throw convert(ex);
             }
         }
@@ -327,19 +372,27 @@ public class HttpsProxySetupHandler
         return result;
     }
 
-    private SSLEngineResult doUnwrap(final ByteBuffer src, final ByteBuffer dst)
-        throws SSLException
+    private SSLEngineResult doUnwrap(final ByteBuffer src, final ByteBuffer dst) throws SSLException
     {
-        if (_pipelinedChannel == null) {
-            try {
-                _engineResult =  _sslEngine.unwrap(src, dst);
-            } catch (final RuntimeException ex) {
+        if (_pipelinedChannel == null)
+        {
+            try
+            {
+                _engineResult = _sslEngine.unwrap(src, dst);
+            }
+            catch (final RuntimeException ex)
+            {
                 throw convert(ex);
             }
-        } else {
-            if (_pipelinedInEncrypted == null) {
+        }
+        else
+        {
+            if (_pipelinedInEncrypted == null)
+            {
                 _pipelinedInEncrypted = ByteBuffer.allocate(_sslEngine.getSession().getPacketBufferSize());
-            } else if (_pipelinedInEncrypted.position() > 0) {
+            }
+            else if (_pipelinedInEncrypted.position() > 0)
+            {
                 _pipelinedInEncrypted.flip();
                 _pipelinedChannel.unwrap(_pipelinedInEncrypted, dst);
                 _pipelinedInEncrypted.compact();
@@ -348,25 +401,33 @@ public class HttpsProxySetupHandler
             boolean needsUnwrap = true;
             boolean isFirst = true;
 
-            while (needsUnwrap) {
-                try {
-                    SSLEngineResult engineResult =  _sslEngine.unwrap(src, _pipelinedInEncrypted);
+            while (needsUnwrap)
+            {
+                try
+                {
+                    SSLEngineResult engineResult = _sslEngine.unwrap(src, _pipelinedInEncrypted);
 
-                    if (isFirst) {
+                    if (isFirst)
+                    {
                         _engineResult = engineResult;
                         isFirst = false;
                     }
 
-                    if (engineResult.getStatus() == Status.OK) {
+                    if (engineResult.getStatus() == Status.OK)
+                    {
                         _pipelinedInEncrypted.flip();
                         _pipelinedChannel.unwrap(_pipelinedInEncrypted, dst);
                         _pipelinedInEncrypted.compact();
                         //needsUnwrap = src.remaining() > 0;
                         needsUnwrap = false;
-                    } else {
+                    }
+                    else
+                    {
                         needsUnwrap = false;
                     }
-                } catch (final RuntimeException ex) {
+                }
+                catch (final RuntimeException ex)
+                {
                     throw convert(ex);
                 }
             }
@@ -375,21 +436,23 @@ public class HttpsProxySetupHandler
         return _engineResult;
     }
 
-    private void doRunTask()
-        throws SSLException
+    private void doRunTask() throws SSLException
     {
-        try {
+        try
+        {
             final Runnable r = _sslEngine.getDelegatedTask();
-            if (r != null) {
+            if (r != null)
+            {
                 r.run();
             }
-        } catch (final RuntimeException ex) {
+        }
+        catch (final RuntimeException ex)
+        {
             throw convert(ex);
         }
     }
 
-    private void writeRequest(final HttpRequest request)
-        throws IOException
+    private void writeRequest(final HttpRequest request) throws IOException
     {
         StringBuilder builder = new StringBuilder();
         RequestLine requestLine = request.getRequestLine();
@@ -401,7 +464,8 @@ public class HttpsProxySetupHandler
         builder.append(requestLine.getProtocolVersion().toString());
         builder.append(CRLF);
 
-        for (Header header : request.getAllHeaders()) {
+        for (Header header : request.getAllHeaders())
+        {
             builder.append(header.toString());
             builder.append(CRLF);
         }
@@ -414,10 +478,10 @@ public class HttpsProxySetupHandler
         sendEncryptedData();
     }
 
-    private synchronized int writePlain(final ByteBuffer src)
-        throws SSLException
+    private synchronized int writePlain(final ByteBuffer src) throws SSLException
     {
-        if (src == null) {
+        if (src == null)
+        {
             throw new IllegalArgumentException("Null source buffer");
         }
 
@@ -427,52 +491,63 @@ public class HttpsProxySetupHandler
         }
         */
 
-        if (_outPlain.position() > 0) {
+        if (_outPlain.position() > 0)
+        {
             _outPlain.flip();
             doWrap(_outPlain, _outEncrypted);
             _outPlain.compact();
         }
 
-        if (_outPlain.position() == 0) {
+        if (_outPlain.position() == 0)
+        {
             final SSLEngineResult result = doWrap(src, _outEncrypted);
 
             //if (result.getStatus() == Status.CLOSED) {
-                //this.status = CLOSED;
+            //this.status = CLOSED;
             //}
 
             return result.bytesConsumed();
-        } else {
+        }
+        else
+        {
             return 0;
         }
     }
 
     private synchronized int readPlain(final ByteBuffer dst)
     {
-        if (dst == null) {
+        if (dst == null)
+        {
             throw new IllegalArgumentException("Null source buffer");
         }
 
-        if (_inPlain.position() > 0) {
+        if (_inPlain.position() > 0)
+        {
             _inPlain.flip();
 
             final int n = Math.min(_inPlain.remaining(), dst.remaining());
-            for (int i = 0; i < n; i++) {
+            for (int i = 0; i < n; i++)
+            {
                 dst.put(_inPlain.get());
             }
 
             _inPlain.compact();
             return n;
-        } else {
-            if (_endOfStream) {
+        }
+        else
+        {
+            if (_endOfStream)
+            {
                 return -1;
-            } else {
+            }
+            else
+            {
                 return 0;
             }
         }
     }
 
-    private int sendEncryptedData()
-        throws IOException
+    private int sendEncryptedData() throws IOException
     {
         _outEncrypted.flip();
 
@@ -481,8 +556,7 @@ public class HttpsProxySetupHandler
         return bytesWritten;
     }
 
-    private int receiveEncryptedData()
-        throws IOException
+    private int receiveEncryptedData() throws IOException
     {
         /*
         if (this.endOfStream) {
@@ -491,39 +565,47 @@ public class HttpsProxySetupHandler
         */
 
         int bytesRead = _ioSession.channel().read(_inEncrypted);
-        if (bytesRead == -1) {
+        if (bytesRead == -1)
+        {
             _endOfStream = true;
         }
 
         return bytesRead;
     }
 
-    private boolean decryptData()
-        throws SSLException
+    private boolean decryptData() throws SSLException
     {
         boolean decrypted = false;
 
-        while (_inEncrypted.position() > 0) {
+        while (_inEncrypted.position() > 0)
+        {
             _inEncrypted.flip();
             final SSLEngineResult result = doUnwrap(_inEncrypted, _inPlain);
             _inEncrypted.compact();
-            if (!_inEncrypted.hasRemaining() && result.getHandshakeStatus() == HandshakeStatus.NEED_UNWRAP) {
+            if (!_inEncrypted.hasRemaining() && result.getHandshakeStatus() == HandshakeStatus.NEED_UNWRAP)
+            {
                 throw new SSLException("Input buffer is full");
             }
 
-            if (result.getStatus() == Status.OK) {
-                if (_inPlain.position() > 0) {
+            if (result.getStatus() == Status.OK)
+            {
+                if (_inPlain.position() > 0)
+                {
                     decrypted = true;
                 }
-            } else {
+            }
+            else
+            {
                 break;
             }
 
-            if (result.getHandshakeStatus() != HandshakeStatus.NOT_HANDSHAKING) {
+            if (result.getHandshakeStatus() != HandshakeStatus.NOT_HANDSHAKING)
+            {
                 break;
             }
 
-            if (_endOfStream) {
+            if (_endOfStream)
+            {
                 break;
             }
         }
@@ -531,8 +613,7 @@ public class HttpsProxySetupHandler
         return decrypted;
     }
 
-    private HttpResponse readResponse()
-        throws IOException
+    private HttpResponse readResponse() throws IOException
     {
         final ByteBuffer responseBuffer = ByteBuffer.allocate(_sslEngine.getSession().getApplicationBufferSize());
         StatusLine statusLine = processStatusLine(responseBuffer);
@@ -543,12 +624,12 @@ public class HttpsProxySetupHandler
         return response;
     }
 
-    private StatusLine processStatusLine(final ByteBuffer responseBuffer)
-        throws IOException
+    private StatusLine processStatusLine(final ByteBuffer responseBuffer) throws IOException
     {
         String statusLine = readLine(responseBuffer);
 
-        while (statusLine.trim().length() == 0) {
+        while (statusLine.trim().length() == 0)
+        {
             statusLine = readLine(responseBuffer);
         }
         statusLine = statusLine.trim();
@@ -565,8 +646,10 @@ public class HttpsProxySetupHandler
     {
         StringBuilder builder = new StringBuilder();
 
-        if ((statusTokens != null) && (statusTokens.length > 2)) {
-            for (int i = 2; i < statusTokens.length; i++) {
+        if ((statusTokens != null) && (statusTokens.length > 2))
+        {
+            for (int i = 2; i < statusTokens.length; i++)
+            {
                 builder.append(statusTokens[i]);
                 builder.append(" ");
             }
@@ -585,14 +668,15 @@ public class HttpsProxySetupHandler
         return new ProtocolVersion(tokens[0], major, minor);
     }
 
-    private void processHeaders(final HttpResponse response, final ByteBuffer responseBuffer)
-        throws IOException
+    private void processHeaders(final HttpResponse response, final ByteBuffer responseBuffer) throws IOException
     {
         String headerLine = readLine(responseBuffer);
 
-        while (headerLine.length() > 0) {
+        while (headerLine.length() > 0)
+        {
             int index = headerLine.indexOf(":");
-            if (index == -1) {
+            if (index == -1)
+            {
                 throw new IOException("Corrupt header-field: '" + headerLine + "'");
             }
 
@@ -604,62 +688,78 @@ public class HttpsProxySetupHandler
         _inPlain.get();
     }
 
-    private Byte readByte()
-        throws IOException
+    private Byte readByte() throws IOException
     {
         Byte rc = null;
         ByteBuffer readBuffer = ByteBuffer.allocate(1);
         int plainBytes = readPlain(readBuffer);
 
-        if (plainBytes == 0) {
+        if (plainBytes == 0)
+        {
             boolean needRead = true;
 
-            while (needRead) {
+            while (needRead)
+            {
                 int bytesRead = receiveEncryptedData();
 
-                if (bytesRead > 0) {
+                if (bytesRead > 0)
+                {
                     needRead = !decryptData();
-                } else if (bytesRead == -1) {
+                }
+                else if (bytesRead == -1)
+                {
                     needRead = false;
                 }
             }
 
-            if (!_endOfStream) {
+            if (!_endOfStream)
+            {
                 readPlain(readBuffer);
                 readBuffer.flip();
                 rc = new Byte(readBuffer.get());
-            } else {
+            }
+            else
+            {
                 rc = new Byte("-1");
             }
-        } else if (plainBytes > 0) {
+        }
+        else if (plainBytes > 0)
+        {
             readBuffer.flip();
             rc = new Byte(readBuffer.get());
-        } else {
+        }
+        else
+        {
             rc = new Byte("-1");
         }
 
         return rc;
     }
 
-    private String readLine(final ByteBuffer responseBuffer)
-        throws IOException
+    private String readLine(final ByteBuffer responseBuffer) throws IOException
     {
         StringBuilder lineBuilder = new StringBuilder();
 
-        while (true) {
+        while (true)
+        {
             int c = readByte().byteValue() & 0xff;
 
-            if (c == -1) {
+            if (c == -1)
+            {
                 throw new IOException("HttpResponse corrupt, input stream closed from " + getProxyHost().getHostName());
             }
 
-            if (c == '\n') {
+            if (c == '\n')
+            {
                 continue;
             }
 
-            if (c != '\r') {
-                lineBuilder.append((char)c);
-            } else {
+            if (c != '\r')
+            {
+                lineBuilder.append((char) c);
+            }
+            else
+            {
                 break;
             }
         }

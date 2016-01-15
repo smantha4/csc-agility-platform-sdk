@@ -32,11 +32,9 @@ import com.servicemesh.core.reactor.TimerHandler;
 import com.servicemesh.core.reactor.WorkHandler;
 
 /**
- * 
- * A promise to produce a result of type <T> at some point in the future.
- * Enables a functional approach to transforming/completing work as intermediate
- * results complete.
- * 
+ * A promise to produce a result of type <T> at some point in the future. Enables a functional approach to transforming/completing
+ * work as intermediate results complete.
+ *
  * @param <T>
  */
 public abstract class Promise<T>
@@ -48,55 +46,53 @@ public abstract class Promise<T>
     protected List<Reactor> _reactors = Collections.synchronizedList(new ArrayList<Reactor>());
 
     /**
-     *  Blocks until the promise is completed and result returned or 
-     *  failure occurs. 
+     * Blocks until the promise is completed and result returned or failure occurs.
      */
-    public T get()
-        throws Throwable
+    public T get() throws Throwable
     {
         return _synchronizer.get();
     }
 
     /**
-     *  Blocks until the promise is completed and result returned, the timeout
-     *  expires or failure occurs.
-     *   
+     * Blocks until the promise is completed and result returned, the timeout expires or failure occurs.
      */
-    public T get(final long timeout, final TimeUnit unit)
-        throws Throwable
+    public T get(final long timeout, final TimeUnit unit) throws Throwable
     {
         return _synchronizer.get(timeout, unit);
     }
 
     /**
-     *  Blocks execution until the promise is completed and result returned or 
-     *  failure occurs. However, continues to process events on the supplied
-     *  reactor while waiting for completion. Note that this may only be called
-     *  from the context of the reactors dispatch thread. So, this would typically
-     *  be used in the context of an async service message handler.
+     * Blocks execution until the promise is completed and result returned or failure occurs. However, continues to process events
+     * on the supplied reactor while waiting for completion. Note that this may only be called from the context of the reactors
+     * dispatch thread. So, this would typically be used in the context of an async service message handler.
      */
-    public T get(final Reactor reactor)
-        throws Throwable
+    public T get(final Reactor reactor) throws Throwable
     {
-        if (reactor.getThread() != Thread.currentThread()) {
+        if (reactor.getThread() != Thread.currentThread())
+        {
             throw new IllegalStateException("Must be called from reactor thread context");
         }
 
         _reactors.add(reactor);
 
-        try {
-            while (!_synchronizer.isDone()) {
+        try
+        {
+            while (!_synchronizer.isDone())
+            {
                 reactor.dispatch();
             }
-        } finally {
+        }
+        finally
+        {
             _reactors.remove(reactor);
         }
 
-         return _synchronizer.getValue();
+        return _synchronizer.getValue();
     }
 
     /**
      * Returns true if the request has completed.
+     * 
      * @return true if the request has completed.
      */
     public boolean isCompleted()
@@ -105,50 +101,59 @@ public abstract class Promise<T>
     }
 
     /**
-     * Set a callback to be invoked on completion of the promise. The callback
-     * is executed immediately if the promise has already been completed.
+     * Set a callback to be invoked on completion of the promise. The callback is executed immediately if the promise has already
+     * been completed.
      */
-     public void onComplete(final Callback<T> cb)
-     {
-         if (isCompleted()) {
-             try {
-                 // get() with no timeout should work
-                 final T value = get(1, TimeUnit.SECONDS); 
+    public void onComplete(final Callback<T> cb)
+    {
+        if (isCompleted())
+        {
+            try
+            {
+                // get() with no timeout should work
+                final T value = get(1, TimeUnit.SECONDS);
 
-                 cb.invoke(value);
-             } catch (final Throwable th) {
-                 // get() can throw an exception, shouldn't happen but allow for
-                 // it anyway
-                 throw new RuntimeException(th);
-             }
-         } else {
-             _onComplete.add(cb);
-         }
-     }
-
-     /**
-      * @return true if the request has completed.
-      */
-     public boolean isFailed()
-     {
-         return _synchronizer.isFailed();
-     }
+                cb.invoke(value);
+            }
+            catch (final Throwable th)
+            {
+                // get() can throw an exception, shouldn't happen but allow for
+                // it anyway
+                throw new RuntimeException(th);
+            }
+        }
+        else
+        {
+            _onComplete.add(cb);
+        }
+    }
 
     /**
-     * Register a callback to be invoked if a failure condition occurs. The
-     * callback is executed immediately if the promise has already been failed.
+     * @return true if the request has completed.
      */
-     public void onFailure(final Callback<Throwable> cb)
-     {
-         if (isFailed()) {
-             cb.invoke(_synchronizer.getFailure());
-         } else {
-             _onFailure.add(cb);
-         }
-     }
+    public boolean isFailed()
+    {
+        return _synchronizer.isFailed();
+    }
 
     /**
-      * @return true if the request has cancelled.
+     * Register a callback to be invoked if a failure condition occurs. The callback is executed immediately if the promise has
+     * already been failed.
+     */
+    public void onFailure(final Callback<Throwable> cb)
+    {
+        if (isFailed())
+        {
+            cb.invoke(_synchronizer.getFailure());
+        }
+        else
+        {
+            _onFailure.add(cb);
+        }
+    }
+
+    /**
+     * @return true if the request has cancelled.
      */
     public boolean isCancelled()
     {
@@ -162,136 +167,155 @@ public abstract class Promise<T>
     {
         final boolean cancelledNow = _synchronizer.cancel();
 
-        if (cancelledNow) {
+        if (cancelledNow)
+        {
             final List<Callback<Void>> executeList = new ArrayList<Callback<Void>>();
             final List<Reactor> reactorList = new ArrayList<Reactor>();
 
-            synchronized (_reactors) {
+            synchronized (_reactors)
+            {
                 reactorList.addAll(_reactors);
             }
 
-            for (final Reactor nextReactor : reactorList) {
+            for (final Reactor nextReactor : reactorList)
+            {
                 // need to dispatch something on the reactor loop to wake up pending thread
                 // blocked waiting on a Promise.get(Reactor);
                 nextReactor.workCreate(new WorkHandler() {
                     @Override
-                    public boolean workFire() {
+                    public boolean workFire()
+                    {
                         return false;
                     }
                 });
             }
 
-            synchronized (_onCancel) {
+            synchronized (_onCancel)
+            {
                 executeList.addAll(_onCancel);
             }
 
-            for (final Callback<Void> cb : executeList) {
+            for (final Callback<Void> cb : executeList)
+            {
                 cb.invoke(null);
             }
-        } else {
+        }
+        else
+        {
             throw new IllegalStateException("Promise already completed.");
         }
     }
 
     /**
-      * Set a callback to be invoked on cancellation of the promise. The callback
-      * is executed immediately if the promise has already been cancelled.
-      */
-     public void onCancel(final Callback<Void> cb)
-     {
-         if (isCancelled()) {
-             cb.invoke(null);
-         } else {
-             _onCancel.add(cb);
-         }
-     }
+     * Set a callback to be invoked on cancellation of the promise. The callback is executed immediately if the promise has
+     * already been cancelled.
+     */
+    public void onCancel(final Callback<Void> cb)
+    {
+        if (isCancelled())
+        {
+            cb.invoke(null);
+        }
+        else
+        {
+            _onCancel.add(cb);
+        }
+    }
 
     /**
-     * Return a new promise that on completion of the this promise completes by mapping the result
-     * using the supplied function.
+     * Return a new promise that on completion of the this promise completes by mapping the result using the supplied function.
      */
-     public <R> Promise<R> map(final Function<T, R> func)
-     {
-         // completion propagates from wrapped(this) to wrapper(promise)
-         final CompletablePromise<R> promise = PromiseFactory.create();
+    public <R> Promise<R> map(final Function<T, R> func)
+    {
+        // completion propagates from wrapped(this) to wrapper(promise)
+        final CompletablePromise<R> promise = PromiseFactory.create();
 
-         this.onComplete(new Callback<T>() {
-             @Override
-             public void invoke(final T arg)
-             {
-                 // if there is an exception mapping the result propagate the failure
-                 try {
-                     promise.complete(func.invoke(arg));
-                 } catch (final Throwable th) {
-                     promise.failure(th);
-                 }
-             }
-         });
+        this.onComplete(new Callback<T>() {
+            @Override
+            public void invoke(final T arg)
+            {
+                // if there is an exception mapping the result propagate the failure
+                try
+                {
+                    promise.complete(func.invoke(arg));
+                }
+                catch (final Throwable th)
+                {
+                    promise.failure(th);
+                }
+            }
+        });
 
-         // failures propagate from wrapped(this) to wrapper(promise)
-         this.onFailure(th -> promise.failure(th));
+        // failures propagate from wrapped(this) to wrapper(promise)
+        this.onFailure(th -> promise.failure(th));
 
-         // cancel propagate from wrapper(promise) to wrapped(this)
-         promise.onCancel((v) -> cancel());
+        // cancel propagate from wrapper(promise) to wrapped(this)
+        promise.onCancel((v) -> cancel());
 
-         return promise;
-     }
+        return promise;
+    }
 
     /**
-     * Return a new promise that on completion of the current promise completes by mapping the result
-     * using the supplied function.
+     * Return a new promise that on completion of the current promise completes by mapping the result using the supplied function.
      */
-     public <R> Promise<R> flatMap(final Function<T, Promise<R>> func)
-     {
-         // completion propagates from wrapped(this) to wrapper(promise)
-         final CompletablePromise<R> promise = PromiseFactory.create();
+    public <R> Promise<R> flatMap(final Function<T, Promise<R>> func)
+    {
+        // completion propagates from wrapped(this) to wrapper(promise)
+        final CompletablePromise<R> promise = PromiseFactory.create();
 
-         this.onComplete(new Callback<T>() {
-             @Override
-             public void invoke(final T tArg)
-             {
-                 // if there is an exception mapping the result propagate the failure
-                 try {
-                     // on completion of the result - complete the wrapper
-                     final Promise<R> flatten = func.invoke(tArg);
+        this.onComplete(new Callback<T>() {
+            @Override
+            public void invoke(final T tArg)
+            {
+                // if there is an exception mapping the result propagate the failure
+                try
+                {
+                    // on completion of the result - complete the wrapper
+                    final Promise<R> flatten = func.invoke(tArg);
 
-                     flatten.onComplete(rArg -> promise.complete(rArg));
+                    flatten.onComplete(rArg -> promise.complete(rArg));
 
-                     // on failure of the result - fail the wrapper
-                     flatten.onFailure(th -> promise.failure(th));
+                    // on failure of the result - fail the wrapper
+                    flatten.onFailure(th -> promise.failure(th));
 
-                     // if the wrapper is canceled - cancel the result
-                     promise.onCancel((v) -> cancel());
-                 } catch (final Throwable th) {
-                     promise.failure(th);
-                 }
-             }
-         });
+                    // if the wrapper is canceled - cancel the result
+                    promise.onCancel((v) -> cancel());
+                }
+                catch (final Throwable th)
+                {
+                    promise.failure(th);
+                }
+            }
+        });
 
-         // failures propagate from wrapped(this) to wrapper(promise)
-         this.onFailure(th -> promise.failure(th));
+        // failures propagate from wrapped(this) to wrapper(promise)
+        this.onFailure(th -> promise.failure(th));
 
-         // cancel propagate from wrapper(promise) to wrapped(this)
-         promise.onCancel((v) -> cancel());
+        // cancel propagate from wrapper(promise) to wrapped(this)
+        promise.onCancel((v) -> cancel());
 
-         // if the result is cancelled - fail the wrapper
-         this.onCancel(new Callback<Void>() {
-             @Override
-             public void invoke(final Void arg) {
-                 try {
-                     promise.failure(new CancellationException("Wrapped promise cancelled"));
-                 } catch (IllegalStateException ex) {
-                     // Ignore, can happen if the flattened promise is already complete
-                 }
-             }
-         });
+        // if the result is cancelled - fail the wrapper
+        this.onCancel(new Callback<Void>() {
+            @Override
+            public void invoke(final Void arg)
+            {
+                try
+                {
+                    promise.failure(new CancellationException("Wrapped promise cancelled"));
+                }
+                catch (IllegalStateException ex)
+                {
+                    // Ignore, can happen if the flattened promise is already complete
+                }
+            }
+        });
 
-         return promise;
-     }
+        return promise;
+    }
 
-     /**
-     * Wrap this promise with a promise that will handle exceptions throws.
-     * If there is a runtime exception during the recover function then the promise is marked as failed.
+    /**
+     * Wrap this promise with a promise that will handle exceptions throws. If there is a runtime exception during the recover
+     * function then the promise is marked as failed.
      */
     public Promise<T> recover(final Function<Throwable, T> func)
     {
@@ -302,9 +326,12 @@ public abstract class Promise<T>
             public void invoke(final T result)
             {
                 // if there is an exception mapping the result propagate the failure
-                try {
+                try
+                {
                     promise.complete(result);
-                } catch (final Throwable t) {
+                }
+                catch (final Throwable t)
+                {
                     promise.complete(func.invoke(t));
                 }
             }
@@ -313,12 +340,16 @@ public abstract class Promise<T>
         // failures propagate from wrapped(this) to wrapper(promise)
         this.onFailure(new Callback<Throwable>() {
             @Override
-            public void invoke(final Throwable t) {
-            	try {
-            		promise.complete(func.invoke(t));
-            	} catch (Throwable th) {
-            		promise.failure(th);
-            	}
+            public void invoke(final Throwable t)
+            {
+                try
+                {
+                    promise.complete(func.invoke(t));
+                }
+                catch (Throwable th)
+                {
+                    promise.failure(th);
+                }
             }
         });
 
@@ -333,7 +364,8 @@ public abstract class Promise<T>
      */
     public static <T> Promise<T> pure(final T result)
     {
-        if (result == null) {
+        if (result == null)
+        {
             throw new IllegalArgumentException("Null result argument");
         }
 
@@ -348,7 +380,8 @@ public abstract class Promise<T>
      */
     public static <T> Promise<T> pure(Throwable th)
     {
-        if (th == null) {
+        if (th == null)
+        {
             throw new IllegalArgumentException("Null Throwable argument");
         }
 
@@ -363,14 +396,17 @@ public abstract class Promise<T>
      */
     public static <T> Promise<List<T>> sequence(final List<Promise<T>> promises)
     {
-        if (promises == null) {
+        if (promises == null)
+        {
             throw new IllegalArgumentException("Null promises");
         }
 
         final SequencePromise<T> sequence = new SequencePromise<T>(promises.size());
 
-        if (promises.size() > 0) {
-            for (final Promise<T> promise : promises) {
+        if (promises.size() > 0)
+        {
+            for (final Promise<T> promise : promises)
+            {
                 // completion propagates from wrapped to wrapper
                 promise.onComplete(result -> sequence.add(result));
 
@@ -383,16 +419,22 @@ public abstract class Promise<T>
                 // propagate wrapped cancels as failures to the sequenced promise
                 promise.onCancel(new Callback<Void>() {
                     @Override
-                    public void invoke(Void arg) {
-                        try {
+                    public void invoke(Void arg)
+                    {
+                        try
+                        {
                             sequence.failure(new CancellationException("Wrapped promise cancelled"));
-                        } catch (IllegalStateException ex) {
+                        }
+                        catch (IllegalStateException ex)
+                        {
                             // Ignore, can happen if the sequenced promise is already complete
                         }
                     }
                 });
             }
-        } else {
+        }
+        else
+        {
             sequence.complete(new ArrayList<T>());
         }
 
@@ -405,14 +447,17 @@ public abstract class Promise<T>
     //@SuppressWarnings("unchecked")
     public static Promise<List<Object>> sequenceAny(List<Promise<?>> promises)
     {
-        if (promises == null) {
+        if (promises == null)
+        {
             throw new IllegalArgumentException("Null promises");
         }
 
         final SequencePromise<Object> sequence = new SequencePromise<Object>(promises.size());
 
-        if (promises.size() > 0) {
-            for (final Promise<?> promise : promises) {
+        if (promises.size() > 0)
+        {
+            for (final Promise<?> promise : promises)
+            {
                 // completion propagates from wrapped to wrapper
                 promise.onComplete(result -> sequence.add(result));
 
@@ -425,16 +470,22 @@ public abstract class Promise<T>
                 // propagate wrapped cancels as failures to the sequenced promise
                 promise.onCancel(new Callback<Void>() {
                     @Override
-                    public void invoke(Void arg) {
-                        try {
+                    public void invoke(Void arg)
+                    {
+                        try
+                        {
                             sequence.failure(new CancellationException("Wrapped promise cancelled"));
-                        } catch (IllegalStateException ex) {
+                        }
+                        catch (IllegalStateException ex)
+                        {
                             // Ignore, can happen if the sequenced promise is already complete
                         }
                     }
                 });
             }
-        } else {
+        }
+        else
+        {
             sequence.complete(new ArrayList<Object>());
         }
 
@@ -442,16 +493,17 @@ public abstract class Promise<T>
     }
 
     /**
-     * Returns a promise that will execute work at some point in the future using
-     * the specified reactor
+     * Returns a promise that will execute work at some point in the future using the specified reactor
      */
     public static <T> Promise<T> promise(final Reactor reactor, final Function0<T> func0)
     {
-        if (reactor == null) {
+        if (reactor == null)
+        {
             throw new IllegalArgumentException("Null reactor");
         }
 
-        if (func0 == null) {
+        if (func0 == null)
+        {
             throw new IllegalArgumentException("Null func argument");
         }
 
@@ -459,10 +511,14 @@ public abstract class Promise<T>
 
         reactor.workCreate(new WorkHandler() {
             @Override
-            public boolean workFire() {
-                try {
+            public boolean workFire()
+            {
+                try
+                {
                     promise.complete(func0.exec());
-                } catch (Throwable th) {
+                }
+                catch (Throwable th)
+                {
                     promise.failure(th);
                 }
 
@@ -474,16 +530,17 @@ public abstract class Promise<T>
     }
 
     /**
-    * Returns a promise that will execute at some point in the future using the
-    * specified reactor
-    */
+     * Returns a promise that will execute at some point in the future using the specified reactor
+     */
     public static <T> Promise<T> delayed(final Reactor reactor, final long delta, final Function0<T> func)
     {
-        if (reactor == null) {
+        if (reactor == null)
+        {
             throw new IllegalArgumentException("Null reactor");
         }
 
-        if (func == null) {
+        if (func == null)
+        {
             throw new IllegalArgumentException("Null func argument");
         }
 
@@ -493,9 +550,12 @@ public abstract class Promise<T>
             @Override
             public long timerFire(final long scheduledTime, final long actualTime)
             {
-                try {
+                try
+                {
                     promise.complete(func.exec());
-                } catch (Throwable th) {
+                }
+                catch (Throwable th)
+                {
                     promise.failure(th);
                 }
 
@@ -507,16 +567,17 @@ public abstract class Promise<T>
     }
 
     /**
-     * Returns a promise that will complete at some point in the future using the
-     * specified reactor
+     * Returns a promise that will complete at some point in the future using the specified reactor
      */
     public static <T> Promise<T> timeout(final Reactor reactor, final long delta, final T message)
     {
-        if (reactor == null) {
+        if (reactor == null)
+        {
             throw new IllegalArgumentException("Null reactor");
         }
 
-        if (message == null) {
+        if (message == null)
+        {
             throw new IllegalArgumentException("Null message argument");
         }
 
@@ -524,11 +585,14 @@ public abstract class Promise<T>
 
         reactor.timerCreateRel(delta, new TimerHandler() {
             @Override
-            public long timerFire(final long scheduledTime, final long actualTime) 
+            public long timerFire(final long scheduledTime, final long actualTime)
             {
-                try {
+                try
+                {
                     promise.complete(message);
-                } catch (Throwable th) {
+                }
+                catch (Throwable th)
+                {
                     promise.failure(th);
                 }
 
@@ -539,8 +603,7 @@ public abstract class Promise<T>
         return promise;
     }
 
-    static final class Synchronizer<T>
-        extends AbstractQueuedSynchronizer
+    static final class Synchronizer<T> extends AbstractQueuedSynchronizer
     {
         private static final long serialVersionUID = 0L;
 
@@ -566,8 +629,7 @@ public abstract class Promise<T>
         }
 
         /**
-         * Always allow a release to go through, this means the state has been
-         * successfully changed and the result is available.
+         * Always allow a release to go through, this means the state has been successfully changed and the result is available.
          */
         @Override
         protected boolean tryReleaseShared(final int finalState)
@@ -577,16 +639,16 @@ public abstract class Promise<T>
         }
 
         /**
-         * Blocks until the task is complete or the timeout expires.  Throws a
-         * {@link TimeoutException} if the timer expires, otherwise behaves like
-         * {@link #get()}.
+         * Blocks until the task is complete or the timeout expires. Throws a {@link TimeoutException} if the timer expires,
+         * otherwise behaves like {@link #get()}.
          */
         // timeout in milliseconds
         protected T get(final long timeout, final TimeUnit unit)
-            throws TimeoutException, CancellationException, InterruptedException, Throwable
+                throws TimeoutException, CancellationException, InterruptedException, Throwable
         {
             // Attempt to acquire the shared lock with a timeout.
-            if (!tryAcquireSharedNanos(-1, unit.toNanos(timeout))) {
+            if (!tryAcquireSharedNanos(-1, unit.toNanos(timeout)))
+            {
                 throw new TimeoutException("Timeout waiting for task.");
             }
 
@@ -594,13 +656,11 @@ public abstract class Promise<T>
         }
 
         /**
-         * Blocks until {@link #complete(Object, Throwable, int)} has been
-         * successfully called.  Throws a {@link CancellationException} if the task
-         * was cancelled, or a {@link ExecutionException} if the task completed with
-         * an error.
+         * Blocks until {@link #complete(Object, Throwable, int)} has been successfully called. Throws a
+         * {@link CancellationException} if the task was cancelled, or a {@link ExecutionException} if the task completed with an
+         * error.
          */
-        protected T get()
-            throws CancellationException, InterruptedException, Throwable
+        protected T get() throws CancellationException, InterruptedException, Throwable
         {
             // Acquire the shared lock allowing interruption.
             acquireSharedInterruptibly(-1);
@@ -609,26 +669,31 @@ public abstract class Promise<T>
         }
 
         /**
-         * Implementation of the actual value retrieval.  Will return the value
-         * on success, an exception on failure, a cancellation on cancellation, or
-         * an illegal state if the synchronizer is in an invalid state.
+         * Implementation of the actual value retrieval. Will return the value on success, an exception on failure, a cancellation
+         * on cancellation, or an illegal state if the synchronizer is in an invalid state.
          */
-        private T getValue()
-            throws CancellationException, Throwable
+        private T getValue() throws CancellationException, Throwable
         {
             final int state = getState();
 
-            switch (state) {
+            switch (state)
+            {
                 case COMPLETED:
-                    if (_exception != null) {
+                    if (_exception != null)
+                    {
                         throw _exception;
-                    } else {
+                    }
+                    else
+                    {
                         return _value;
                     }
                 case FAILED:
-                    if (_exception != null) {
+                    if (_exception != null)
+                    {
                         throw _exception;
-                    } else {
+                    }
+                    else
+                    {
                         throw new IllegalStateException("Promise in FAILED state without set exception");
                     }
                 case CANCELLED:
@@ -648,14 +713,14 @@ public abstract class Promise<T>
         }
 
         /**
-         * Checks if the state is {@link #COMPLETED}, {@link #CANCELLED}, or {@link
-         * FAILED}.
+         * Checks if the state is {@link #COMPLETED}, {@link #CANCELLED}, or {@link FAILED}.
          */
         protected boolean isDone()
         {
             boolean done;
 
-            switch(getState()) {
+            switch (getState())
+            {
                 case COMPLETED:
                 case CANCELLED:
                 case FAILED:
@@ -709,32 +774,36 @@ public abstract class Promise<T>
         }
 
         /**
-         * Implementation of completing a task.  Either {@code v} or {@code t} will
-         * be set but not both.  The {@code finalState} is the state to change to
-         * from {@link #RUNNING}.  If the state is not in the RUNNING state we
-         * return {@code false} after waiting for the state to be set to a valid
-         * final state ({@link #COMPLETED}, {@link #CANCELLED}, or {@link
-         * #FAILED}).
+         * Implementation of completing a task. Either {@code v} or {@code t} will be set but not both. The {@code finalState} is
+         * the state to change to from {@link #RUNNING}. If the state is not in the RUNNING state we return {@code false} after
+         * waiting for the state to be set to a valid final state ({@link #COMPLETED}, {@link #CANCELLED}, or {@link #FAILED}).
          *
-         * @param v the value to set as the result of the computation.
-         * @param t the exception to set as the result of the computation.
-         * @param finalState the state to transition to.
+         * @param v
+         *            the value to set as the result of the computation.
+         * @param t
+         *            the exception to set as the result of the computation.
+         * @param finalState
+         *            the state to transition to.
          */
         private boolean complete(final T value, final Throwable th, final int finalState)
         {
             final boolean doCompletion = compareAndSetState(RUNNING, COMPLETING);
 
-            if (doCompletion) {
+            if (doCompletion)
+            {
                 // If this thread successfully transitioned to COMPLETING, set the value
                 // and exception and then release to the final state.
                 _value = value;
 
-                if (th != null) {
+                if (th != null)
+                {
                     _exception = th;
                 }
 
                 releaseShared(finalState);
-            } else if (getState() == COMPLETING) {
+            }
+            else if (getState() == COMPLETING)
+            {
                 // If some other thread is currently completing the future, block until
                 // they are done so we can guarantee completion.
                 acquireShared(-1);

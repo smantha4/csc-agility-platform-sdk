@@ -35,217 +35,168 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * Represents an WS-Management fault or transport error that occured when performing
- * a WS-Management operation.
- *
- *
+ * Represents an WS-Management fault or transport error that occured when performing a WS-Management operation.
  * <P>
  *
  * @see #getReason()
- *
- *
- *
  */
-public class WsmanException  extends Exception {
+public class WsmanException extends Exception
+{
 
     /**
-     * The XML document containing the fault.
      *
+     */
+    private static final long serialVersionUID = 1L;
+    /**
+     * The XML document containing the fault.
      */
     protected Document document;
 
-     /**
+    /**
      * Construct a WsmanException from an XML document and a WsmanConnection.
      *
-
-     *
-     * @param connection The connection to use for all Wsman operations
-     * @param document The XML containing the fault
-     *
-     *
-     *
+     * @param connection
+     *            The connection to use for all Wsman operations
+     * @param document
+     *            The XML containing the fault
      */
-    public WsmanException(Document document) {
+    public WsmanException(Document document)
+    {
         super(getReason(document));
     }
+
     /**
      * Construct a WsmanException from a java Exception.
      *
-     *
-     * @param cause The source of the exception
-     *
-     *
-     *
+     * @param cause
+     *            The source of the exception
      */
-    WsmanException(Exception cause) {
+    WsmanException(Exception cause)
+    {
         super(cause.getMessage());
 
         initCause(cause);
-        document=null;
+        document = null;
     }
 
-     /**
+    /**
      * Get the fault code (see WS-Management spec).
      *
-     *
-     *
-     *
-     * @return
-     * The fault code.
-     *
+     * @return The fault code.
      */
-    public String getCode() {
-        String code ="Unknown";
+    public String getCode()
+    {
+        String code = "Unknown";
 
-        if (isFault()) {
-            
-            Element bodyElt=WsmanUtils.findChild(document.getDocumentElement(),
-                    WsmanUtils.SOAP_NAMESPACE,
-                    "Body");
-            
-            Element faultElt=WsmanUtils.findChild(bodyElt,
-                    WsmanUtils.SOAP_NAMESPACE,
-                    "Fault");
-            
-            Element codeElt=WsmanUtils.findChild(faultElt,
-                    WsmanUtils.SOAP_NAMESPACE,
-                    "Code");
+        if (isFault())
+        {
 
-            Element valueElt=WsmanUtils.findChild(codeElt,
-                    WsmanUtils.SOAP_NAMESPACE,
-                    "Value");
+            Element bodyElt = WsmanUtils.findChild(document.getDocumentElement(), WsmanUtils.SOAP_NAMESPACE, "Body");
+
+            Element faultElt = WsmanUtils.findChild(bodyElt, WsmanUtils.SOAP_NAMESPACE, "Fault");
+
+            Element codeElt = WsmanUtils.findChild(faultElt, WsmanUtils.SOAP_NAMESPACE, "Code");
+
+            Element valueElt = WsmanUtils.findChild(codeElt, WsmanUtils.SOAP_NAMESPACE, "Value");
 
             code = valueElt.getTextContent();
         }
-        else if (getCause()!=null) {
+        else if (getCause() != null)
+        {
             code = getCause().getClass().getSuperclass().toString();
         }
         return code;
     }
 
- /**
+    /**
      * Get the fault SubCode (see WS-Management spec).
      *
-     *
-     *
-     * @return
-     * The fault subcode
-     *
+     * @return The fault subcode
      */
-    public String getSubCode() {
+    public String getSubCode()
+    {
         String subCode = "Unknown";
 
-        if (isFault()) {
-            
-            Element bodyElt=WsmanUtils.findChild(document.getDocumentElement(),
-                    WsmanUtils.SOAP_NAMESPACE,
-                    "Body");
+        if (isFault())
+        {
 
-            Element faultElt=WsmanUtils.findChild(bodyElt,
-                    WsmanUtils.SOAP_NAMESPACE,
-                    "Fault");
+            Element bodyElt = WsmanUtils.findChild(document.getDocumentElement(), WsmanUtils.SOAP_NAMESPACE, "Body");
 
-            Element codeElt=WsmanUtils.findChild(faultElt,
-                    WsmanUtils.SOAP_NAMESPACE,
-                    "Code");
+            Element faultElt = WsmanUtils.findChild(bodyElt, WsmanUtils.SOAP_NAMESPACE, "Fault");
 
-            Element subCodeElt=WsmanUtils.findChild(codeElt,
-                    WsmanUtils.SOAP_NAMESPACE,
-                    "SubCode");
+            Element codeElt = WsmanUtils.findChild(faultElt, WsmanUtils.SOAP_NAMESPACE, "Code");
 
-            Element valueElt=WsmanUtils.findChild(subCodeElt,
-                    WsmanUtils.SOAP_NAMESPACE,
-                    "Value");
+            Element subCodeElt = WsmanUtils.findChild(codeElt, WsmanUtils.SOAP_NAMESPACE, "SubCode");
+
+            Element valueElt = WsmanUtils.findChild(subCodeElt, WsmanUtils.SOAP_NAMESPACE, "Value");
 
             subCode = valueElt.getTextContent();
 
         }
-        else if (getCause() !=null ) {
+        else if (getCause() != null)
+        {
             subCode = getCause().getClass().toString();
         }
-            
 
         return subCode;
     }
 
- /**
+    /**
      * Get the reason the fault occured
      *
-     *
-     *
-     * @return
-     * The reason the fault occured
-     *
+     * @return The reason the fault occured
      */
-    private static String getReason(Document document) 
+    private static String getReason(Document document)
     {
-         Element bodyElt=WsmanUtils.findChild(document.getDocumentElement(),
-                WsmanUtils.SOAP_NAMESPACE,
-                "Body");
+        Element bodyElt = WsmanUtils.findChild(document.getDocumentElement(), WsmanUtils.SOAP_NAMESPACE, "Body");
 
-        Element faultElt=WsmanUtils.findChild(bodyElt,
-                WsmanUtils.SOAP_NAMESPACE,
-                "Fault");
+        Element faultElt = WsmanUtils.findChild(bodyElt, WsmanUtils.SOAP_NAMESPACE, "Fault");
 
-        Element codeElt=WsmanUtils.findChild(faultElt,
-                WsmanUtils.SOAP_NAMESPACE,
-                "Reason");
+        Element codeElt = WsmanUtils.findChild(faultElt, WsmanUtils.SOAP_NAMESPACE, "Reason");
 
-        Element textElt=WsmanUtils.findChild(codeElt,
-                WsmanUtils.SOAP_NAMESPACE,
-                "Text");
+        Element textElt = WsmanUtils.findChild(codeElt, WsmanUtils.SOAP_NAMESPACE, "Text");
 
         return textElt.getTextContent();
-     }
+    }
 
- /**
+    /**
      * Get detailed information about the fault
      *
-     *
-     *
-     * @return
-     * A description about the fault
-     *
+     * @return A description about the fault
      */
-    public String getDetail() {
+    public String getDetail()
+    {
         String detail = "";
 
-        if (isFault()) {
+        if (isFault())
+        {
 
-            Element bodyElt=WsmanUtils.findChild(document.getDocumentElement(),
-                    WsmanUtils.SOAP_NAMESPACE,
-                    "Body");
+            Element bodyElt = WsmanUtils.findChild(document.getDocumentElement(), WsmanUtils.SOAP_NAMESPACE, "Body");
 
-            Element faultElt=WsmanUtils.findChild(bodyElt,
-                    WsmanUtils.SOAP_NAMESPACE,
-                    "Fault");
+            Element faultElt = WsmanUtils.findChild(bodyElt, WsmanUtils.SOAP_NAMESPACE, "Fault");
 
-            Element detailElt=WsmanUtils.findChild(faultElt,
-                    WsmanUtils.SOAP_NAMESPACE,
-                    "Detial");
+            Element detailElt = WsmanUtils.findChild(faultElt, WsmanUtils.SOAP_NAMESPACE, "Detial");
 
-            if (detailElt!=null) {
-                Element faultDetailElt=WsmanUtils.findChild(detailElt,
-                        WsmanUtils.WSMAN_NAMESPACE,
-                        "FaultDetial");
-                if (faultDetailElt!=null)
+            if (detailElt != null)
+            {
+                Element faultDetailElt = WsmanUtils.findChild(detailElt, WsmanUtils.WSMAN_NAMESPACE, "FaultDetial");
+                if (faultDetailElt != null)
+                {
                     detail = faultDetailElt.getTextContent();
+                }
             }
         }
         return detail;
     }
 
- /**
+    /**
      * Does the exception represent a WS-Management fault returned by a service.
      *
-     *
-     *
-     * @return
-     * <code>true</code> if the exception is a result of a WS-Management fault
-     *
+     * @return <code>true</code> if the exception is a result of a WS-Management fault
      */
-    public boolean isFault() {
-        return document!=null;
+    public boolean isFault()
+    {
+        return document != null;
     }
 
 }

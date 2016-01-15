@@ -23,26 +23,29 @@ import com.fasterxml.uuid.impl.RandomBasedGenerator;
 /**
  * Class to generate a unique UUID
  */
-public final class UIDGenerator {
-   
-	private static RandomBasedGenerator _generator; 
-   
-	private static void initGenerator()
-	{
-		if(_generator == null) {
-			_generator = new RandomBasedGenerator(null);
-		}
-	}
-	
+public final class UIDGenerator
+{
+
+    private static RandomBasedGenerator _generator;
+
+    private static void initGenerator()
+    {
+        if (_generator == null)
+        {
+            _generator = new RandomBasedGenerator(null);
+        }
+    }
+
     /**
-     * Generate a general purpose unique ID. The returned value is the hexadecimal representation of
-     * a 128 bit value, i.e. it is 16 octets in the form of 8-4-4-4-12 comprising 36 characters. The implementation guarantees a high level of
-     * uniqueness, but makes no provisions to guarantee randomness. It is thread safe, but doesn't
-     * use synchronization.
+     * Generate a general purpose unique ID. The returned value is the hexadecimal representation of a 128 bit value, i.e. it is
+     * 16 octets in the form of 8-4-4-4-12 comprising 36 characters. The implementation guarantees a high level of uniqueness, but
+     * makes no provisions to guarantee randomness. It is thread safe, but doesn't use synchronization.
+     * 
      * @return the generated unique ID
      */
-    public static String generateUID() {
-    	initGenerator();
+    public static String generateUID()
+    {
+        initGenerator();
         return _generator.generate().toString();
-    }   
+    }
 }

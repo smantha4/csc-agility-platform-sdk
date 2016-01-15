@@ -17,16 +17,14 @@
 
 package com.servicemesh.io.util;
 
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 
 import java.net.ServerSocket;
 
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 
-public class JunitWireMockClassRule
-    extends WireMockClassRule
+public class JunitWireMockClassRule extends WireMockClassRule
 {
 
     public JunitWireMockClassRule(final String keystorePath, final boolean getHttpsPort)
@@ -38,24 +36,29 @@ public class JunitWireMockClassRule
     {
         WireMockConfiguration configuration = null;
 
-        try (ServerSocket httpServerSocket = new ServerSocket(0);
-             ServerSocket httpsServerSocket = new ServerSocket(0))
+        try (ServerSocket httpServerSocket = new ServerSocket(0); ServerSocket httpsServerSocket = new ServerSocket(0))
         {
             int httpPort = httpServerSocket.getLocalPort();
             configuration = wireMockConfig().port(httpPort);
 
-            if (getHttpsPort) {
+            if (getHttpsPort)
+            {
                 int httpsPort = httpsServerSocket.getLocalPort();
 
                 configuration = configuration.httpsPort(httpsPort);
             }
 
-            if ((keystorePath != null) && !keystorePath.isEmpty()) {
+            if ((keystorePath != null) && !keystorePath.isEmpty())
+            {
                 configuration = configuration.keystorePath(keystorePath);
             }
-        } catch (RuntimeException ex) {
+        }
+        catch (RuntimeException ex)
+        {
             throw ex;
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             throw new RuntimeException(ex.getMessage(), ex);
         }
 

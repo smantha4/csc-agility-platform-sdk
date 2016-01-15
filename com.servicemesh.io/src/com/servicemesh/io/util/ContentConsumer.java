@@ -21,15 +21,15 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
- * Abstract content consumer. Content consumers can be used to read entity
- * content in small chunks.
+ * Abstract content consumer. Content consumers can be used to read entity content in small chunks.
  */
 public interface ContentConsumer
 {
     /**
      * Consumes all or a portion of the source data.
-     * 
-     * @param src Buffer holding the data to be consumed.
+     *
+     * @param src
+     *            Buffer holding the data to be consumed.
      * @return The number of bytes consumed.
      * @throws IOException
      */

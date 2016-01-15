@@ -14,61 +14,64 @@ import com.servicemesh.agility.sdk.service.msgs.ServiceProviderResponse;
 import com.servicemesh.core.async.Promise;
 
 /**
- * 
- * This interface provides generic methods to receive notifications of asset creation, modification, and
- * deletion. An adapter should request receipt of notifications for desired asset types in the
- * adapter registration message.
- *
+ * This interface provides generic methods to receive notifications of asset creation, modification, and deletion. An adapter
+ * should request receipt of notifications for desired asset types in the adapter registration message.
  */
-public interface IAssetLifecycle {
-	
-   /**
-	* Create validation of an Asset
-    *  
-    * @param request Contains information about the asset
-    * @return Promise to results on completion.
-    */
-   public Promise<ServiceProviderResponse> preCreate(PreCreateRequest request);
+public interface IAssetLifecycle
+{
 
-   /**
-    * Notification on create of an Asset
-    * 
-    *  
-    * @param request Contains information about the asset
-    * @return Promise to results on completion.
-    */
-   public Promise<ServiceProviderResponse> postCreate(PostCreateRequest request);
+    /**
+     * Create validation of an Asset
+     * 
+     * @param request
+     *            Contains information about the asset
+     * @return Promise to results on completion.
+     */
+    public Promise<ServiceProviderResponse> preCreate(PreCreateRequest request);
 
-   /**
-    * Update validation on an Asset
-    * 
-    * @param request Contains information about the asset
-    * @return Promise to results on completion.
-    */
-   public Promise<ServiceProviderResponse> preUpdate(PreUpdateRequest request);
+    /**
+     * Notification on create of an Asset
+     * 
+     * @param request
+     *            Contains information about the asset
+     * @return Promise to results on completion.
+     */
+    public Promise<ServiceProviderResponse> postCreate(PostCreateRequest request);
 
-   /**
-    * Notification on update to an Asset
-    * 
-    * @param request Contains information about the asset
-    * @return Promise to results on completion.
-    */
-   public Promise<ServiceProviderResponse> postUpdate(PostUpdateRequest request);
+    /**
+     * Update validation on an Asset
+     * 
+     * @param request
+     *            Contains information about the asset
+     * @return Promise to results on completion.
+     */
+    public Promise<ServiceProviderResponse> preUpdate(PreUpdateRequest request);
 
-   /**
-    * Delete validation on an Asset
-    * 
-    * @param request Contains information about the asset
-    * @return Promise to results on completion.
-    */
-   public Promise<ServiceProviderResponse> preDelete(PreDeleteRequest request);
+    /**
+     * Notification on update to an Asset
+     * 
+     * @param request
+     *            Contains information about the asset
+     * @return Promise to results on completion.
+     */
+    public Promise<ServiceProviderResponse> postUpdate(PostUpdateRequest request);
 
-   /**
-    * Notification on delete of an Asset
-    * 
-    * @param request Contains information about the asset
-    * @return Promise to results on completion.
-    */
-   public Promise<ServiceProviderResponse> postDelete(PostDeleteRequest request);
-  
+    /**
+     * Delete validation on an Asset
+     * 
+     * @param request
+     *            Contains information about the asset
+     * @return Promise to results on completion.
+     */
+    public Promise<ServiceProviderResponse> preDelete(PreDeleteRequest request);
+
+    /**
+     * Notification on delete of an Asset
+     * 
+     * @param request
+     *            Contains information about the asset
+     * @return Promise to results on completion.
+     */
+    public Promise<ServiceProviderResponse> postDelete(PostDeleteRequest request);
+
 }
