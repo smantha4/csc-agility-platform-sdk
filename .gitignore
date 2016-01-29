@@ -3,3 +3,11 @@ ivy-lib/
 apidocs.log
 javadoc/
 coverage/
+**/target/*
+.DS_Store
+pom.xml.versionsBackup
+.project
+.settings/
+.metadata
+.DS_Store
+
