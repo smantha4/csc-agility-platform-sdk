@@ -65,11 +65,12 @@
 							<target name="recheck">
 								<uptodate property="hack.not.required"
 									targetfile="${xjc.generated.sources.dir}/com/servicemesh/agility/api/Topology.java">
-									<srcfiles dir="${project.basedir}/src/main/java/" includes="*" />
+									<srcfiles dir="${project.basedir}/src/main/java/"
+										includes="*" />
 								</uptodate>
 							</target>
-							<target name="sedfix" unless="hack.not.required">	
-								<echo message="deleting core/messaging xjc classes"/>
+							<target name="sedfix" unless="hack.not.required">
+								<echo message="deleting core/messaging xjc classes" />
 								<delete dir="${xjc.generated.sources.dir}/com/servicemesh/core" />
 								<exec executable="/bin/sh">
 									<arg value='-c' />
@@ -77,7 +78,8 @@
 										value="sed -f ${sed.script.dir}/sedscript2 -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/ObjectFactory.java" />
 								</exec>
 								<delete>
-									<fileset dir="${xjc.generated.sources.dir}/com/servicemesh/agility/api/"
+									<fileset
+										dir="${xjc.generated.sources.dir}/com/servicemesh/agility/api/"
 										includes="*.javatmp" />
 								</delete>
 								<exec executable="/bin/sh">
@@ -250,9 +252,22 @@
 								<!-- End of JsonTypeInfo -->
 
 								<delete>
-									<fileset dir="${xjc.generated.sources.dir}/com/servicemesh/agility/api/"
+									<fileset
+										dir="${xjc.generated.sources.dir}/com/servicemesh/agility/api/"
 										includes="*.javatmp" />
 								</delete>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>cleanApiDocsLog</id>
+						<phase>package</phase>
+						<configuration>
+							<target>
+								<delete file="${project.basedir}/apidocs.log" quiet="true" />
 							</target>
 						</configuration>
 						<goals>
@@ -294,11 +309,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<!-- TODO: Skipping test for now, which skips "AthenaModelTest". 
-					This test is not run from ant build and is failing. This test should be fixed or removed if not applicable. -->
-					<skipTests>true</skipTests>
-				</configuration>
 				<goals>
 					<goal>surefire-report:report</goal>
 				</goals>
@@ -310,7 +320,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>

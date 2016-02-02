@@ -10,4 +10,5 @@ pom.xml.versionsBackup
 .settings/
 .metadata
 .DS_Store
+**/apidocs.log
 

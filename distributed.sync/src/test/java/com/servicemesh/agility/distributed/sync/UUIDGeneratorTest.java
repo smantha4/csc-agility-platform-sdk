@@ -1,4 +1,4 @@
-package com.servicemesh.agility.distributed.sync.unit;
+package com.servicemesh.agility.distributed.sync;
 
 import java.util.HashSet;
 import java.util.UUID;

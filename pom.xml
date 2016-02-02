@@ -11,12 +11,14 @@
 	<version>1.0.1-SNAPSHOT</version>
 
 	<name>${artifactId}-${version}</name>
-	
+
 	<modules>
 		<module>core</module>
 		<module>io</module>
 		<module>api</module>
+		<module>distributed.sync</module>
 	</modules>
+	
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
@@ -404,6 +406,7 @@
 			<artifactId>spock-core</artifactId>
 			<version>0.6-groovy-1.8</version>
 			<optional>false</optional>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
@@ -458,9 +461,25 @@
 	</dependencies>
 
 	<build>
-
 		<plugins>
-
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<id>cleanApiDocsLog</id>
+						<phase>prepare-package</phase>
+						<configuration>
+							<target>
+								<delete file="${project.basedir}/apidocs.log" quiet="true" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<!-- Directory plugin to find parent root directory absolute path -->
 			<plugin>
 				<groupId>org.commonjava.maven.plugins</groupId>
@@ -483,7 +502,6 @@
 
 		<pluginManagement>
 			<plugins>
-
 				<!-- JAXB Generated Classes -->
 				<plugin>
 					<groupId>org.jvnet.jaxb2.maven2</groupId>
@@ -522,7 +540,6 @@
 						</dependency>
 					</dependencies>
 				</plugin>
-
 				<plugin>
 					<groupId>org.codehaus.gmaven</groupId>
 					<artifactId>gmaven-plugin</artifactId>
