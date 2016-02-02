@@ -226,12 +226,6 @@
 			<optional>false</optional>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.sshd</groupId>
-			<artifactId>sshd-core</artifactId>
-			<version>0.13.0</version>
-			<optional>false</optional>
-		</dependency>
-		<dependency>
 			<groupId>org.antlr</groupId>
 			<artifactId>antlr4</artifactId>
 			<version>4.1</version>
