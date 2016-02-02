@@ -346,7 +346,7 @@
 				<artifactId>maven-jaxb2-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>com.servicemesh.core.messaging</id>
+						<id>xjc-core</id>
 						<phase>validate</phase>
 						<goals>
 							<goal>generate</goal>
@@ -356,9 +356,7 @@
 							<schemaIncludes>
 								<includes>*.xsd</includes>
 							</schemaIncludes>
-							<generatePackage>com.servicemesh.core.messaging</generatePackage>
 							<generateDirectory>target/generated-sources/xjc</generateDirectory>
-							<forceRegenerate>true</forceRegenerate>
 						</configuration>
 					</execution>
 				</executions>
