@@ -10,9 +10,12 @@
 	<packaging>pom</packaging>
 	<version>1.0.1-SNAPSHOT</version>
 
+	<name>${artifactId}-${version}</name>
+	
 	<modules>
 		<module>core</module>
 		<module>io</module>
+		<module>api</module>
 	</modules>
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
