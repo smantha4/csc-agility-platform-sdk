@@ -41,7 +41,6 @@
 	<classpathentry kind="var" path="IVY-LIB/mockito-all-1.10.19.jar"/>
 	<classpathentry kind="var" path="IVY-LIB/slf4j-api-1.7.5.jar"/>
 	<classpathentry kind="var" path="IVY-LIB/slf4j-log4j12-1.7.5.jar"/>
-	<classpathentry kind="var" path="IVY-LIB/sshd-core-0.13.0.jar"/>
 	<classpathentry kind="var" path="IVY-LIB/wiremock-1.43.jar"/>
 	<classpathentry kind="var" path="COMMON-LIB/powermock-mockito-1.6.3-full.jar"/>
 	<classpathentry kind="var" path="DIST/com.servicemesh.core-1.0.0.jar"/>
