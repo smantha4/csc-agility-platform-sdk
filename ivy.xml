@@ -75,9 +75,6 @@
       <dependency org="org.slf4j" name="slf4j-log4j12" rev="1.7.5">
          <artifact name="slf4j-log4j12" type="jar" ext="jar" />
       </dependency>
-      <dependency org="org.apache.sshd" name="sshd-core" rev="0.13.0">
-         <artifact name="sshd-core" type="jar" ext="jar" />
-      </dependency>
       <dependency org="org.antlr" name="antlr4" rev="4.1">
          <artifact name="antlr4" type="jar" ext="jar" />
       </dependency>
