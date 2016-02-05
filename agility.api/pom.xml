@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.servicemesh</groupId>
+	<artifactId>agility.api</artifactId>
+	<packaging>jar</packaging>
+
+	<name>agility.api</name>
+
+	<parent>
+		<groupId>com.servicemesh</groupId>
+		<artifactId>agility.platform-sdk</artifactId>
+		<version>4.0.0-SNAPSHOT</version>
+	</parent>
+
+	<properties>
+		<xjc.generated.sources.dir>${project.build.directory}/generated-sources/xjc</xjc.generated.sources.dir>
+		<sed.script.dir>${project.basedir}/src/main/resources/sed</sed.script.dir>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.servicemesh</groupId>
+			<artifactId>core</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName>
+		<resources>
+			<resource>
+				<directory>src/main/resources/</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/*</include>
+				</includes>
+				<excludes>
+					<exclude>**/schema/**</exclude>
+					<exclude>**/scripts/**</exclude>
+					<exclude>**/sed/**</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<directory>${project.basedir}/../</directory>
+				<includes>
+					<include>LICENSE</include>
+				</includes>
+			</resource>
+		</resources>
+
+		<plugins>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<id>checkForAdjustImport</id>
+					</execution>
+					<execution>
+						<id>adjustImports</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<target name="recheck">
+								<uptodate property="hack.not.required"
+									targetfile="${xjc.generated.sources.dir}/com/servicemesh/agility/api/Topology.java">
+									<srcfiles dir="${project.basedir}/src/main/java/"
+										includes="*" />
+								</uptodate>
+							</target>
+							<target name="sedfix" unless="hack.not.required">
+								<echo message="deleting core/messaging xjc classes" />
+								<delete dir="${xjc.generated.sources.dir}/com/servicemesh/core" />
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/sedscript2 -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/ObjectFactory.java" />
+								</exec>
+								<delete>
+									<fileset
+										dir="${xjc.generated.sources.dir}/com/servicemesh/agility/api/"
+										includes="*.javatmp" />
+								</delete>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/sedscript4 -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/*.java" />
+								</exec>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/sedscript5 -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/Template.java" />
+								</exec>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/template -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/Template.java" />
+								</exec>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/sedscript5 -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/PolicyAssignment.java" />
+								</exec>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/policyAssign -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/PolicyAssignment.java" />
+								</exec>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/sedscript5 -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/Asset.java" />
+								</exec>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/assetlist2 -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/Asset.java" />
+								</exec>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/assetlist -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/Assetlist.java" />
+								</exec>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/assetlist2 -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/Assetlist.java" />
+								</exec>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/env1 -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/Environment.java" />
+								</exec>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/env2 -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/Environment.java" />
+								</exec>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/versionedItem -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/VersionedItem.java" />
+								</exec>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/sedscript6 -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/Taxonomy.java" />
+								</exec>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/sedscript6 -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/TreeNode.java" />
+								</exec>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/designContainer -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/DesignContainer.java" />
+								</exec>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/fixCalendar -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/EULA.java" />
+								</exec>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/fixCalendar -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/Item.java" />
+								</exec>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/fixCalendar -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/Task.java" />
+								</exec>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/fixCalendar -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/UserTask.java" />
+								</exec>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/fixCalendar -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/AssetProperty.java" />
+								</exec>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/fixCalendar -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/LaunchItem.java" />
+								</exec>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/fixCalendar -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/LaunchItemDeployment.java" />
+								</exec>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/fixCalendar -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/Instance.java" />
+								</exec>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/fixCalendar -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/ServiceInstance.java" />
+								</exec>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/fixCalendar -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/AuthToken.java" />
+								</exec>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/fixValidator -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/FieldValidators.java" />
+								</exec>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/fixConfigurationRepository -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/ConfigurationRepository.java" />
+								</exec>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/sedscript11 -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/DeploymentRequest.java" />
+								</exec>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/sedscript12 -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/ServiceProviderType.java" />
+								</exec>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/fixUser -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/User.java" />
+								</exec>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/fixCalendar -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/User.java" />
+								</exec>
+
+								<!-- JsonTypeInfo -->
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/assetprop -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/AssetProperty.java" />
+								</exec>
+								<exec executable="/bin/sh">
+									<arg value='-c' />
+									<arg
+										value="sed -f ${sed.script.dir}/fieldvalidator -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/FieldValidator.java" />
+								</exec>
+								<!-- End of JsonTypeInfo -->
+
+								<delete>
+									<fileset
+										dir="${xjc.generated.sources.dir}/com/servicemesh/agility/api/"
+										includes="*.javatmp" />
+								</delete>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>cleanApiDocsLog</id>
+						<phase>package</phase>
+						<configuration>
+							<target>
+								<delete file="${project.basedir}/apidocs.log" quiet="true" />
+								<delete file="${main.basedir}/apidocs.log" quiet="true" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- JAXB Generated Classes -->
+			<plugin>
+				<groupId>org.jvnet.jaxb2.maven2</groupId>
+				<artifactId>maven-jaxb2-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>xjc-api</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<schemaDirectory>${project.basedir}/src/main/resources/schema/</schemaDirectory>
+							<schemaIncludes>
+								<includes>*.xsd</includes>
+							</schemaIncludes>
+							<generateDirectory>target/generated-sources/xjc</generateDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Compiler -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+
+			<!-- Tests -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<goals>
+					<goal>surefire-report:report</goal>
+				</goals>
+			</plugin>
+
+
+			<!-- Force Maven Plugin Versions -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${project.build.directory}/generated-sources/</source>
+							</sources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>add-test-sources</id>
+						<phase>generate-test-sources</phase>
+						<goals>
+							<goal>add-test-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${project.build.directory}/generated-test-sources/</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>test</phase>
+						<goals>
+							<goal>cobertura</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+</project>
