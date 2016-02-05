@@ -11,4 +11,6 @@ pom.xml.versionsBackup
 .metadata
 .DS_Store
 **/apidocs.log
+**/.externalToolBuilders/*
+
 
