@@ -12,7 +12,7 @@ import com.servicemesh.core.reactor.TimerReactor;
 import com.servicemesh.core.async.Promise;
 
 
-class ServiceInstanceOperationsSpec extends spock.lang.Specification
+class ServiceInstanceOperationsTest extends spock.lang.Specification
 {
   def "dispatch IServiceInstance.validate request"()
   {

@@ -14,7 +14,7 @@ import com.servicemesh.core.reactor.TimerReactor;
 import com.servicemesh.core.async.Promise;
 
 
-class ServiceProviderOperationsSpec extends spock.lang.Specification
+class ServiceProviderOperationsTest extends spock.lang.Specification
 {
   def "dispatch IServiceProvider.preCreate request"()
   {

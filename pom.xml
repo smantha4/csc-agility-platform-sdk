@@ -18,6 +18,7 @@
 		<module>agility.api</module>
 		<module>agility.distributed.sync</module>
 		<module>agility.sdk.cloud</module>
+		<module>agility.sdk-service</module>
 	</modules>
 
 	<properties>

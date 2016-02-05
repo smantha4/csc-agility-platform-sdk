@@ -19,7 +19,7 @@ import com.servicemesh.core.reactor.TimerReactor;
 import com.servicemesh.core.async.Promise;
 
 
-class InstanceOperationsSpec extends spock.lang.Specification
+class InstanceOperationsTest extends spock.lang.Specification
 {
   def "dispatch IInstanceLifecycle.preProvision request"()
   {

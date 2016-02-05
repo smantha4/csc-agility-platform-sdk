@@ -13,7 +13,7 @@ import com.servicemesh.core.reactor.TimerReactor;
 import com.servicemesh.core.async.Promise;
 
 
-class ConnectionOperationsSpec extends spock.lang.Specification
+class ConnectionOperationsTest extends spock.lang.Specification
 {
   def "dispatch IConnection.preCreate request"()
   {
