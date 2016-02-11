@@ -8,7 +8,7 @@
 	<groupId>com.servicemesh</groupId>
 	<artifactId>agility.api</artifactId>
 	<packaging>jar</packaging>
-
+	<version>3.1.0</version>
 	<name>agility.api</name>
 
 	<parent>
@@ -22,11 +22,18 @@
 		<sed.script.dir>${project.basedir}/src/main/resources/sed</sed.script.dir>
 	</properties>
 
+	<repositories>
+		<!-- project Local repository for hosting unmanaged dependencies -->
+		<repository>
+			<id>agility-platform-sdk.local</id>
+			<url>file://${project.basedir}/../local-maven-repo/</url>
+		</repository>
+	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>com.servicemesh</groupId>
 			<artifactId>core</artifactId>
-			<version>${project.parent.version}</version>
+			<version>1.0.0</version>
 		</dependency>
 	</dependencies>
 

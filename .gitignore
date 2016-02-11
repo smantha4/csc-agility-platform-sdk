@@ -12,5 +12,6 @@ pom.xml.versionsBackup
 .DS_Store
 **/apidocs.log
 **/.externalToolBuilders/*
-
+lib/*
+com.servicemesh.io/*
 

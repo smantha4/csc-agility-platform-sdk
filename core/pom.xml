@@ -9,7 +9,8 @@
 	<groupId>com.servicemesh</groupId>
 	<artifactId>core</artifactId>
 	<packaging>jar</packaging>
-
+	<version>1.0.0</version>
+	
 	<name>core</name>
 
 	<parent>
@@ -26,7 +27,14 @@
 		<test.sources.gen.dir>target/generated-test-sources/</test.sources.gen.dir>
 		<test.sources.src.dir>${project.basedir}/src/test/java/</test.sources.src.dir>
 	</properties>
-
+	
+	<repositories>
+		<!-- project Local repository for hosting unmanaged dependencies -->
+		<repository>
+			<id>agility-platform-sdk.local</id>
+			<url>file://${project.basedir}/../local-maven-repo/</url>
+		</repository>
+	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.xmlbeans</groupId>
@@ -408,7 +416,7 @@
 									<artifactId>freemarker</artifactId>
 								</artifactItem>
 								<artifactItem>
-									<groupId>com.servicemesh.tools</groupId>
+									<groupId>agility-platform-sdk.local.com.servicemesh.tools</groupId>
 									<artifactId>agility-api-docs-annotation</artifactId>
 								</artifactItem>
 								<artifactItem>
