@@ -1,5 +1,5 @@
 <?xml version="1.0" standalone="yes"?>
-<project name="agility-platform-sdk" basedir="."
+<project name="csc-agility-platform-sdk" basedir="."
 default="help" xmlns:ivy="antlib:org.apache.ivy.ant">
 
 <!-- =====================================================================
