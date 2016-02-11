@@ -13,11 +13,28 @@
 	<property name="iodir" value="com.servicemesh.io" />
 	<property name="iolib" value="${iodir}/lib" />
 
-	<target name="maven">
-		<!--exec dir="." executable="sh">
-	        <arg line="-c 'mvn clean install'" />
-	    </exec-->
+	<property name="mavenCommand" value="mvn clean install"/>
+	
+	<condition property="isUnix">
+	    <os family="unix" />
+	</condition>
+	<condition property="isWindows">
+	    <os family="windows" />
+	</condition>
+	    	
+	<target name="mavenUnix" if="isUnix">
+		<exec dir="." executable="sh">
+	        <arg line="-c '${mavenCommand}'" />
+	    </exec>
 	</target>
+
+	<target name="mavenWindows" if="isWindows">
+		<exec dir="." executable="cmd">
+	        <arg line="/c '${mavenCommand}'" />
+	    </exec>
+	</target>
+	    
+	<target name="maven" depends="mavenUnix,mavenWindows"/>
 
 	<target name="init" depends="maven" description="Downloads third party jar files needed by the projects in this repo.">
 		<mkdir dir="${dist.dir}" />
