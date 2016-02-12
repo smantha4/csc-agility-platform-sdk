@@ -60,9 +60,128 @@ REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIB
                      </xsd:appinfo>
                   </xsd:annotation>
                </xsd:element>
+               
+               <xsd:element name="sourceProjectTemplate" type="agility:Link" minOccurs="0">
+					<xsd:annotation>
+						<xsd:appinfo>
+							<annox:annotate target="field">
+								<a:ApiField
+									comment="Reference to the project template object from which the project was created." />
+							</annox:annotate>
+						</xsd:appinfo>
+					</xsd:annotation>
+				</xsd:element>
             </xsd:sequence>
          </xsd:extension>
       </xsd:complexContent>
    </xsd:complexType>
+
+   <xsd:complexType name="ProjectTemplate">
    
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>ProjectTemplate</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "A project template provides a standarsized approach to project creation by project type." 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="agility:Project">
+            <xsd:sequence>
+               <xsd:element name="projectType" type="agility:Link" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Reference to project AssetType." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="readyForUse" type="xsd:boolean" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="True if ready for use in project creation." systemGenerated="true" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>   
+   
+   <xsd:complexType name="ProjectCreateRequest">
+   
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>ProjectCreateRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "A request to create a project containing reference to project template and other required information to create a project." 
+               			   description = "Allows project creation based off project template. At the minimum the following is required: name, location and project template."
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+         <xsd:sequence>
+            <xsd:element name="name" type="xsd:string" minOccurs="1">
+               <xsd:annotation>
+                  <xsd:appinfo>
+                     <annox:annotate target="field">
+                        <a:ApiField comment="Project name." />
+                     </annox:annotate>
+                  </xsd:appinfo>
+               </xsd:annotation>
+            </xsd:element>
+            
+            <xsd:element name="description" type="xsd:string" minOccurs="0">
+               <xsd:annotation>
+                  <xsd:appinfo>
+                     <annox:annotate target="field">
+                        <a:ApiField comment="Project description." />
+                     </annox:annotate>
+                  </xsd:appinfo>
+               </xsd:annotation>
+            </xsd:element>
+            
+            <xsd:element name="projectTemplate" type="agility:Link" minOccurs="1">
+               <xsd:annotation>
+                  <xsd:appinfo>
+                     <annox:annotate target="field">
+                        <a:ApiField comment="A reference to project template." />
+                     </annox:annotate>
+                  </xsd:appinfo>
+               </xsd:annotation>
+            </xsd:element>
+            
+            <xsd:element name="location" type="agility:Link" minOccurs="1">
+               <xsd:annotation>
+                  <xsd:appinfo>
+                     <annox:annotate target="field">
+                        <a:ApiField comment="A reference to project parent location" />
+                     </annox:annotate>
+                  </xsd:appinfo>
+               </xsd:annotation>
+            </xsd:element>
+            
+            <xsd:element name="properties" type="agility:AssetProperty" minOccurs="0" maxOccurs="unbounded">
+		<xsd:annotation>
+			<xsd:appinfo>
+				<annox:annotate target="field">
+					<a:ApiField
+						comment="List of project properties. At the minimum, the list should have all required properties defined in project template project type." />
+				</annox:annotate>
+			</xsd:appinfo>
+		</xsd:annotation>
+	</xsd:element>
+         </xsd:sequence>
+   </xsd:complexType>
 </xsd:schema>

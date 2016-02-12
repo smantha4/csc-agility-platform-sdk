@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Agility - Distributed Sync
 Bundle-Activator: com.servicemesh.agility.distributed.impl.Activator
-Bundle-SymbolicName: ${project.groupId}.${project.artifactId}c
+Bundle-SymbolicName: ${project.groupId}.${project.artifactId}
 Bundle-Version: ${project.version}
 Bundle-Vendor: ServiceMesh
 Import-Package: 

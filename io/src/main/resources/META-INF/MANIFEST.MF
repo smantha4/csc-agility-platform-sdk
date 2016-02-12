@@ -6,13 +6,8 @@ Bundle-Version: ${project.version}
 Bundle-Vendor: ServiceMesh
 Export-Package: 
  com.servicemesh.io.http,
- com.servicemesh.io.proxy,
- com.servicemesh.io.rsh,
- com.servicemesh.io.rsh.mockshell,
- com.servicemesh.io.rsh.ssh,
- com.servicemesh.io.rsh.winrm,
- com.servicemesh.proxy,
- com.servicemesh.util
+ com.servicemesh.io.proxy
+ com.servicemesh.io.util
 Import-Package: 
  com.servicemesh.core.async,
  com.servicemesh.core.reactor,

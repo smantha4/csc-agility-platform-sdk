@@ -1,0 +1,33 @@
+<xsd:schema targetNamespace="http://servicemesh.com/agility/api" 
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="qualified"
+   xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0" jaxb:extensionBindingPrefixes="xjc annox"
+   xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+   xmlns:annox="http://annox.dev.java.net" 
+   xmlns:a="http://annox.dev.java.net/com.servicemesh.agility.tools.annotation"
+   xmlns:jl="http://annox.dev.java.net/java.lang"
+   xmlns:jxml="http://annox.dev.java.net/javax.xml.bind.annotation"
+   xmlns:agility="http://servicemesh.com/agility/api">
+   
+   <xsd:complexType name="GlobalVariable">
+   
+        <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>GlobalVariable</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Global variable used by scripts to pass messages." 
+                           description = "Global variable used by scripts to pass messages." 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      
+      <xsd:complexContent>
+          <xsd:extension base="agility:AssetProperty">
+          </xsd:extension>
+      </xsd:complexContent>
+      
+   </xsd:complexType>
+      
+</xsd:schema>

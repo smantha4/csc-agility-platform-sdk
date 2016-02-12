@@ -36,7 +36,7 @@
 	    
 	<target name="maven" depends="mavenUnix,mavenWindows"/>
 
-	<target name="init" depends="maven" description="Downloads third party jar files needed by the projects in this repo.">
+	<target name="init" description="Downloads third party jar files needed by the projects in this repo.">
 		<mkdir dir="${dist.dir}" />
 		<mkdir dir="${ivylib}" />
 
