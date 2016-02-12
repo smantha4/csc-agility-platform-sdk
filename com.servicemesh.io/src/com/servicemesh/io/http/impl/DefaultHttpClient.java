@@ -52,10 +52,14 @@ import org.apache.http.nio.conn.SchemeIOSessionStrategy;
 import org.apache.http.nio.conn.ssl.SSLIOSessionStrategy;
 import org.apache.http.nio.reactor.ConnectingIOReactor;
 import org.apache.http.protocol.HttpContext;
+import org.apache.log4j.Logger;
 
 import com.servicemesh.core.async.CompletablePromise;
 import com.servicemesh.core.async.Promise;
 import com.servicemesh.core.async.PromiseFactory;
+import com.servicemesh.core.reactor.Reactor;
+import com.servicemesh.core.reactor.TimerReactor;
+import com.servicemesh.core.reactor.WorkHandler;
 import com.servicemesh.io.http.Credentials;
 import com.servicemesh.io.http.Credentials.CredentialsType;
 import com.servicemesh.io.http.IHttpCallback;
@@ -71,6 +75,7 @@ import com.servicemesh.io.proxy.impl.ProxyHost;
 
 public class DefaultHttpClient implements IHttpClient
 {
+    private static final Logger logger = Logger.getLogger(DefaultHttpClient.class);
     private final CloseableHttpAsyncClient client;
     private final IHttpClientConfig config;
     private ProxyHost proxyHost = null;
@@ -221,7 +226,40 @@ public class DefaultHttpClient implements IHttpClient
     {
         if (client != null)
         {
-            client.close();
+            Thread thread = Thread.currentThread();
+            if (thread.getName().startsWith("pool-")) //  Close coming from callback - spawn a temporary thread to close client:
+            {
+                Reactor reactor = TimerReactor.getTimerReactor("HttpClient-Close");
+                try
+                {
+                    reactor.workCreate(new WorkHandler() {
+                        @Override
+                        public boolean workFire()
+                        {
+                            try
+                            {
+                                client.close(); // This should clean up all the request/responses
+                            }
+                            catch (Exception ex)
+                            {
+                                logger.error("Error closing HTTP Client connection: " + ex.getMessage());
+                            }
+                            return true;
+                        }
+                    });
+                }
+                finally
+                {
+                    if (reactor != null)
+                    {
+                        reactor.shutdown();
+                    }
+                }
+            }
+            else //  Safe to close from this thread:
+            {
+                client.close(); // This should clean up all the request/responses
+            }
         }
     }
 

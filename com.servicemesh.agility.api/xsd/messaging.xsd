@@ -961,6 +961,24 @@ REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIB
       </xsd:complexContent>
    </xsd:complexType>
    
+   <xsd:simpleType name="IPAMValidationCRUDType" >
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>VolumeOperation</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment="Volume Operation Enumeration" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:restriction base="xsd:string" >
+         <xsd:enumeration value="Create" />
+         <xsd:enumeration value="Update" />
+         <xsd:enumeration value="Delete" />
+      </xsd:restriction>
+   </xsd:simpleType>
+   
    <xsd:complexType name="IPAMValidationRequest">
       <xsd:annotation>
          <xsd:appinfo>
@@ -983,6 +1001,16 @@ REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIB
                      <xsd:appinfo>
                         <annox:annotate target="field">
                            <a:ApiField comment="Service Provider that is being validated." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="crudOperation" type="agility:IPAMValidationCRUDType" minOccurs="1" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Type of CRUD operation that is being validated." />
                         </annox:annotate>
                      </xsd:appinfo>
                   </xsd:annotation>

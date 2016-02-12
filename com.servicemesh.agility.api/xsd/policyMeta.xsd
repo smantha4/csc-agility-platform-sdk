@@ -214,5 +214,35 @@ REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIB
          </xsd:extension>
       </xsd:complexContent>
    </xsd:complexType>
-   
-</xsd:schema>
+
+   <xsd:complexType name="CustomActionPolicyMeta">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>CustomActionPolicyMeta</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "CustomAction Policy meta data."
+                           description = ""
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:PolicyMeta">
+            <xsd:sequence>
+               <xsd:element name="supportedAssetType" type="agility:AssetTypeMeta" minOccurs="0" maxOccurs="unbounded">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="List of asset type meta data for supported asset types." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+ </xsd:schema>
