@@ -2,11 +2,11 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: IO Services
 Bundle-SymbolicName: ${project.groupId}.${project.artifactId}
-Bundle-Version: ${project.version}
+Bundle-Version: ${project.version}.0
 Bundle-Vendor: ServiceMesh
 Export-Package: 
  com.servicemesh.io.http,
- com.servicemesh.io.proxy
+ com.servicemesh.io.proxy,
  com.servicemesh.io.util
 Import-Package: 
  com.servicemesh.core.async,
