@@ -17,16 +17,6 @@ From project root folder, run
 
 <code>mvn clean install -Dmaven.legacyLocalRepo=true</code>
 
-**To Build a perticular module:**
-
-From module root folder or from project root folder.
-
-<code>mvn clean install -pl <module name> -am </code>
-
-OR
-
-simply run <code>"mvn package"</code> from module root, if you already ran mvn clean install earlier.
-
 **To Build dependent project like adapters:**
 
 make sure you ran maven build, then from project root folder, run
