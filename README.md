@@ -7,9 +7,38 @@ The projects contained in this repository are used for developing Cloud Adapters
 * agility-platform-services-sdk - A SDK used to develop asynchronous service adapters for the Agility Platform&trade;
 * agility-platform-async-cloud-sdk - A SDK used to develop asynchronous cloud adapters for the Agility Platform&trade;
 
+## How to Build this project:
+
+**To Build all modules:**
+
+-Dmaven.legacyLocalRepo=true parameter is required. Otherwise, maven fails to resolve some project local repository dependencies, on its very first run. 
+
+From project root folder, run 
+
+<code>mvn clean install -Dmaven.legacyLocalRepo=true</code>
+
+**To Build a perticular module:**
+
+From module root folder or from project root folder.
+
+<code>mvn clean install -pl <module name> -am </code>
+
+OR
+
+simply run <code>"mvn package"</code> from module root, if you already ran mvn clean install earlier.
+
+**To Build dependent project like adapters:**
+
+make sure you ran maven build, then from project root folder, run
+
+<code>ant clean init</code>
+
+This arranges dependencies into "dist", "ivy-lib", "lib" and"com.servicemesh.io/lib" folders as required for adapter projects.
+
+
 ## Build Configuration
 
-The projects in this repository are compatible with Java 8 and ant 1.9.3.
+The projects in this repository are compatible with Java 8, maven 3 and ant 1.9.3.
 
 If you want to edit these projects using eclipse you will need to set up 3 build path variables.
 * IVY-LIB - Contains the path to the ivy-lib directory under agility-platform-sdk
