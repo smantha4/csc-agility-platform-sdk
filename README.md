@@ -1,5 +1,5 @@
-# agility-platform-sdk
-The projects contained in this repository are used for developing Cloud Adapters or Service Adapters for the Agility Platform&trade;. The projects are as follows.
+# csc-agility-platform-sdk
+The projects contained in this repository are used for developing Cloud Adapters or Service Adapters for the CSC Agility Platform&trade;. The projects are as follows.
 * com.servicemesh.core - Foundation classes for every Agility Platform SDK.
 * com.servicemesh.io - Supports I/O via HTTP/HTTPS, Proxies, and Remote Shell.
 * com.servicemesh.agility.api - Agility Platform&trade; Scripting APIs
@@ -17,13 +17,13 @@ From project root folder, run
 
 <code>mvn clean install -Dmaven.legacyLocalRepo=true</code>
 
-**To Build dependent project like adapters:**
+**To Build dependent projects like service adapters:**
 
 make sure you ran maven build, then from project root folder, run
 
 <code>ant clean init</code>
 
-This arranges dependencies into "dist", "ivy-lib", "lib" and"com.servicemesh.io/lib" folders as required for adapter projects.
+This arranges dependencies into "dist", "ivy-lib", "lib" and"com.servicemesh.io/lib" folders as required for service adapter projects.
 
 
 ## Build Configuration
