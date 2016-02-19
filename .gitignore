@@ -3,3 +3,17 @@ ivy-lib/
 apidocs.log
 javadoc/
 coverage/
+**/target/*
+.DS_Store
+pom.xml.versionsBackup
+.project
+.settings/
+.metadata
+.DS_Store
+**/.idea
+**/*.iml
+**/apidocs.log
+**/.externalToolBuilders/*
+lib/*
+com.servicemesh.io/*
+

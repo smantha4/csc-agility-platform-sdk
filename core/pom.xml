@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.servicemesh</groupId>
+	<artifactId>core</artifactId>
+	<packaging>jar</packaging>
+	<version>1.0.0</version>
+	
+	<name>core</name>
+
+	<parent>
+		<groupId>com.servicemesh</groupId>
+		<artifactId>agility.platform-sdk</artifactId>
+		<version>4.0.0-SNAPSHOT</version>
+	</parent>
+
+	<properties>
+		<gen.dir>target/generated-sources/</gen.dir>
+		<src.dir>${project.basedir}/src/main/java/</src.dir>
+		<pkg.root.dir>com/servicemesh/core</pkg.root.dir>
+
+		<test.sources.gen.dir>target/generated-test-sources/</test.sources.gen.dir>
+		<test.sources.src.dir>${project.basedir}/src/test/java/</test.sources.src.dir>
+	</properties>
+	
+	<repositories>
+		<!-- project Local repository for hosting unmanaged dependencies -->
+		<repository>
+			<id>agility-platform-sdk.local</id>
+			<url>file://${project.basedir}/../local-maven-repo/</url>
+		</repository>
+	</repositories>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.xmlbeans</groupId>
+			<artifactId>xmlbeans</artifactId>
+			<version>2.6.0</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName>
+
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/*</include>
+				</includes>
+				<excludes>
+					<exclude>**/schema/**</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<directory>${project.basedir}/../</directory>
+				<includes>
+					<include>LICENSE</include>
+				</includes>
+			</resource>
+		</resources>
+
+		<plugins>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<id>generateSourceFiles</id>
+						<phase>validate</phase>
+						<configuration>
+							<target>
+								<echo>About to start generating code....</echo>
+								<property name="pkg.dir" value="${pkg.root.dir}/collections" />
+								<property name="src.pkg.dir" value="${src.dir}/${pkg.dir}" />
+								<property name="gen.pkg.dir" value="${gen.dir}/${pkg.dir}" />
+
+								<property name="test.sources.src.pkg.dir" value="${test.sources.src.dir}/${pkg.dir}" />
+								<property name="test.sources.gen.pkg.dir" value="${test.sources.gen.dir}/${pkg.dir}" />
+
+								<macrodef name="generateKeyType">
+									<attribute name="keyName" />
+									<attribute name="keyType" />
+									<attribute name="package" />
+									<attribute name="prefix" default="" />
+									<attribute name="suffix" default="" />
+									<sequential>
+										<copy
+											file="${src.pkg.dir}/@{package}/@{prefix}_KeyName_@{suffix}.java"
+											toFile="${gen.pkg.dir}/@{package}/@{prefix}@{keyName}@{suffix}.java">
+											<filterset begintoken="_" endtoken="_">
+												<filter token="KeyName" value="@{keyName}" />
+												<filter token="KeyType" value="@{keyType}" />
+												<filter token="Warning"
+													value="***** DO NOT EDIT: Generated from template *****" />
+											</filterset>
+										</copy>
+									</sequential>
+								</macrodef>
+
+								<macrodef name="generateValueType">
+									<attribute name="valueName" />
+									<attribute name="valueType" />
+									<attribute name="package" />
+									<attribute name="prefix" default="" />
+									<attribute name="suffix" default="" />
+									<sequential>
+										<copy
+											file="${src.pkg.dir}/@{package}/@{prefix}_ValueName_@{suffix}.java"
+											toFile="${gen.pkg.dir}/@{package}/@{prefix}@{valueName}@{suffix}.java">
+											<filterset begintoken="_" endtoken="_">
+												<filter token="ValueName" value="@{valueName}" />
+												<filter token="ValueType" value="@{valueType}" />
+												<filter token="Warning"
+													value="***** DO NOT EDIT: Generated from template *****" />
+											</filterset>
+										</copy>
+									</sequential>
+								</macrodef>
+
+								<macrodef name="generateValueTypeForTests">
+									<attribute name="valueName" />
+									<attribute name="valueType" />
+									<attribute name="package" />
+									<attribute name="prefix" default="" />
+									<attribute name="suffix" default="" />
+									<sequential>
+										<copy
+											file="${test.sources.src.pkg.dir}/@{package}/@{prefix}_ValueName_@{suffix}.java"
+											toFile="${test.sources.gen.pkg.dir}/@{package}/@{prefix}@{valueName}@{suffix}.java">
+											<filterset begintoken="_" endtoken="_">
+												<filter token="ValueName" value="@{valueName}" />
+												<filter token="ValueType" value="@{valueType}" />
+												<filter token="Warning"
+													value="***** DO NOT EDIT: Generated from template *****" />
+											</filterset>
+										</copy>
+									</sequential>
+								</macrodef>
+
+								<macrodef name="generateKeyValueType">
+									<attribute name="keyName" />
+									<attribute name="keyType" />
+									<attribute name="valueName" />
+									<attribute name="valueType" />
+									<attribute name="package" />
+									<attribute name="prefix" default="" />
+									<attribute name="suffix" default="" />
+									<sequential>
+										<copy
+											file="${src.pkg.dir}/@{package}/@{prefix}_KeyName__ValueName_@{suffix}.java"
+											toFile="${gen.pkg.dir}/@{package}/@{prefix}@{keyName}@{valueName}@{suffix}.java">
+											<filterset begintoken="_" endtoken="_">
+												<filter token="KeyName" value="@{keyName}" />
+												<filter token="KeyType" value="@{keyType}" />
+												<filter token="ValueName" value="@{valueName}" />
+												<filter token="ValueType" value="@{valueType}" />
+												<filter token="Warning"
+													value="***** DO NOT EDIT: Generated from template *****" />
+											</filterset>
+										</copy>
+									</sequential>
+								</macrodef>
+
+								<macrodef name="generateKeyValueTypeForTests">
+									<attribute name="keyName" />
+									<attribute name="keyType" />
+									<attribute name="valueName" />
+									<attribute name="valueType" />
+									<attribute name="package" />
+									<attribute name="prefix" default="" />
+									<attribute name="suffix" default="" />
+									<sequential>
+										<copy
+											file="${test.sources.src.pkg.dir}/@{package}/@{prefix}_KeyName__ValueName_@{suffix}.java"
+											toFile="${test.sources.gen.pkg.dir}/@{package}/@{prefix}@{keyName}@{valueName}@{suffix}.java">
+											<filterset begintoken="_" endtoken="_">
+												<filter token="KeyName" value="@{keyName}" />
+												<filter token="KeyType" value="@{keyType}" />
+												<filter token="ValueName" value="@{valueName}" />
+												<filter token="ValueType" value="@{valueType}" />
+												<filter token="Warning"
+													value="***** DO NOT EDIT: Generated from template *****" />
+											</filterset>
+										</copy>
+									</sequential>
+								</macrodef>
+
+								<macrodef name="generateValueTypes">
+									<attribute name="valueName" />
+									<attribute name="valueType" />
+									<sequential>
+										<!-- common -->
+										<generateValueType valueName="@{valueName}"
+											valueType="@{valueType}" package="common" prefix="MapG" />
+										<!-- comparator -->
+										<generateValueType valueName="@{valueName}"
+											valueType="@{valueType}" package="comparator" prefix="Cmp" />
+										<generateValueType valueName="@{valueName}"
+											valueType="@{valueType}" package="comparator" prefix="Eq" />
+										<generateValueType valueName="@{valueName}"
+											valueType="@{valueType}" package="comparator" prefix="Comparator" />
+										<!-- hash -->
+										<generateValueType valueName="@{valueName}"
+											valueType="@{valueType}" package="hash" prefix="HashMapG" />
+										<!-- heap -->
+										<generateValueType valueName="@{valueName}"
+											valueType="@{valueType}" package="heap" prefix="HeapG" />
+										<!-- search -->
+										<generateValueType valueName="@{valueName}"
+											valueType="@{valueType}" package="search" prefix="Search" />
+										<!-- sort -->
+										<generateValueType valueName="@{valueName}"
+											valueType="@{valueType}" package="sort" prefix="PermutationSort" />
+										<generateValueType valueName="@{valueName}"
+											valueType="@{valueType}" package="sort" prefix="Sort" />
+										<!-- vector -->
+										<generateValueType valueName="@{valueName}"
+											valueType="@{valueType}" package="vector" prefix="Vector" />
+										<generateValueTypeForTests
+											valueName="@{valueName}" valueType="@{valueType}" package="vector"
+											prefix="Vector" suffix="Test" />
+									</sequential>
+								</macrodef>
+
+
+								<macrodef name="generateKeyValueTypes">
+									<attribute name="keyName" />
+									<attribute name="keyType" />
+									<attribute name="valueName" />
+									<attribute name="valueType" />
+									<sequential>
+										<!-- common -->
+										<generateKeyValueType keyName="@{keyName}"
+											keyType="@{keyType}" valueName="@{valueName}" valueType="@{valueType}"
+											package="common" prefix="Map" />
+										<!-- hash -->
+										<generateKeyValueType keyName="@{keyName}"
+											keyType="@{keyType}" valueName="@{valueName}" valueType="@{valueType}"
+											package="hash" prefix="HashMap" />
+										<generateKeyValueTypeForTests
+											keyName="@{keyName}" keyType="@{keyType}" valueName="@{valueName}"
+											valueType="@{valueType}" package="hash" prefix="HashMap"
+											suffix="Test" />
+										<!-- heap -->
+										<generateKeyValueType keyName="@{keyName}"
+											keyType="@{keyType}" valueName="@{valueName}" valueType="@{valueType}"
+											package="heap" prefix="Heap" />
+										<generateKeyValueTypeForTests
+											keyName="@{keyName}" keyType="@{keyType}" valueName="@{valueName}"
+											valueType="@{valueType}" package="heap" prefix="Heap" suffix="Test" />
+									</sequential>
+								</macrodef>
+
+								<macrodef name="generateKeyTypes">
+									<attribute name="keyName" />
+									<attribute name="keyType" />
+									<sequential>
+										<!-- common -->
+										<generateKeyType keyName="@{keyName}" keyType="@{keyType}"
+											package="common" prefix="Set" />
+										<generateKeyType keyName="@{keyName}" keyType="@{keyType}"
+											package="common" prefix="Map" suffix="G" />
+										<!-- hash -->
+										<generateKeyType keyName="@{keyName}" keyType="@{keyType}"
+											package="hash" prefix="AbstractHash" />
+										<generateKeyType keyName="@{keyName}" keyType="@{keyType}"
+											package="hash" prefix="Hash" />
+										<generateKeyType keyName="@{keyName}" keyType="@{keyType}"
+											package="hash" prefix="HashMap" suffix="G" />
+										<generateKeyType keyName="@{keyName}" keyType="@{keyType}"
+											package="hash" prefix="HashSet" />
+										<!-- heap -->
+										<generateKeyType keyName="@{keyName}" keyType="@{keyType}"
+											package="heap" prefix="AbstractHeap" />
+										<generateKeyType keyName="@{keyName}" keyType="@{keyType}"
+											package="heap" prefix="Heap" suffix="G" />
+
+										<!-- Nested generation of KeyValue types -->
+										<generateKeyValueTypes keyName="@{keyName}"
+											keyType="@{keyType}" valueName="Char" valueType="char" />
+										<generateKeyValueTypes keyName="@{keyName}"
+											keyType="@{keyType}" valueName="Byte" valueType="byte" />
+										<generateKeyValueTypes keyName="@{keyName}"
+											keyType="@{keyType}" valueName="Short" valueType="short" />
+										<generateKeyValueTypes keyName="@{keyName}"
+											keyType="@{keyType}" valueName="Int" valueType="int" />
+										<generateKeyValueTypes keyName="@{keyName}"
+											keyType="@{keyType}" valueName="Long" valueType="long" />
+										<generateKeyValueTypes keyName="@{keyName}"
+											keyType="@{keyType}" valueName="Float" valueType="float" />
+										<generateKeyValueTypes keyName="@{keyName}"
+											keyType="@{keyType}" valueName="Double" valueType="double" />
+										<generateKeyValueTypes keyName="@{keyName}"
+											keyType="@{keyType}" valueName="Object" valueType="Object" />
+									</sequential>
+								</macrodef>
+
+
+								<mkdir dir="${gen.dir}" />
+								<mkdir dir="${test.sources.gen.dir}" />
+
+								<generateValueTypes valueName="Char"
+									valueType="char" />
+								<generateValueTypes valueName="Byte"
+									valueType="byte" />
+								<generateValueTypes valueName="Short"
+									valueType="short" />
+								<generateValueTypes valueName="Int"
+									valueType="int" />
+								<generateValueTypes valueName="Long"
+									valueType="long" />
+								<generateValueTypes valueName="Float"
+									valueType="float" />
+								<generateValueTypes valueName="Double"
+									valueType="double" />
+								<generateValueTypes valueName="Object"
+									valueType="Object" />
+
+								<generateKeyTypes keyName="Char" keyType="char" />
+								<generateKeyTypes keyName="Byte" keyType="byte" />
+								<generateKeyTypes keyName="Short" keyType="short" />
+								<generateKeyTypes keyName="Int" keyType="int" />
+								<generateKeyTypes keyName="Long" keyType="long" />
+								<generateKeyTypes keyName="Float" keyType="float" />
+								<generateKeyTypes keyName="Double" keyType="double" />
+								<generateKeyTypes keyName="Object" keyType="Object" />
+
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>cleanApiDocsLog</id>
+						<phase>package</phase>
+						<configuration>
+							<target>
+								<delete file="${project.basedir}/apidocs.log" quiet="true" />
+								<delete file="${main.basedir}/apidocs.log" quiet="true" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- JAXB Generated Classes -->
+			<plugin>
+				<groupId>org.jvnet.jaxb2.maven2</groupId>
+				<artifactId>maven-jaxb2-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>xjc-core</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<schemaDirectory>${project.basedir}/src/main/resources/schema/messaging/</schemaDirectory>
+							<schemaIncludes>
+								<includes>*.xsd</includes>
+							</schemaIncludes>
+							<generateDirectory>target/generated-sources/xjc</generateDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+
+			<!-- Compiler -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+
+			<!-- Tests -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<goals>
+					<goal>surefire-report:report</goal>
+				</goals>
+			</plugin>
+
+
+			<!-- Force Maven Plugin Versions -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.10</version>
+				<executions>
+					<execution>
+						<id>copy</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/classes</outputDirectory>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.freemarker</groupId>
+									<artifactId>freemarker</artifactId>
+								</artifactItem>
+								<artifactItem>
+									<groupId>agility-platform-sdk.local.com.servicemesh.tools</groupId>
+									<artifactId>agility-api-docs-annotation</artifactId>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.hamcrest</groupId>
+									<artifactId>hamcrest-core</artifactId>
+								</artifactItem>
+								<artifactItem>
+									<groupId>javax.xml</groupId>
+									<artifactId>jsr173</artifactId>
+								</artifactItem>
+								<artifactItem>
+									<groupId>ch.qos.logback</groupId>
+									<artifactId>logback-classic</artifactId>
+								</artifactItem>
+								<artifactItem>
+									<groupId>ch.qos.logback</groupId>
+									<artifactId>logback-core</artifactId>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.slf4j</groupId>
+									<artifactId>slf4j-api</artifactId>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.apache.xmlbeans</groupId>
+									<artifactId>xmlbeans</artifactId>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${project.build.directory}/generated-sources/</source>
+							</sources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>add-test-sources</id>
+						<phase>generate-test-sources</phase>
+						<goals>
+							<goal>add-test-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${project.build.directory}/generated-test-sources/</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>test</phase>
+						<goals>
+							<goal>cobertura</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+</project>
