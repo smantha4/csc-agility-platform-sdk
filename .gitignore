@@ -13,7 +13,6 @@ pom.xml.versionsBackup
 **/.idea
 **/*.iml
 **/apidocs.log
-**/.externalToolBuilders/*
 lib/*
 com.servicemesh.io/*
 

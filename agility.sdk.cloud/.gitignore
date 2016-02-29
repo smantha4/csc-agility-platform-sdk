@@ -1,9 +1,0 @@
-/bin
-/dist
-/docs
-/coverage
-/instrumented
-/local_coverage_instrumented
-src/com/servicemesh/agility/sdk/cloud/msgs/
-test/unit/bin
-test/unit/reports
