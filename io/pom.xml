@@ -6,7 +6,6 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.servicemesh</groupId>
 	<artifactId>io</artifactId>
 	<packaging>jar</packaging>
 	<version>1.0.0</version>
@@ -108,7 +107,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.3</version>
 			</plugin>
 			<!-- Force Maven Plugin Versions -->
 			<plugin>
