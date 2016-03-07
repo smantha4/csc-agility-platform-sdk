@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>com.servicemesh.agility.sdk.cloud</name>
-	<comment></comment>
+	<name>agility.sdk.cloud</name>
+	<comment>NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
 	<projects>
+		<project>io</project>
+		<project>core</project>
+		<project>agility.api</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.jdt.core.javabuilder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
-		<buildCommand>
-			<name>org.eclipse.pde.ManifestBuilder</name>
 			<arguments>
 			</arguments>
 		</buildCommand>
@@ -21,18 +19,13 @@
 			</arguments>
 		</buildCommand>
 		<buildCommand>
-			<name>org.eclipse.ui.externaltools.ExternalToolBuilder</name>
-			<triggers>full,incremental,</triggers>
+			<name>org.eclipse.m2e.core.maven2Builder</name>
 			<arguments>
-				<dictionary>
-					<key>LaunchConfigHandle</key>
-					<value>&lt;project&gt;/.externalToolBuilders/SDK_Cloud_Deploy.launch</value>
-				</dictionary>
 			</arguments>
 		</buildCommand>
 	</buildSpec>
 	<natures>
-		<nature>org.eclipse.pde.PluginNature</nature>
+		<nature>org.eclipse.m2e.core.maven2Nature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
 </projectDescription>
