@@ -25,6 +25,15 @@ make sure you ran maven build, then from project root folder, run
 
 This arranges dependencies into "dist", "ivy-lib", "lib" and"com.servicemesh.io/lib" folders as required for service adapter projects.
 
+## Eclipse Configuration
+
+* Make sure Java 8, maven are installed
+* Make sure m2e plugin is installed. [m2e is a Maven integration in Eclipse.]
+* Install m2e connector for build-helper-maven-plugin (http://repo1.maven.org/maven2/.m2e/connectors/m2eclipse-buildhelper/0.15.0/N/0.15.0.201207090124/)
+* make sure you ran maven build step mentioned in "How to Build this project" section above
+* Update this eclipse setting. Eclipse -> preferences -> Maven -> Errors/Warnings -> "Plugin execution not covered by lifecycle configuration" to "ignore"
+* import project using "Import existing maven project"
+
 
 ## Build Configuration
 
