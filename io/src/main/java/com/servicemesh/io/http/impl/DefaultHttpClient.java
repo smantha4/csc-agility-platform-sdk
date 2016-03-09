@@ -119,6 +119,11 @@ public class DefaultHttpClient implements IHttpClient
                 builder.setProxy(proxyHost);
             }
 
+            if (config.getManualCookieManagement().booleanValue() == true)
+            {
+                builder.disableCookieManagement();
+            }
+
             client = builder.build();
             client.start();
         }

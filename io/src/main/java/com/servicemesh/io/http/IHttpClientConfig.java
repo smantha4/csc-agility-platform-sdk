@@ -92,4 +92,11 @@ public interface IHttpClientConfig
      * @return The proxy host configuration if set, otherwise null.
      */
     public Proxy getProxy();
+
+    /**
+     * Returns the setting for manual cookie configuration.
+     * 
+     * @return The boolean value for manual cookie configuration.
+     */
+    public Boolean getManualCookieManagement();
 }

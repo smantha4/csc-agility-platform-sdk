@@ -151,6 +151,16 @@ public class DefaultHttpClientConfigBuilder implements IHttpClientConfigBuilder
      * {@inheritDoc}
      */
     @Override
+    public IHttpClientConfigBuilder setManualCookieManagement(final boolean value)
+    {
+        _config.setManualCookieManagement(value);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public IHttpClientConfigBuilder adapt()
     {
         IHttpClientConfigBuilder adapted = null;

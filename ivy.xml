@@ -42,29 +42,8 @@
       <dependency org="org.mockito" name="mockito-all" rev="1.10.19">
          <artifact name="mockito-all" type="jar" ext="jar" />
       </dependency>
-      <dependency org="com.github.tomakehurst" name="wiremock" rev="1.43">
+      <dependency org="com.github.tomakehurst" name="wiremock" rev="1.58">
          <artifact name="wiremock" type="jar" ext="jar" />
-      </dependency>
-      <dependency org="com.fasterxml.jackson.core" name="jackson-core" rev="2.3.1">
-         <artifact name="jackson-core" type="jar" ext="jar" />
-      </dependency>
-      <dependency org="com.fasterxml.jackson.core" name="jackson-annotations" rev="2.3.1">
-         <artifact name="jackson-annotations" type="jar" ext="jar" />
-      </dependency>
-      <dependency org="com.fasterxml.jackson.core" name="jackson-databind" rev="2.3.1">
-         <artifact name="jackson-databind" type="jar" ext="jar" />
-      </dependency>
-      <dependency org="org.mortbay.jetty" name="jetty" rev="6.1.26">
-         <artifact name="jetty" type="jar" ext="jar" />
-      </dependency>
-      <dependency org="org.mortbay.jetty" name="jetty-util" rev="6.1.26">
-         <artifact name="jetty-util" type="jar" ext="jar" />
-      </dependency>
-      <dependency org="org.json" name="json" rev="20140107">
-         <artifact name="json" type="jar" ext="jar" />
-      </dependency>
-      <dependency org="org.skyscreamer" name="jsonassert" rev="1.2.1">
-         <artifact name="jsonassert" type="jar" ext="jar" />
       </dependency>
       <dependency org="org.javassist" name="javassist" rev="3.18.2-GA">
          <artifact name="javassist" type="jar" ext="jar" />

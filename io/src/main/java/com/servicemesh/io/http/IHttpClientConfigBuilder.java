@@ -105,6 +105,15 @@ public interface IHttpClientConfigBuilder
     public IHttpClientConfigBuilder setCredentials(final Credentials credentials);
 
     /**
+     * Sets cookie management
+     * 
+     * @param value
+     *            Sets the setting for manual cookie management, defaults to false.
+     * @return IHttpClientConfigBuilder with the value for cookie management set.
+     */
+    public IHttpClientConfigBuilder setManualCookieManagement(final boolean value);
+
+    /**
      * Set proxy configuration for the client.
      * 
      * @param proxy

@@ -56,6 +56,7 @@ import com.github.tomakehurst.wiremock.http.Fault;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import com.github.tomakehurst.wiremock.stubbing.Scenario;
 import com.servicemesh.core.async.Promise;
+import com.servicemesh.io.http.Credentials.CredentialsType;
 import com.servicemesh.io.http.impl.DefaultHttpCallback;
 import com.servicemesh.io.http.impl.DefaultHttpClient;
 import com.servicemesh.io.http.impl.DefaultHttpResponse;
@@ -766,6 +767,147 @@ public class HttpClientTest
         Assert.assertEquals(responseBody, httpResponse.getContent());
         verify(postRequestedFor(urlEqualTo("/agility/api/redirect/storeproducttype")).withHeader("x-ms-version",
                 equalTo("2012-08-01")));
+        httpClient.close();
+    }
+
+    @Test
+    public void testAutomaticCookieManagement() throws Exception
+    {
+        final String loginRequestBody = "<request>login test</request>";
+        final String loginResponeBody = "<response>login tested</response>";
+        final String cookieValue = "SID=31d4d96e407aad42";
+        stubFor(get(urlEqualTo("/agility/api/current/login"))
+                .willReturn(aResponse().withStatus(200).withHeader("Set-Cookie", cookieValue).withBody(loginResponeBody)));
+
+        final String loginUri = "https://localhost:" + instanceRule.httpsPort() + "/agility/api/current/login";
+        final IHttpRequest loginRequest = HttpClientFactory.getInstance().createRequest(HttpMethod.GET, new URI(loginUri));
+        final Credentials loginCreds = new Credentials(CredentialsType.CREDENTIALS_TYPE_USERNAMEPASSORD);
+        loginCreds.setPassword("admin");
+        loginCreds.setUsername("admin");
+        final IHttpHeader contentTypeHeaderOut = HttpClientFactory.getInstance().createHeader("Content-Type", "text/xml");
+        loginRequest.setHeader(contentTypeHeaderOut);
+        loginRequest.setContent(loginRequestBody);
+
+        final IHttpClientConfigBuilder builder = HttpClientFactory.getInstance().getConfigBuilder();
+        final IHttpClient httpClient = HttpClientFactory.getInstance().getClient(builder.build());
+        final Future<IHttpResponse> loginFuture = httpClient.execute(loginRequest);
+        final IHttpResponse loginResponse = loginFuture.get(10, TimeUnit.SECONDS);
+        Assert.assertNotNull(loginResponse.getStatus());
+        Assert.assertEquals(200, loginResponse.getStatusCode());
+        Assert.assertNotNull(loginResponse.getHeader("Set-Cookie"));
+        Assert.assertEquals(cookieValue, loginResponse.getHeader("Set-Cookie").getValue());
+
+        final String requestURL = "/agility/api/current/storeproducttype";
+        final String stringRequestBody = "<request>request test</request>";
+        final String responseBody = "<response>Cookies tested</response>";
+        stubFor(post(urlEqualTo(requestURL)).withHeader("Cookie", equalTo(cookieValue))
+                .willReturn(aResponse().withStatus(200).withHeader("Content-Type", "text/xml").withBody(responseBody)));
+        final String stringUri = "https://localhost:" + instanceRule.httpsPort() + requestURL;
+        final IHttpRequest request = HttpClientFactory.getInstance().createRequest(HttpMethod.POST, new URI(stringUri));
+        request.setHeader(contentTypeHeaderOut);
+        request.setContent(stringRequestBody);
+
+        final Future<IHttpResponse> future = httpClient.execute(request);
+        final IHttpResponse httpResponse = future.get(10, TimeUnit.SECONDS);
+        Assert.assertNotNull(httpResponse.getStatus());
+        Assert.assertEquals(200, httpResponse.getStatusCode());
+        Assert.assertEquals(responseBody, httpResponse.getContent());
+        verify(postRequestedFor(urlEqualTo(requestURL)).withHeader("Cookie", equalTo(cookieValue)));
+        httpClient.close();
+    }
+
+    @Test
+    public void testManualCookieManagementNoCookie() throws Exception
+    {
+        final String loginRequestBody = "<request>login test</request>";
+        final String loginResponeBody = "<response>login tested</response>";
+        final String cookieValue = "SID=31d4d96e407aad42";
+        stubFor(get(urlEqualTo("/agility/api/current/login"))
+                .willReturn(aResponse().withStatus(200).withHeader("Set-Cookie", cookieValue).withBody(loginResponeBody)));
+
+        final String loginUri = "https://localhost:" + instanceRule.httpsPort() + "/agility/api/current/login";
+        final IHttpRequest loginRequest = HttpClientFactory.getInstance().createRequest(HttpMethod.GET, new URI(loginUri));
+        final Credentials loginCreds = new Credentials(CredentialsType.CREDENTIALS_TYPE_USERNAMEPASSORD);
+        loginCreds.setPassword("admin");
+        loginCreds.setUsername("admin");
+        final IHttpHeader contentTypeHeaderOut = HttpClientFactory.getInstance().createHeader("Content-Type", "text/xml");
+        loginRequest.setHeader(contentTypeHeaderOut);
+        loginRequest.setContent(loginRequestBody);
+
+        final IHttpClientConfigBuilder builder = HttpClientFactory.getInstance().getConfigBuilder();
+        builder.setManualCookieManagement(true);
+        final IHttpClient httpClient = HttpClientFactory.getInstance().getClient(builder.build());
+        final Future<IHttpResponse> loginFuture = httpClient.execute(loginRequest);
+        final IHttpResponse loginResponse = loginFuture.get(10, TimeUnit.SECONDS);
+        Assert.assertNotNull(loginResponse.getStatus());
+        Assert.assertEquals(200, loginResponse.getStatusCode());
+        Assert.assertNotNull(loginResponse.getHeader("Set-Cookie"));
+        Assert.assertEquals(cookieValue, loginResponse.getHeader("Set-Cookie").getValue());
+
+        final String requestURL = "/agility/api/current/storeproducttype";
+        final String stringRequestBody = "<request>request test</request>";
+        final String responseBody = "<response>Cookies tested</response>";
+        stubFor(post(urlEqualTo(requestURL)).withHeader("Cookie", equalTo(cookieValue))
+                .willReturn(aResponse().withStatus(200).withHeader("Content-Type", "text/xml").withBody(responseBody)));
+        final String stringUri = "https://localhost:" + instanceRule.httpsPort() + requestURL;
+        final IHttpRequest request = HttpClientFactory.getInstance().createRequest(HttpMethod.POST, new URI(stringUri));
+        request.setHeader(contentTypeHeaderOut);
+        request.setContent(stringRequestBody);
+
+        final Future<IHttpResponse> future = httpClient.execute(request);
+        final IHttpResponse httpResponse = future.get(10, TimeUnit.SECONDS);
+        Assert.assertNotNull(httpResponse.getStatus());
+        Assert.assertEquals(404, httpResponse.getStatusCode());
+        verify(postRequestedFor(urlEqualTo(requestURL)).withoutHeader("Cookie"));
+        httpClient.close();
+    }
+
+    @Test
+    public void testManualCookieManagementManualCookie() throws Exception
+    {
+        final String loginRequestBody = "<request>login test</request>";
+        final String loginResponeBody = "<response>login tested</response>";
+        final String cookieValue = "SID=31d4d96e407aad42";
+        stubFor(get(urlEqualTo("/agility/api/current/login"))
+                .willReturn(aResponse().withStatus(200).withHeader("Set-Cookie", cookieValue).withBody(loginResponeBody)));
+
+        final String loginUri = "https://localhost:" + instanceRule.httpsPort() + "/agility/api/current/login";
+        final IHttpRequest loginRequest = HttpClientFactory.getInstance().createRequest(HttpMethod.GET, new URI(loginUri));
+        final Credentials loginCreds = new Credentials(CredentialsType.CREDENTIALS_TYPE_USERNAMEPASSORD);
+        loginCreds.setPassword("admin");
+        loginCreds.setUsername("admin");
+        final IHttpHeader contentTypeHeaderOut = HttpClientFactory.getInstance().createHeader("Content-Type", "text/xml");
+        loginRequest.setHeader(contentTypeHeaderOut);
+        loginRequest.setContent(loginRequestBody);
+
+        final IHttpClientConfigBuilder builder = HttpClientFactory.getInstance().getConfigBuilder();
+        builder.setManualCookieManagement(true);
+        final IHttpClient httpClient = HttpClientFactory.getInstance().getClient(builder.build());
+        final Future<IHttpResponse> loginFuture = httpClient.execute(loginRequest);
+        final IHttpResponse loginResponse = loginFuture.get(10, TimeUnit.SECONDS);
+        Assert.assertNotNull(loginResponse.getStatus());
+        Assert.assertEquals(200, loginResponse.getStatusCode());
+        Assert.assertNotNull(loginResponse.getHeader("Set-Cookie"));
+        Assert.assertEquals(cookieValue, loginResponse.getHeader("Set-Cookie").getValue());
+
+        final String requestURL = "/agility/api/current/storeproducttype";
+        final String stringRequestBody = "<request>request test</request>";
+        final String responseBody = "<response>Cookies tested</response>";
+        final String cookieHttpValue = "JSESSIONID=1234";
+        stubFor(post(urlEqualTo(requestURL)).withHeader("Cookie", equalTo(cookieHttpValue))
+                .willReturn(aResponse().withStatus(200).withHeader("Content-Type", "text/xml").withBody(responseBody)));
+        final String stringUri = "https://localhost:" + instanceRule.httpsPort() + requestURL;
+        final IHttpRequest request = HttpClientFactory.getInstance().createRequest(HttpMethod.POST, new URI(stringUri));
+        final IHttpHeader cookieHeader = HttpClientFactory.getInstance().createHeader("Cookie", cookieHttpValue);
+        request.setHeader(contentTypeHeaderOut);
+        request.setHeader(cookieHeader);
+        request.setContent(stringRequestBody);
+
+        final Future<IHttpResponse> future = httpClient.execute(request);
+        final IHttpResponse httpResponse = future.get(10, TimeUnit.SECONDS);
+        Assert.assertNotNull(httpResponse.getStatus());
+        Assert.assertEquals(200, httpResponse.getStatusCode());
+        verify(postRequestedFor(urlEqualTo(requestURL)).withHeader("Cookie", equalTo(cookieHttpValue)));
         httpClient.close();
     }
 
