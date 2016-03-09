@@ -9,6 +9,6 @@
 	jaxb:extensionBindingPrefixes="xjc"
 	jaxb:version="2.0">
 
-  <xsd:include schemaLocation="../../../../../core/src/main/resources/schema/Messaging/messaging.xsd" />
+  <xsd:include schemaLocation="../../../../../core/src/main/resources/schema/messaging/messaging.xsd" />
 
 </xsd:schema>
