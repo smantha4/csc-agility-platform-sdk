@@ -35,6 +35,7 @@ public class DefaultHttpClientConfig implements IHttpClientConfig
     private KeyManager[] keyManagers = null;
     private Credentials credentials = null;
     private Proxy proxy = null;
+    private Boolean manualCookieManagement = Boolean.FALSE;
 
     @Override
     public Object clone() throws CloneNotSupportedException
@@ -48,6 +49,8 @@ public class DefaultHttpClientConfig implements IHttpClientConfig
         clone.setMaxConnections(maxConnections);
         clone.setKeyManagers(keyManagers);
         clone.setCredentials(credentials);
+        clone.setProxy(proxy);
+        clone.setManualCookieManagement(manualCookieManagement);
 
         return clone;
     }
@@ -190,5 +193,19 @@ public class DefaultHttpClientConfig implements IHttpClientConfig
     public void setProxy(Proxy proxy)
     {
         this.proxy = proxy;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Boolean getManualCookieManagement()
+    {
+        return (manualCookieManagement != null) ? manualCookieManagement : Boolean.FALSE;
+    }
+
+    public void setManualCookieManagement(final Boolean value)
+    {
+        this.manualCookieManagement = (value != null) ? value : Boolean.FALSE;
     }
 }
