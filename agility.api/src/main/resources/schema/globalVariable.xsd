@@ -1,3 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Copyright (c) 2008-2013 ServiceMesh, Incorporated; All Rights Reserved
+Copyright (c) 2013-Present Computer Sciences Corporation
+-->
+
 <xsd:schema targetNamespace="http://servicemesh.com/agility/api" 
    xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="qualified"
    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0" jaxb:extensionBindingPrefixes="xjc annox"
@@ -17,17 +24,21 @@
                   <jxml:name>GlobalVariable</jxml:name>
                </jxml:XmlRootElement>
                <a:ApiModel comment = "Global variable used by scripts to pass messages." 
-                           description = "Global variable used by scripts to pass messages." 
-                           externalDocLink = "" />
+						description="Global variable used by scripts to pass messages." />
             </annox:annotate>
          </xsd:appinfo>
       </xsd:annotation>
       
-      <xsd:complexContent>
-          <xsd:extension base="agility:AssetProperty">
-          </xsd:extension>
-      </xsd:complexContent>
-      
-   </xsd:complexType>
-      
+		<xsd:sequence>
+			<xsd:element name="key" minOccurs="0" maxOccurs="1" type="xsd:string"/>
+			<xsd:element name="stringValue" minOccurs="0" maxOccurs="1" type="xsd:string"/>
+			<xsd:element name="dateValue" minOccurs="0" maxOccurs="1" type="xsd:date"/>
+			<xsd:element name="doubleValue" minOccurs="0" maxOccurs="1" type="xsd:double"/>
+			<xsd:element name="floatValue" minOccurs="0" maxOccurs="1" type="xsd:float"/>
+			<xsd:element name="intValue" minOccurs="0" maxOccurs="1" type="xsd:int"/>
+			<xsd:element name="booleanValue" minOccurs="0" maxOccurs="1" type="xsd:boolean"/>
+			<xsd:element name="byteValue" minOccurs="0" maxOccurs="1" type="xsd:hexBinary"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="GlobalVariable" type="agility:GlobalVariable"/>
 </xsd:schema>
