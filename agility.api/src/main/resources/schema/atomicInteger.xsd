@@ -22,8 +22,6 @@ REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIB
    xmlns:agility="http://servicemesh.com/agility/api">
 
    <xsd:include schemaLocation="item.xsd" />
-   <xsd:include schemaLocation="credential.xsd" /> <!-- cycle -->
-   <xsd:include schemaLocation="property.xsd" />
    
    <xsd:complexType name="AtomicInteger">
    
@@ -33,7 +31,7 @@ REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIB
                <jxml:XmlRootElement>
                   <jxml:name>AtomicInteger</jxml:name>
                </jxml:XmlRootElement>
-               <a:ApiModel comment = "stub" 
+               <a:ApiModel comment = "Allows for a user to retrieve a counter that corresponds to an incremented identifier each time it is called." 
                            description = "stub" 
                            externalDocLink = "" />
             </annox:annotate>
@@ -48,17 +46,47 @@ REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIB
                   <xsd:annotation>
                      <xsd:appinfo>
                         <annox:annotate target="field">
-                           <a:ApiField comment="stub" />
+                           <a:ApiField comment="pkey stands for primary key. Is the unique identifier associated to an AtomicInteger." />
                         </annox:annotate>
                      </xsd:appinfo>
                   </xsd:annotation>
                </xsd:element>
                
-              <xsd:element name="value" type="xsd:long" minOccurs="0" maxOccurs="1">
+              <xsd:element name="value" type="xsd:string" minOccurs="0" maxOccurs="1">
                   <xsd:annotation>
                      <xsd:appinfo>
                         <annox:annotate target="field">
-                           <a:ApiField comment="stub" />
+                           <a:ApiField comment="The value associated with the AtomicInteger identified by pkey." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="base" type="xsd:byte" minOccurs="0" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="The base value is to be retrieved in. Base 2 through 36 are supported." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="width" type="xsd:byte" minOccurs="0" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="The number of digits to display. The value will be padded to the left with 0's if necessary to reach width.  Because truncation will not occur, the value will be rendered with more than width digits when value is too large.  A width of 0 means to never show any leading 0's" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
+               <xsd:element name="upperCase" type="xsd:boolean" minOccurs="0" maxOccurs="1">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="If true, the value returned will be converted to uppercase. Otherwise, the value will be lowercase." />
                         </annox:annotate>
                      </xsd:appinfo>
                   </xsd:annotation>
@@ -68,7 +96,7 @@ REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIB
                   <xsd:annotation>
                      <xsd:appinfo>
                         <annox:annotate target="field">
-                           <a:ApiField comment="stub" />
+                           <a:ApiField comment="The minimum value the field value can take on. Expressed in base 10." />
                         </annox:annotate>
                      </xsd:appinfo>
                   </xsd:annotation>
@@ -78,7 +106,7 @@ REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIB
                   <xsd:annotation>
                      <xsd:appinfo>
                         <annox:annotate target="field">
-                           <a:ApiField comment="stub" />
+                           <a:ApiField comment="The maximum value the field value can take on. Expressed in base 10." />
                         </annox:annotate>
                      </xsd:appinfo>
                   </xsd:annotation>
@@ -88,7 +116,7 @@ REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIB
                   <xsd:annotation>
                      <xsd:appinfo>
                         <annox:annotate target="field">
-                           <a:ApiField comment="stub" />
+                           <a:ApiField comment="If true, then the value associated with the AtomicInteger identified by pkey will loop between the minAtomicValue and maxAtomicValue value. If the value field attempts to exceed a boundry an exception is thrown." />
                         </annox:annotate>
                      </xsd:appinfo>
                   </xsd:annotation>
