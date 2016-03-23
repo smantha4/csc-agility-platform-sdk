@@ -43,6 +43,7 @@ public class QueryParams implements Serializable
     private int index; // used to keep order of entry - this may be important to some clients such as amazon signatures
     private boolean maintainOrder = false; // defaults to alphabetic order
     private boolean caseSensitive = true; // true will sort the params case sensitive
+    private boolean useAsToken = false;
 
     public QueryParams()
     {
@@ -193,7 +194,7 @@ public class QueryParams implements Serializable
 
                 for (String key : keyArray)
                 {
-                    buf.append(params.get(orderMap.get(key)).toString(encode) + seperator);
+                    buf.append(params.get(orderMap.get(key)).toString(isUseAsToken(), encode) + seperator);
                 }
             }
             else if (!isCaseSensitive())
@@ -204,7 +205,7 @@ public class QueryParams implements Serializable
 
                 for (String key : keyArray)
                 {
-                    buf.append(params.get(caseMap.get(key)).toString(encode) + seperator);
+                    buf.append(params.get(caseMap.get(key)).toString(isUseAsToken(), encode) + seperator);
                 }
             }
             else
@@ -215,7 +216,7 @@ public class QueryParams implements Serializable
 
                 for (String key : keyArray)
                 {
-                    buf.append(params.get(key).toString(encode) + seperator);
+                    buf.append(params.get(key).toString(isUseAsToken(), encode) + seperator);
                 }
             }
 
@@ -244,6 +245,23 @@ public class QueryParams implements Serializable
     public void setCaseSensitive(boolean caseSensitive)
     {
         this.caseSensitive = caseSensitive;
+    }
+
+    /**
+     * @return the useAsToken
+     */
+    public boolean isUseAsToken()
+    {
+        return useAsToken;
+    }
+
+    /**
+     * @param useAsToken
+     *            the useAsToken to set
+     */
+    public void setUseAsToken(boolean useAsToken)
+    {
+        this.useAsToken = useAsToken;
     }
 
 }
