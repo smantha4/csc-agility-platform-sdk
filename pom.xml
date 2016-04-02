@@ -13,6 +13,7 @@
 	<name>agility.platform-sdk</name>
 
 	<modules>
+		<module>agility.api.docs.annotation</module>
 		<module>core</module>
 		<module>io</module>
 		<module>agility.api</module>
@@ -55,7 +56,6 @@
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
 			<version>2.5</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.mortbay.jetty</groupId>
@@ -66,304 +66,291 @@
 			<groupId>org.mortbay.jetty</groupId>
 			<artifactId>javax.servlet</artifactId>
 			<version>5.1.12</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.sun.xml.bind</groupId>
 			<artifactId>jaxb-impl</artifactId>
-			<version>2.2.5-2</version>
-			<optional>false</optional>
+			<version>2.2.11</version>
 		</dependency>
 		<dependency>
 			<groupId>com.sun.xml.bind</groupId>
 			<artifactId>jaxb-xjc</artifactId>
-			<version>2.2.5-2</version>
-			<optional>false</optional>
+			<version>2.2.11</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.5</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.jvnet.jaxb2_commons</groupId>
 			<artifactId>jaxb2-basics</artifactId>
-			<version>0.6.4</version>
-			<optional>false</optional>
+			<version>0.11.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jvnet.jaxb2_commons</groupId>
 			<artifactId>jaxb2-basics-annotate</artifactId>
-			<version>0.6.4</version>
-			<optional>false</optional>
+			<version>1.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jvnet.jaxb2_commons</groupId>
 			<artifactId>jaxb2-basics-ant</artifactId>
-			<version>0.6.4</version>
-			<optional>false</optional>
+			<version>0.11.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jvnet.jaxb2_commons</groupId>
 			<artifactId>jaxb2-basics-runtime</artifactId>
-			<version>0.6.4</version>
-			<optional>false</optional>
+			<version>0.11.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jvnet.jaxb2_commons</groupId>
 			<artifactId>jaxb2-basics-tools</artifactId>
-			<version>0.6.4</version>
-			<optional>false</optional>
+			<version>0.11.0</version>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
-			<optional>false</optional>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
 			<version>1.10.19</version>
-			<optional>false</optional>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.github.tomakehurst</groupId>
 			<artifactId>wiremock</artifactId>
-			<version>1.58</version>
-			<optional>false</optional>
+			<version>1.43</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>2.3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>2.3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mortbay.jetty</groupId>
+			<artifactId>jetty</artifactId>
+			<version>6.1.26</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mortbay.jetty</groupId>
+			<artifactId>jetty-util</artifactId>
+			<version>6.1.26</version>
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20140107</version>
+		</dependency>
+		<dependency>
+			<groupId>org.skyscreamer</groupId>
+			<artifactId>jsonassert</artifactId>
+			<version>1.2.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
 			<version>3.18.2-GA</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib-nodep</artifactId>
 			<version>2.2.2</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.7.5</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.antlr</groupId>
 			<artifactId>antlr4</artifactId>
 			<version>4.1</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.freemarker</groupId>
 			<artifactId>freemarker</artifactId>
 			<version>2.3.20</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-core</artifactId>
 			<version>1.3</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>javax.xml</groupId>
 			<artifactId>jsr173</artifactId>
 			<version>1.0</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>1.0.13</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-core</artifactId>
 			<version>1.0.13</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
 			<artifactId>jaxb-api</artifactId>
 			<version>2.2.5</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.javaparser</groupId>
 			<artifactId>javaparser</artifactId>
-			<version>1.0.9</version>
-			<optional>false</optional>
+			<version>1.0.11</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
 			<version>1.1.1</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>commons-beanutils</groupId>
 			<artifactId>commons-beanutils</artifactId>
 			<version>1.7.0</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.jvnet.annox</groupId>
 			<artifactId>annox</artifactId>
-			<version>0.5.1</version>
-			<optional>false</optional>
+			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.ow2.asm</groupId>
 			<artifactId>asm</artifactId>
 			<version>5.0.1</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>asm</groupId>
 			<artifactId>asm</artifactId>
 			<version>3.2</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.ow2.asm</groupId>
 			<artifactId>asm-commons</artifactId>
 			<version>5.0.1</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.ow2.asm</groupId>
 			<artifactId>asm-tree</artifactId>
 			<version>5.0.1</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.ow2.asm</groupId>
 			<artifactId>asm-util</artifactId>
 			<version>5.0.1</version>
-			<optional>false</optional>
+
 		</dependency>
 		<dependency>
 			<groupId>org.ow2.asm</groupId>
 			<artifactId>asm-analysis</artifactId>
 			<version>5.0.1</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<optional>false</optional>
 			<version>3.3.2</version>
 		</dependency>
 		<dependency>
 			<groupId>jaxen</groupId>
 			<artifactId>jaxen</artifactId>
 			<version>1.1.4</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>oro</groupId>
 			<artifactId>oro</artifactId>
 			<version>2.0.8</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-jcl</artifactId>
 			<version>1.7.5</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.uuid</groupId>
 			<artifactId>java-uuid-generator</artifactId>
 			<version>3.0.0</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.zookeeper</groupId>
 			<artifactId>zookeeper</artifactId>
 			<version>3.4.2</version>
-			<optional>false</optional>
+
 		</dependency>
 		<dependency>
 			<groupId>org.apache.felix</groupId>
 			<artifactId>org.apache.felix.configadmin</artifactId>
 			<version>1.8.4</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.felix</groupId>
 			<artifactId>org.apache.felix.framework</artifactId>
 			<version>4.2.1</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.felix</groupId>
 			<artifactId>org.apache.felix.fileinstall</artifactId>
 			<version>3.5.0</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.groovy</groupId>
 			<artifactId>groovy-all</artifactId>
 			<version>${groovy.version}</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.groovy</groupId>
 			<artifactId>groovy</artifactId>
 			<version>${groovy.version}</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>commons-cli</groupId>
 			<artifactId>commons-cli</artifactId>
 			<version>1.2</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.spockframework</groupId>
 			<artifactId>spock-core</artifactId>
 			<version>0.6-groovy-1.8</version>
-			<optional>false</optional>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-core-asl</artifactId>
 			<version>1.7.3</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>1.7.3</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>16.0.1</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse</groupId>
 			<artifactId>org.eclipse.osgi</artifactId>
 			<version>3.8.0.v20120529-1548</version>
-			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.powermock</groupId>
@@ -371,12 +358,6 @@
 			<version>1.6.4</version>
 			<type>pom</type>
 			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>agility-platform-sdk.local.com.servicemesh.tools</groupId>
-			<artifactId>agility-api-docs-annotation</artifactId>
-			<version>1.1.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
@@ -452,12 +433,17 @@
 							<plugin>
 								<groupId>org.jvnet.jaxb2_commons</groupId>
 								<artifactId>jaxb2-basics-annotate</artifactId>
-								<version>0.6.4</version>
+								<version>1.0.2</version>
 							</plugin>
 							<plugin>
 								<groupId>org.jvnet.jaxb2_commons</groupId>
 								<artifactId>jaxb2-basics</artifactId>
-								<version>0.6.4</version>
+								<version>0.11.0</version>
+							</plugin>
+							<plugin>
+								<groupId>org.jvnet.jaxb2.maven2</groupId>
+								<artifactId>maven-jaxb2-plugin-core</artifactId>
+								<version>0.13.1</version>
 							</plugin>
 						</plugins>
 					</configuration>
@@ -468,9 +454,9 @@
 							<version>1.1</version>
 						</dependency>
 						<dependency>
-							<groupId>agility-platform-sdk.local.com.servicemesh.tools</groupId>
-							<artifactId>agility-api-docs-annotation</artifactId>
-							<version>1.1.3</version>
+							<groupId>com.servicemesh</groupId>
+							<artifactId>agility.api.docs.annotation</artifactId>
+							<version>1.1.4</version>
 						</dependency>
 					</dependencies>
 				</plugin>
