@@ -61,4 +61,5 @@ Import-Package:
  org.xml.sax.helpers
 Export-Package: 
  com.servicemesh.agility.api;version="3.1.0",
- com.servicemesh.agility.api.service;version="3.1.0"
+ com.servicemesh.agility.api.service;version="3.1.0",
+ com.servicemesh.agility.annotation;version="3.1.0"
