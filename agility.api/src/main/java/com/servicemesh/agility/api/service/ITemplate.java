@@ -9,6 +9,7 @@ package com.servicemesh.agility.api.service;
 
 import java.util.List;
 
+import com.servicemesh.agility.annotation.Synchronized;
 import com.servicemesh.agility.api.HotswapList;
 import com.servicemesh.agility.api.Instance;
 import com.servicemesh.agility.api.Link;
@@ -25,7 +26,7 @@ public interface ITemplate
 
     /**
      * Create instance objects based on template definitions without starting them.
-     * 
+     *
      * @param template
      *            An instance of com.servicemesh.agility.api.Template
      * @throws Exception
@@ -34,7 +35,7 @@ public interface ITemplate
 
     /**
      * Creates a new package and adds it to the template definition
-     * 
+     *
      * @param template
      *            An instance of com.servicemesh.agility.api.Template
      * @param pkg
@@ -46,7 +47,7 @@ public interface ITemplate
 
     /**
      * Removes a package from the template definition
-     * 
+     *
      * @param template
      *            An instance of com.servicemesh.agility.api.Template
      * @param pkg
@@ -58,7 +59,7 @@ public interface ITemplate
 
     /**
      * Adds a package to the template definition.
-     * 
+     *
      * @param template
      *            An instance of com.servicemesh.agility.api.Template
      * @param pkg
@@ -66,11 +67,12 @@ public interface ITemplate
      * @return Completion status
      * @throws Exception
      */
+    @Synchronized
     public boolean attachPackage(Template template, Package pkg) throws Exception;
 
     /**
      * Adds a ConfigurationResource reference to the template definition.
-     * 
+     *
      * @param template
      *            An instance of com.servicemesh.agility.api.Template
      * @param cr
@@ -82,7 +84,7 @@ public interface ITemplate
 
     /**
      * Removes a ConfigurationResource reference from the template definition
-     * 
+     *
      * @param template
      *            An instance of com.servicemesh.agility.api.Template
      * @param crId
@@ -94,7 +96,7 @@ public interface ITemplate
 
     /**
      * Returns any scale-up policy associated with the template.
-     * 
+     *
      * @param template
      *            An instance of com.servicemesh.agility.api.Template
      * @return An instance of com.servicemesh.agility.api.Policy
@@ -104,7 +106,7 @@ public interface ITemplate
 
     /**
      * Define the scale-up policy associated with the template.
-     * 
+     *
      * @param template
      *            An instance of com.servicemesh.agility.api.Template
      * @param policy
@@ -116,7 +118,7 @@ public interface ITemplate
 
     /**
      * Deletes any scale-up policy defined for the template.
-     * 
+     *
      * @param template
      *            An instance of com.servicemesh.agility.api.Template
      * @throws Exception
@@ -125,7 +127,7 @@ public interface ITemplate
 
     /**
      * Returns any scale-down policy associated with the template.
-     * 
+     *
      * @param template
      *            An instance of com.servicemesh.agility.api.Template
      * @return An instance of com.servicemesh.agility.api.Policy
@@ -135,7 +137,7 @@ public interface ITemplate
 
     /**
      * Define the scale-down policy associated with the template.
-     * 
+     *
      * @param template
      *            An instance of com.servicemesh.agility.api.Template
      * @param policy
@@ -147,7 +149,7 @@ public interface ITemplate
 
     /**
      * Deletes any scale-down policy defined for the template.
-     * 
+     *
      * @param template
      *            An instance of com.servicemesh.agility.api.Template
      * @throws Exception
@@ -157,7 +159,7 @@ public interface ITemplate
     /**
      * If any instances associated with the template are in a starting state this call does not return until they have obtained a
      * network address and should be reachable on the network.
-     * 
+     *
      * @param template
      *            An instance of com.servicemesh.agility.api.Template
      * @throws Exception
@@ -167,7 +169,7 @@ public interface ITemplate
     /**
      * This method is functionally the same as the waitForBoot(Template) method, but takes a second parameter specifying the
      * maximum time that one will wait for the method to return
-     * 
+     *
      * @param template
      *            An instance of com.servicemesh.agility.api.Template
      * @param timeout
@@ -179,7 +181,7 @@ public interface ITemplate
     /**
      * Returns a list of instances that can be hotswapped and a list of instances that need to be restarted in order to have their
      * resources updated.
-     * 
+     *
      * @param template
      * @throws Exception
      */
@@ -187,7 +189,7 @@ public interface ITemplate
 
     /**
      * Request to delete a template.
-     * 
+     *
      * @param parentTask
      *            Parent task of the delete request
      * @param template
@@ -201,7 +203,7 @@ public interface ITemplate
 
     /**
      * Request to remove all associations after all instances have been released from a template
-     * 
+     *
      * @param parentTask
      *            task that initialized the request
      * @param template

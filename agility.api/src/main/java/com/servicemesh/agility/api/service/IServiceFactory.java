@@ -11,6 +11,8 @@ public interface IServiceFactory
 
     public <T> IService<T> get(Class<T> tClass) throws Exception;
 
+    public <T> IService<T> get(Link link) throws Exception;
+
     public <T> Class<T> getJaxbClass(String assetTypeName) throws Exception;
 
     public <T> Class<T> getModelClass(String apiClassName) throws Exception;

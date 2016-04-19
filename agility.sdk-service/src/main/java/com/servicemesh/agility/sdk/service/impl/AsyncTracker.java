@@ -1,5 +1,6 @@
 package com.servicemesh.agility.sdk.service.impl;
 
+import org.apache.log4j.Logger;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
@@ -18,6 +19,7 @@ import com.servicemesh.core.messaging.Request;
 public class AsyncTracker implements ServiceTrackerCustomizer
 {
 
+    private static final Logger logger = Logger.getLogger(AsyncTracker.class);
     private ServiceAdapter _adapter;
     private BundleContext _context;
     private AsyncService _serviceProvider;
@@ -45,39 +47,58 @@ public class AsyncTracker implements ServiceTrackerCustomizer
         if (serviceType != null && serviceType.equals("service") && serviceProviderType != null
                 && serviceProviderType.equals("framework") && version != null && version.toString().equals(_version))
         {
-            _serviceProvider = service;
-            RegistrationRequest request = _adapter.getRegistrationRequest();
-            if (_adapter.getInstanceOperations() != null)
+            try
             {
-                request.getSupportedInterfaces().add(IInstanceLifecycle.class.getName());
-            }
-            if (_adapter.getServiceProviderOperations() != null)
-            {
-                request.getSupportedInterfaces().add(IServiceProvider.class.getName());
-            }
-            if (_adapter.getServiceInstanceOperations() != null)
-            {
-                request.getSupportedInterfaces().add(IServiceInstance.class.getName());
-            }
-            if (_adapter.getAddressManagementOperations() != null)
-            {
-                request.getSupportedInterfaces().add(IAddressManagement.class.getName());
-            }
-            _serviceProvider.sendRequest(request, new ResponseHandler<RegistrationResponse>() {
+                _serviceProvider = service;
+                RegistrationRequest request = _adapter.getRegistrationRequest();
 
-                @Override
-                public boolean onResponse(RegistrationResponse response)
+                if (_adapter.getInstanceOperations() != null)
                 {
-                    _adapter.onRegistration(response);
-                    return false;
+                    request.getSupportedInterfaces().add(IInstanceLifecycle.class.getName());
                 }
-
-                @Override
-                public void onError(Request request, Throwable t)
+                if (_adapter.getServiceProviderOperations() != null)
                 {
-
+                    request.getSupportedInterfaces().add(IServiceProvider.class.getName());
                 }
-            });
+                if (_adapter.getServiceInstanceOperations() != null)
+                {
+                    request.getSupportedInterfaces().add(IServiceInstance.class.getName());
+                }
+                if (_adapter.getAddressManagementOperations() != null)
+                {
+                    request.getSupportedInterfaces().add(IAddressManagement.class.getName());
+                }
+                _serviceProvider.sendRequest(request, new ResponseHandler<RegistrationResponse>() {
+
+                    @Override
+                    public boolean onResponse(RegistrationResponse response)
+                    {
+                        try
+                        {
+                            _adapter.onRegistration(response);
+                            return false;
+                        }
+                        catch (Throwable th)
+                        {
+                            logger.error("Failed to register service adapter. Error while processing response. service provider: "
+                                    + _adapter.getClass() + ". Error Message: " + th.getMessage(), th);
+                            throw th;
+                        }
+                    }
+
+                    @Override
+                    public void onError(Request request, Throwable t)
+                    {
+
+                    }
+                });
+            }
+            catch (Throwable th)
+            {
+                logger.error("Failed to register service adapter. service provider: " + _adapter.getClass() + ". Error Message: "
+                        + th.getMessage(), th);
+                throw th;
+            }
         }
         return service;
     }
