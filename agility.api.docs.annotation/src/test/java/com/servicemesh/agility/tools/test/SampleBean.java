@@ -10,96 +10,108 @@ import com.servicemesh.agility.tools.annotation.ApiField;
 import com.servicemesh.agility.tools.annotation.ApiModel;
 import com.servicemesh.agility.tools.annotation.ApiDictionaryEntry;
 
-@ApiDictionary(entries = {@ApiDictionaryEntry(token = "docRoot", definition = "http://www.servicemesh.com/docs/")})
+@ApiDictionary(entries = { @ApiDictionaryEntry(token = "docRoot", definition = "http://www.servicemesh.com/docs/") })
 
-@ApiModel(externalDocLink = "{{docRoot}}sampleBean.html",
-          comment = "This is the sample bean",
-          description = "This is the sample bean descritpion.")
-public class SampleBean {
+@ApiModel(externalDocLink = "{{docRoot}}sampleBean.html", comment = "This is the sample bean",
+        description = "This is the sample bean descritpion.")
+public class SampleBean
+{
 
-   @ApiField(comment = "comment on id field",
-             systemGenerated = true)
-   @XmlElement(required = true)
-   private long   id;
-   
-   @ApiField(comment = "comment on string field")
-   @XmlElement(defaultValue = "defaultStringValue")
-   private String stringField;
-   
-   @ApiField(comment = "comment on int field",
-             allowableValues = "[0-9]")
-   private int    intField;
-   
-   @ApiField(comment = "comment on long field")
-   private Long   longField;
-   
-   @ApiField(comment = "comment on date field",
-             systemGenerated = true)
-   private Date   dateField;
-   
-   @ApiField(comment = "comment on date array field")
-   private Date[]   dateArrayField;
+    @ApiField(comment = "comment on id field", systemGenerated = true)
+    @XmlElement(required = true)
+    private long id;
 
-   @ApiField(comment = "comment on list field")
-   private List<Sample2Bean>   sample2ListField;
+    @ApiField(comment = "comment on string field")
+    @XmlElement(defaultValue = "defaultStringValue")
+    private String stringField;
 
-   public SampleBean() {
-   }
+    @ApiField(comment = "comment on int field", allowableValues = "[0-9]")
+    private int intField;
 
-   public String getStringField() {
-      return stringField;
-   }
+    @ApiField(comment = "comment on long field")
+    private Long longField;
 
-   public void setStringField(String stringField) {
-      this.stringField = stringField;
-   }
+    @ApiField(comment = "comment on date field", systemGenerated = true)
+    private Date dateField;
 
-   public int getIntField() {
-      return intField;
-   }
+    @ApiField(comment = "comment on date array field")
+    private Date[] dateArrayField;
 
-   public void setIntField(int intField) {
-      this.intField = intField;
-   }
+    @ApiField(comment = "comment on list field")
+    private List<Sample2Bean> sample2ListField;
 
-   public Long getLongField() {
-      return longField;
-   }
+    public SampleBean()
+    {
+    }
 
-   public void setLongField(Long longField) {
-      this.longField = longField;
-   }
+    public String getStringField()
+    {
+        return stringField;
+    }
 
-   public Date getDateField() {
-      return dateField;
-   }
+    public void setStringField(String stringField)
+    {
+        this.stringField = stringField;
+    }
 
-   public void setDateField(Date dateField) {
-      this.dateField = dateField;
-   }
+    public int getIntField()
+    {
+        return intField;
+    }
 
-   public long getId() {
-      return id;
-   }
+    public void setIntField(int intField)
+    {
+        this.intField = intField;
+    }
 
-   public void setId(long id) {
-      this.id = id;
-   }
+    public Long getLongField()
+    {
+        return longField;
+    }
 
-   public Date[] getDateArrayField() {
-      return dateArrayField;
-   }
+    public void setLongField(Long longField)
+    {
+        this.longField = longField;
+    }
 
-   public void setDateArrayField(Date[] dateArrayField) {
-      this.dateArrayField = dateArrayField;
-   }
+    public Date getDateField()
+    {
+        return dateField;
+    }
 
-   public List<Sample2Bean> getSample2ListField() {
-      return sample2ListField;
-   }
+    public void setDateField(Date dateField)
+    {
+        this.dateField = dateField;
+    }
 
-   public void setSample2ListField(List<Sample2Bean> sample2ListField) {
-      this.sample2ListField = sample2ListField;
-   }
-   
+    public long getId()
+    {
+        return id;
+    }
+
+    public void setId(long id)
+    {
+        this.id = id;
+    }
+
+    public Date[] getDateArrayField()
+    {
+        return dateArrayField;
+    }
+
+    public void setDateArrayField(Date[] dateArrayField)
+    {
+        this.dateArrayField = dateArrayField;
+    }
+
+    public List<Sample2Bean> getSample2ListField()
+    {
+        return sample2ListField;
+    }
+
+    public void setSample2ListField(List<Sample2Bean> sample2ListField)
+    {
+        this.sample2ListField = sample2ListField;
+    }
+
 }
