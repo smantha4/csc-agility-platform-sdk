@@ -31,15 +31,14 @@
 	<distributionManagement>
 		<!-- Deploy with source: mvn source:jar deploy -->
 		<repository>
-			<id>artifactory-releases</id>
-			<name>Internal Releases</name>
-			<url>http://artifactory.csc.com/releases</url>
+			<id>central</id>
+			<name>servicemesh-artifactory-releases</name>
+			<url>http://repo.servicemesh.com:8081/artifactory/libs-release-local</url>
 		</repository>
-
 		<snapshotRepository>
-			<id>artifactory-snapshots</id>
-			<name>Internal Snapshots</name>
-			<url>http://artifactory.csc.com/snapshots</url>
+			<id>snapshots</id>
+			<name>servicemesh-artifactory-snapshots</name>
+			<url>http://repo.servicemesh.com:8081/artifactory/libs-snapshot-local</url>
 		</snapshotRepository>
 	</distributionManagement>
 
