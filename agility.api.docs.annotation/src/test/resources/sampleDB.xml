@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:documentation xmlns:tns="http://servicemesh.com/agility/tools/docs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://servicemesh.com/agility/tools/docs documentation.xsd ">
+   <tns:docVersion>1.0.0</tns:docVersion>
+   <tns:resourceList>
+      <tns:resource>
+         <tns:comment>comment on resource</tns:comment>
+         <tns:description>description on resource</tns:description>
+         <tns:basePath>/</tns:basePath>
+         <tns:uid>100</tns:uid>
+         <tns:version>1.0.0</tns:version>
+         <tns:displayName>Sample Service</tns:displayName>
+         <tns:externalDocLink>http://www.servicemesh.com/docs/sampleService.html</tns:externalDocLink>
+         <tns:actionList>
+            <tns:action>
+               <tns:comment>Comment on get version action.</tns:comment>
+               <tns:description>Description on get version action.</tns:description>
+               <tns:httpMethod>GET</tns:httpMethod>
+               <tns:protocol>http</tns:protocol>
+               <tns:uri>/</tns:uri>
+               <tns:uid>1000</tns:uid>
+               <tns:displayName>Get Version</tns:displayName>
+               <tns:responseList>
+                  <tns:response>
+                     <tns:comment>this is for success</tns:comment>
+                     <tns:dataType>java.lang.String</tns:dataType>
+                     <tns:leaf>true</tns:leaf>
+                     <tns:responseCode>200</tns:responseCode>
+                     <tns:message>success</tns:message>
+                  </tns:response>
+                  <tns:response>
+                     <tns:comment>this is for failure</tns:comment>
+                     <tns:dataType>java.lang.String</tns:dataType>
+                     <tns:leaf>true</tns:leaf>
+                     <tns:responseCode>500</tns:responseCode>
+                     <tns:message>failed</tns:message>
+                  </tns:response>
+               </tns:responseList>
+               <tns:authRequired>false</tns:authRequired>
+               <tns:aclList>
+                  <tns:acl>
+                     <tns:name>user</tns:name>
+                     <tns:description>general agility user</tns:description>
+                  </tns:acl>
+               </tns:aclList>
+               <tns:externalDocLink>http://www.servicemesh.com/docs/getversion.html</tns:externalDocLink>
+            </tns:action>
+            <tns:action>
+               <tns:comment>Comment on get samples.</tns:comment>
+               <tns:description>Description on get samples.</tns:description>
+               <tns:httpMethod>GET</tns:httpMethod>
+               <tns:protocol>http</tns:protocol>
+               <tns:uri>/all/samples</tns:uri>
+               <tns:uid>2000</tns:uid>
+               <tns:displayName>Get Samples</tns:displayName>
+               <tns:responseList>
+                  <tns:response>
+                     <tns:comment>this is for success</tns:comment>
+                     <tns:dataType>com.servicemesh.agility.tools.test.SampleBean</tns:dataType>
+                     <tns:leaf>false</tns:leaf>
+                     <tns:containerType>List</tns:containerType>
+                     <tns:responseCode>200</tns:responseCode>
+                     <tns:message>success</tns:message>
+                  </tns:response>
+                  <tns:response>
+                     <tns:comment>this is for failure</tns:comment>
+                     <tns:dataType>java.lang.String</tns:dataType>
+                     <tns:leaf>true</tns:leaf>
+                     <tns:responseCode>500</tns:responseCode>
+                     <tns:message>failed</tns:message>
+                  </tns:response>
+               </tns:responseList>
+               <tns:authRequired>true</tns:authRequired>
+               <tns:aclList>
+                  <tns:acl>
+                     <tns:name>hr</tns:name>
+                     <tns:description>human resources</tns:description>
+                  </tns:acl>
+               </tns:aclList>
+               <tns:externalDocLink>http://www.servicemesh.com/docs/getsamples.html</tns:externalDocLink>
+            </tns:action>
+            <tns:action>
+               <tns:comment>Comment on get sample.</tns:comment>
+               <tns:description>Description on get sample.</tns:description>
+               <tns:httpMethod>GET</tns:httpMethod>
+               <tns:protocol>http</tns:protocol>
+               <tns:uri>/sample/{sampleId}</tns:uri>
+               <tns:uid>3000</tns:uid>
+               <tns:displayName>Get Sample</tns:displayName>
+               <tns:responseList>
+                  <tns:response>
+                     <tns:comment>this is for success</tns:comment>
+                     <tns:dataType>com.servicemesh.agility.tools.test.SampleBean</tns:dataType>
+                     <tns:leaf>false</tns:leaf>
+                     <tns:responseCode>200</tns:responseCode>
+                     <tns:message>success</tns:message>
+                  </tns:response>
+                  <tns:response>
+                     <tns:comment>this is for failure</tns:comment>
+                     <tns:dataType>java.lang.String</tns:dataType>
+                     <tns:leaf>true</tns:leaf>
+                     <tns:responseCode>500</tns:responseCode>
+                     <tns:message>failed</tns:message>
+                  </tns:response>
+               </tns:responseList>
+               <tns:paramList>
+                  <tns:param>
+                     <tns:comment>sample id comment</tns:comment>
+                     <tns:dataType>java.lang.String</tns:dataType>
+                     <tns:internalName>sampleId</tns:internalName>
+                     <tns:required>true</tns:required>
+                     <tns:type>path</tns:type>
+                  </tns:param>
+               </tns:paramList>
+               <tns:authRequired>true</tns:authRequired>
+               <tns:aclList>
+                  <tns:acl>
+                     <tns:name>hr</tns:name>
+                     <tns:description>human resources</tns:description>
+                  </tns:acl>
+                  <tns:acl>
+                     <tns:name>manager</tns:name>
+                     <tns:description>manager</tns:description>
+                  </tns:acl>
+               </tns:aclList>
+               <tns:externalDocLink>http://www.servicemesh.com/docs/getsample.html</tns:externalDocLink>
+            </tns:action>
+            <tns:action>
+               <tns:comment>Comment on create sample.</tns:comment>
+               <tns:description>Description on create sample.</tns:description>
+               <tns:httpMethod>POST</tns:httpMethod>
+               <tns:protocol>http</tns:protocol>
+               <tns:uri>/sample</tns:uri>
+               <tns:uid>4000</tns:uid>
+               <tns:displayName>Create Sample</tns:displayName>
+               <tns:request>
+                  <tns:comment>comment on request object</tns:comment>
+                  <tns:dataType>com.servicemesh.agility.tools.test.SampleBean</tns:dataType>
+                  <tns:leaf>false</tns:leaf>
+                  <tns:requestPropOverride>[+]id,stringField;[-]intField,longField,dateField;</tns:requestPropOverride>
+               </tns:request>
+               <tns:responseList>
+                  <tns:response>
+                     <tns:comment>this is for success</tns:comment>
+                     <tns:dataType>com.servicemesh.agility.tools.test.SampleBean</tns:dataType>
+                     <tns:leaf>false</tns:leaf>
+                     <tns:responseCode>201</tns:responseCode>
+                     <tns:message>success</tns:message>
+                  </tns:response>
+                  <tns:response>
+                     <tns:comment>this is for failure</tns:comment>
+                     <tns:dataType>java.lang.String</tns:dataType>
+                     <tns:leaf>true</tns:leaf>
+                     <tns:responseCode>500</tns:responseCode>
+                     <tns:message>failed</tns:message>
+                  </tns:response>
+               </tns:responseList>
+               <tns:authRequired>true</tns:authRequired>
+               <tns:aclList>
+                  <tns:acl>
+                     <tns:name>hr</tns:name>
+                     <tns:description>human resources</tns:description>
+                  </tns:acl>
+                  <tns:acl>
+                     <tns:name>manager</tns:name>
+                     <tns:description>manager</tns:description>
+                  </tns:acl>
+               </tns:aclList>
+               <tns:externalDocLink>http://www.servicemesh.com/docs/createsample.html</tns:externalDocLink>
+            </tns:action>
+            <tns:action>
+               <tns:comment>Comment on create samples.</tns:comment>
+               <tns:description>Description on create samples.</tns:description>
+               <tns:httpMethod>POST</tns:httpMethod>
+               <tns:protocol>http</tns:protocol>
+               <tns:uri>/samples</tns:uri>
+               <tns:uid>5000</tns:uid>
+               <tns:displayName>Create Samples</tns:displayName>
+               <tns:request>
+                  <tns:comment>comment on request objects</tns:comment>
+                  <tns:dataType>com.servicemesh.agility.tools.test.SampleBean</tns:dataType>
+                  <tns:leaf>false</tns:leaf>
+                  <tns:containerType>java.util.List</tns:containerType>
+                  <tns:requestPropOverride>[+]id,stringField,intField,longField,dateField</tns:requestPropOverride>
+               </tns:request>
+               <tns:responseList>
+                  <tns:response>
+                     <tns:comment>this is for success</tns:comment>
+                     <tns:dataType>com.servicemesh.agility.tools.test.SampleBean</tns:dataType>
+                     <tns:leaf>false</tns:leaf>
+                     <tns:containerType>java.util.List</tns:containerType>
+                     <tns:responseCode>201</tns:responseCode>
+                     <tns:message>success</tns:message>
+                  </tns:response>
+                  <tns:response>
+                     <tns:comment>this is for failure</tns:comment>
+                     <tns:dataType>java.lang.String</tns:dataType>
+                     <tns:leaf>true</tns:leaf>
+                     <tns:responseCode>500</tns:responseCode>
+                     <tns:message>failed</tns:message>
+                  </tns:response>
+               </tns:responseList>
+               <tns:authRequired>true</tns:authRequired>
+               <tns:aclList>
+                  <tns:acl>
+                     <tns:name>hr</tns:name>
+                     <tns:description>human resources</tns:description>
+                  </tns:acl>
+                  <tns:acl>
+                     <tns:name>manager</tns:name>
+                     <tns:description>manager</tns:description>
+                  </tns:acl>
+               </tns:aclList>
+               <tns:externalDocLink>http://www.servicemesh.com/docs/createsamples.html</tns:externalDocLink>
+            </tns:action>
+         </tns:actionList>
+      </tns:resource>
+   </tns:resourceList>
+   <tns:modelList>
+      <tns:model>
+         <tns:comment>This is the sample bean</tns:comment>
+         <tns:description>This is the sample bean descritpion.</tns:description>
+         <tns:dataType>com.servicemesh.agility.tools.test.SampleBean</tns:dataType>
+         <tns:fieldList>
+            <tns:field>
+               <tns:comment>comment on id field</tns:comment>
+               <tns:dataType>long</tns:dataType>
+               <tns:leaf>true</tns:leaf>
+               <tns:name>id</tns:name>
+               <tns:required>true</tns:required>
+               <tns:systemGenerated>true</tns:systemGenerated>
+            </tns:field>
+            <tns:field>
+               <tns:comment>comment on string field</tns:comment>
+               <tns:dataType>java.lang.String</tns:dataType>
+               <tns:leaf>true</tns:leaf>
+               <tns:name>stringField</tns:name>
+               <tns:required>false</tns:required>
+               <tns:systemGenerated>false</tns:systemGenerated>
+            </tns:field>
+            <tns:field>
+               <tns:comment>comment on int field</tns:comment>
+               <tns:dataType>int</tns:dataType>
+               <tns:leaf>true</tns:leaf>
+               <tns:name>intField</tns:name>
+               <tns:required>false</tns:required>
+               <tns:systemGenerated>false</tns:systemGenerated>
+            </tns:field>
+            <tns:field>
+               <tns:comment>comment on long field</tns:comment>
+               <tns:dataType>java.lang.Long</tns:dataType>
+               <tns:leaf>true</tns:leaf>
+               <tns:name>longField</tns:name>
+               <tns:required>false</tns:required>
+               <tns:systemGenerated>false</tns:systemGenerated>
+            </tns:field>
+            <tns:field>
+               <tns:comment>comment on date field</tns:comment>
+               <tns:dataType>java.util.Date</tns:dataType>
+               <tns:leaf>true</tns:leaf>
+               <tns:name>dateField</tns:name>
+               <tns:required>false</tns:required>
+               <tns:systemGenerated>true</tns:systemGenerated>
+            </tns:field>
+         </tns:fieldList>
+      </tns:model>
+   </tns:modelList>
+</tns:documentation>
+    

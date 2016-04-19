@@ -191,7 +191,7 @@
 								<artifactItem>
 									<groupId>org.jvnet.jaxb2_commons</groupId>
 									<artifactId>jaxb2-basics-runtime</artifactId>
-								</artifactItem>
+								</artifactItem>```
 								<artifactItem>
 									<groupId>org.jvnet.jaxb2_commons</groupId>
 									<artifactId>jaxb2-basics-tools</artifactId>

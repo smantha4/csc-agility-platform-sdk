@@ -1239,7 +1239,7 @@ REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIB
                <jxml:XmlRootElement>
                   <jxml:name>PackageDependency</jxml:name>
                </jxml:XmlRootElement>
-               <a:ApiModel comment = "Utility container for package information."/>
+               <a:ApiModel comment = "Utility container for package information." 
                            description = ""
                            externalDocLink = ""
                            introducedIn = "3.2"/>

@@ -9,7 +9,7 @@
 	<artifactId>core</artifactId>
 	<packaging>jar</packaging>
 	<version>1.0.0</version>
-	
+
 	<name>core</name>
 
 	<parent>
@@ -35,6 +35,11 @@
 		</repository>
 	</repositories>
 	<dependencies>
+		<dependency>
+			<groupId>com.servicemesh</groupId>
+			<artifactId>agility.api.docs.annotation</artifactId>
+			<version>1.1.4</version>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.xmlbeans</groupId>
 			<artifactId>xmlbeans</artifactId>
@@ -415,8 +420,8 @@
 									<artifactId>freemarker</artifactId>
 								</artifactItem>
 								<artifactItem>
-									<groupId>agility-platform-sdk.local.com.servicemesh.tools</groupId>
-									<artifactId>agility-api-docs-annotation</artifactId>
+									<groupId>com.servicemesh</groupId>
+									<artifactId>agility.api.docs.annotation</artifactId>
 								</artifactItem>
 								<artifactItem>
 									<groupId>org.hamcrest</groupId>

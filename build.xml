@@ -56,7 +56,6 @@
 			</fileset>
 		</copy>
 		<move file="${ivylib}/powermock-mockito-release-full-1.6.3.jar" tofile="${lib}/powermock-mockito-1.6.3-full.jar" />
-		<move file="${ivylib}/agility-api-docs-annotation-1.1.3.jar" tofile="${lib}/agility-athena-1.0.4-bin.jar" />
 
 		<copy todir="${iolib}">
 			<fileset dir="${ivylib}">
