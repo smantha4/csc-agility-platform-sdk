@@ -30,7 +30,7 @@ Copyright (c) 2013-Present Computer Sciences Corporation
       </xsd:annotation>
       
 		<xsd:sequence>
-			<xsd:element name="key" minOccurs="0" maxOccurs="1" type="xsd:string"/>
+			<xsd:element name="key" minOccurs="1" maxOccurs="1" type="xsd:string"/>
 			<xsd:element name="stringValue" minOccurs="0" maxOccurs="1" type="xsd:string"/>
 			<xsd:element name="dateValue" minOccurs="0" maxOccurs="1" type="xsd:date"/>
 			<xsd:element name="doubleValue" minOccurs="0" maxOccurs="1" type="xsd:double"/>
