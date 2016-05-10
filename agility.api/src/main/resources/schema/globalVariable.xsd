@@ -38,6 +38,7 @@ Copyright (c) 2013-Present Computer Sciences Corporation
 			<xsd:element name="intValue" minOccurs="0" maxOccurs="1" type="xsd:int"/>
 			<xsd:element name="booleanValue" minOccurs="0" maxOccurs="1" type="xsd:boolean"/>
 			<xsd:element name="byteValue" minOccurs="0" maxOccurs="1" type="xsd:hexBinary"/>
+			<xsd:element name="textValue" minOccurs="0" maxOccurs="1" type="xsd:string"/>
 		</xsd:sequence>
 	</xsd:complexType>
 	<xsd:element name="GlobalVariable" type="agility:GlobalVariable"/>
