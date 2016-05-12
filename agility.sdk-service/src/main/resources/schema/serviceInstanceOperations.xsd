@@ -117,6 +117,16 @@ ALL SOFTWARE, INFORMATION AND ANY OTHER RELATED COMMUNICATIONS (COLLECTIVELY, "W
                   </xsd:annotation>
                </xsd:element>
 
+               <xsd:element name="variable" type="agility:AssetProperty" minOccurs="0" maxOccurs="unbounded">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="List of variables inherited from containment hierarchy"/>
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+
             </xsd:sequence>
          </xsd:extension>
       </xsd:complexContent>
