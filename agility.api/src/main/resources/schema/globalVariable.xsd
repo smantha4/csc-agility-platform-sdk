@@ -15,6 +15,9 @@ Copyright (c) 2013-Present Computer Sciences Corporation
    xmlns:jxml="http://annox.dev.java.net/javax.xml.bind.annotation"
    xmlns:agility="http://servicemesh.com/agility/api">
    
+   <xsd:include schemaLocation="smList.xsd" />
+   <xsd:include schemaLocation="link.xsd" />
+   
    <xsd:complexType name="GlobalVariable">
    
         <xsd:annotation>
@@ -39,7 +42,40 @@ Copyright (c) 2013-Present Computer Sciences Corporation
 			<xsd:element name="booleanValue" minOccurs="0" maxOccurs="1" type="xsd:boolean"/>
 			<xsd:element name="byteValue" minOccurs="0" maxOccurs="1" type="xsd:hexBinary"/>
 			<xsd:element name="textValue" minOccurs="0" maxOccurs="1" type="xsd:string"/>
+			<xsd:element name="link" minOccurs="0" maxOccurs="1" type="agility:Link"/>
 		</xsd:sequence>
 	</xsd:complexType>
 	<xsd:element name="GlobalVariable" type="agility:GlobalVariable"/>
+
+   <xsd:complexType name="GlobalVariableList">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>GlobalVariableList</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Manages a collection of Global Variables." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      
+      <xsd:complexContent>
+         <xsd:extension base="agility:ServiceMeshList">
+		      <xsd:sequence>
+		         <xsd:element name="GlobalVariable" type="agility:GlobalVariable" minOccurs="0" maxOccurs="unbounded">
+		            <xsd:annotation>
+		               <xsd:appinfo>
+		                  <annox:annotate target="field">
+		                     <a:ApiField comment="A list of Global variables." />
+		                  </annox:annotate>
+		               </xsd:appinfo>
+		            </xsd:annotation>
+		         </xsd:element>
+		      </xsd:sequence>
+		   </xsd:extension>
+	   </xsd:complexContent>
+   </xsd:complexType>
+   	
 </xsd:schema>
