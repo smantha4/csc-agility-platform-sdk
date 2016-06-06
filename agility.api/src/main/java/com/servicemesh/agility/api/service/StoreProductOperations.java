@@ -22,7 +22,9 @@ public interface StoreProductOperations
     public void setDeployLocked(LaunchItemDeployment launchItemDeployment) throws Exception;
 
     public void deployApproved(LaunchItemDeployment launchItemDeployment, Integer approverId, String comment) throws Exception;
+
     public void deployApproved(LaunchItemDeployment launchItemDeployment, Integer approverId, String comment, boolean start)
             throws Exception;
+
     public void deployRejected(LaunchItemDeployment launchItemDeployment, String comment) throws Exception;
 }
