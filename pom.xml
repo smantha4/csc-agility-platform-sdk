@@ -32,7 +32,7 @@
         	<repository>
                 	<id>bintray-csc-opensource</id>
                 	<name>CSC-opensource</name>
-                	<url>https://api.bintray.com/maven/csc/opensource/agility.platform-sdk/;publish=1</url>
+                	<url>https://api.bintray.com/maven/csc/opensource/agility.platform-sdk/;publish=1;override=1</url>
                 </repository>
                 <snapshotRepository>
                         <id>snapshots</id>
