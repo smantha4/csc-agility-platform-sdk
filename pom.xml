@@ -29,17 +29,16 @@
 	</properties>
 
 	<distributionManagement>
-		<!-- Deploy with source: mvn source:jar deploy -->
-		<repository>
-			<id>central</id>
-			<name>servicemesh-artifactory-releases</name>
-			<url>http://repo.servicemesh.com:8081/artifactory/libs-release-local</url>
-		</repository>
-		<snapshotRepository>
-			<id>snapshots</id>
-			<name>servicemesh-artifactory-snapshots</name>
-			<url>http://repo.servicemesh.com:8081/artifactory/libs-snapshot-local</url>
-		</snapshotRepository>
+        	<repository>
+                	<id>bintray-csc-opensource</id>
+                	<name>CSC-opensource</name>
+                	<url>https://api.bintray.com/maven/csc/opensource/agility.platform-sdk/;publish=1</url>
+                </repository>
+                <snapshotRepository>
+                        <id>snapshots</id>
+                        <name>servicemesh-artifactory-snapshots</name>
+                        <url>http://repo.servicemesh.com:8081/artifactory/libs-snapshot-local</url>
+                </snapshotRepository>	
 	</distributionManagement>
 
 	<repositories>
