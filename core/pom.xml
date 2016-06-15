@@ -15,7 +15,7 @@
 	<parent>
 		<groupId>com.servicemesh</groupId>
 		<artifactId>agility.platform-sdk</artifactId>
-		<version>4.0.0-SNAPSHOT</version>
+		<version>3.1.1</version>
 	</parent>
 
 	<properties>
@@ -27,13 +27,6 @@
 		<test.sources.src.dir>${project.basedir}/src/test/java/</test.sources.src.dir>
 	</properties>
 	
-	<repositories>
-		<!-- project Local repository for hosting unmanaged dependencies -->
-		<repository>
-			<id>agility-platform-sdk.local</id>
-			<url>file://${project.basedir}/../local-maven-repo/</url>
-		</repository>
-	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>com.servicemesh</groupId>

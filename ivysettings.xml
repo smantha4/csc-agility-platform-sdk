@@ -13,9 +13,10 @@
         <ivy pattern="http://central.maven.org/maven2/[organization]/[module]/[revision]/[module]-[revision].[ext]" />
     </url>
 
-	<filesystem name="local" m2compatible="true">
-        <artifact pattern="${ivy.settings.dir}/local-maven-repo/[organization]/[module]/[revision]/[artifact]-[revision]([tag]).[ext]" />
-      </filesystem>
+	<url name="csc-opensrc" m2compatible="true" >
+        <artifact pattern="https://dl.bintray.com/csc/opensource/[organization]/[module]/[revision]/[artifact]-[revision]([tag]).[ext]" />
+        <ivy pattern="https://dl.bintray.com/csc/opensource/[organization]/[module]/[revision]/[module]-[revision].[ext]" />
+    </url>
 
     <!-- Resolver Chains: http://ant.apache.org/ivy/history/latest-milestone/resolver/chain.html -->
     <!-- ant property 'ivy.resolver' specifies which resolver chain to use (defaults to develop) -->
@@ -24,7 +25,7 @@
     <!-- Used by developers to access their local versions; otherwise pull from artifactory develop -->
     <chain name="ivy" returnFirst="true">
         <resolver ref="maven-central" />
-        <resolver ref="local"/>
+        <resolver ref="csc-opensrc"/>
     </chain>
 
     <!-- Used for CI release builds -->
