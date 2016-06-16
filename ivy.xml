@@ -170,13 +170,13 @@
       <dependency org="org.apache.httpcomponents" name="httpclient" rev="4.4.1"  >
          <artifact name="httpclient" type="jar" ext="jar" />
       </dependency>    
-      <dependency org="agility-platform-sdk.local" name="httpasyncclient" rev="4.1"  >
+      <dependency org="com.servicemesh.agility-platform-sdk" name="httpasyncclient" rev="4.1"  >
          <artifact name="httpasyncclient" type="jar" ext="jar" />
       </dependency>    
-      <dependency org="agility-platform-sdk.local" name="httpcore" rev="4.4.1"  >
+      <dependency org="com.servicemesh.agility-platform-sdk" name="httpcore" rev="4.4.1"  >
          <artifact name="httpcore" type="jar" ext="jar" />
       </dependency>    
-      <dependency org="agility-platform-sdk.local" name="httpcore-nio" rev="4.4.1"  >
+      <dependency org="com.servicemesh.agility-platform-sdk" name="httpcore-nio" rev="4.4.1"  >
          <artifact name="httpcore-nio" type="jar" ext="jar" />
       </dependency>    
       
