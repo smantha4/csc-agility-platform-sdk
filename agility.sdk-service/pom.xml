@@ -6,9 +6,8 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>agility.sdk.service</artifactId>
+	<artifactId>agility.sdk-service</artifactId>
 	<packaging>jar</packaging>
-	<version>1.1.0</version>
 	
 	<!-- This module name deviated from standard naming convention as a folder ".service" 
 	is considered as a Bundle in MAC. -->
@@ -17,7 +16,7 @@
 	<parent>
 		<groupId>com.servicemesh</groupId>
 		<artifactId>agility.platform-sdk</artifactId>
-		<version>3.1.1</version>
+		<version>10.2.2.1001-SNAPSHOT</version>
 	</parent>
 	
 	<properties>
@@ -28,12 +27,12 @@
 		<dependency>
 			<groupId>com.servicemesh</groupId>
 			<artifactId>io</artifactId>
-			<version>1.0.0</version>
+			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.servicemesh</groupId>
 			<artifactId>agility.api</artifactId>
-			<version>3.1.0</version>
+			<version>${project.parent.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -135,6 +134,28 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>flase</addClasspath>
+                        </manifest>
+                        <manifestEntries>
+                            <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
+                            <Bundle-Name>Agility - SDK - Service Adapter</Bundle-Name>
+                            <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
+                            <Bundle-Version>${project.version}</Bundle-Version>
+                            <Bundle-Vendor>ServiceMesh</Bundle-Vendor>
+                            <DynamicImport-Package>*</DynamicImport-Package>
+                            <Import-Package>
+                                com.servicemesh.agility.api;version="${project.version}",com.servicemesh.core.async;version="${project.version}",com.servicemesh.core.messaging;version="${project.version}",com.servicemesh.core.reactor;version="${project.version}",com.servicemesh.io.proxy,org.osgi.framework,org.osgi.util.tracker;version="1.5.1"   
+                            </Import-Package>
+                            <Bundle-ClassPath>.,cobertura.jar</Bundle-ClassPath>
+                            <Export-Package>
+                                com.servicemesh.agility.sdk.service.exception;version="${project.version}",com.servicemesh.agility.sdk.service.helper;version="${project.version}",com.servicemesh.agility.sdk.service.msgs;version="${project.version}",com.servicemesh.agility.sdk.service.spi;version="${project.version}",com.servicemesh.agility.sdk.service.operations;version="${project.version}",com.servicemesh.agility.sdk.service.util;version="${project.version}" 
+                            </Export-Package>
+                        </manifestEntries>
+                    </archive>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

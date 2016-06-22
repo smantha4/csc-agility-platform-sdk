@@ -1,5 +1,0 @@
-Bundle-ManifestVersion: 2
-Bundle-Name: ServiceMesh Core Frameworks
-Bundle-SymbolicName: ${project.groupId}.${project.artifactId}
-Bundle-Version: ${project.version}
-Bundle-Vendor: ServiceMesh
