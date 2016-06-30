@@ -10,21 +10,9 @@ The projects contained in this repository are used for developing Cloud Adapters
 ## How to Build this project:
 
 **To Build all modules:**
-
--Dmaven.legacyLocalRepo=true parameter is required. Otherwise, maven fails to resolve some project local repository dependencies, on its very first run.
-
 From project root folder, run
 
-<code>mvn clean install -Dmaven.legacyLocalRepo=true</code>
-
-**To Build dependent projects like service adapters:**
-
-make sure you ran maven build, then from project root folder, run
-
-<code>ant clean init</code>
-
-This arranges dependencies into "dist", "ivy-lib", "lib" and"com.servicemesh.io/lib" folders as required for service adapter projects.
-
+<code>mvn clean install</code>
 
 For more information, see [the Wiki](https://github.com/csc/csc-agility-platform-sdk/wiki).
 
