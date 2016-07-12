@@ -4,13 +4,12 @@
    <modelVersion>4.0.0</modelVersion>
 
    <artifactId>agility.api.docs.annotation</artifactId>
-   <version>1.1.4</version>
    <packaging>jar</packaging>
    
 	<parent>
 		<groupId>com.servicemesh</groupId>
 		<artifactId>agility.platform-sdk</artifactId>
-		<version>3.1.1</version>
+		<version>10.2.2.1001-SNAPSHOT</version>
 	</parent>
 
    <name>agility.api.docs.annotation</name>
@@ -111,7 +110,7 @@
                             <Bundle-Vendor>ServiceMesh</Bundle-Vendor>
                         </manifestEntries>
                     </archive>
-                </configuration>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

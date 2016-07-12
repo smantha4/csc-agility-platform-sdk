@@ -5,17 +5,14 @@
 
 
 	<modelVersion>4.0.0</modelVersion>
-
 	<artifactId>agility.sdk.cloud</artifactId>
 	<packaging>jar</packaging>
-	<version>3.1.0</version>
-	
 	<name>agility.sdk.cloud</name>
 
 	<parent>
 		<groupId>com.servicemesh</groupId>
 		<artifactId>agility.platform-sdk</artifactId>
-		<version>3.1.1</version>
+		<version>10.2.2.1001-SNAPSHOT</version>
 	</parent>
 	
 	<properties>
@@ -26,12 +23,12 @@
 		<dependency>
 			<groupId>com.servicemesh</groupId>
 			<artifactId>io</artifactId>
-			<version>1.0.0</version>
+			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.servicemesh</groupId>
 			<artifactId>agility.api</artifactId>
-			<version>3.1.0</version>
+			<version>${project.parent.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -133,6 +130,28 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>flase</addClasspath>
+                        </manifest>
+                        <manifestEntries>
+                            <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
+                            <Bundle-Name>Agility - SDK - Cloud Adapter</Bundle-Name>
+                            <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
+                            <Bundle-Version>${project.version}</Bundle-Version>
+                            <Bundle-Vendor>ServiceMesh</Bundle-Vendor>
+                            <DynamicImport-Package>*</DynamicImport-Package>
+                            <Import-Package>
+								com.servicemesh.agility.api;version="${project.version}",com.servicemesh.core.async;version="${project.version}",com.servicemesh.core.messaging;version="${project.version}",com.servicemesh.core.reactor;version="${project.version}",com.servicemesh.io.proxy,org.osgi.framework,org.osgi.util.tracker;version="1.5.1"  
+                            </Import-Package>
+                            <Bundle-ClassPath>.</Bundle-ClassPath>
+                            <Export-Package>
+                                com.servicemesh.agility.sdk.cloud.exception;version="${project.version}",com.servicemesh.agility.sdk.cloud.helper;version="${project.version}",com.servicemesh.agility.sdk.cloud.msgs;version="${project.version}",com.servicemesh.agility.sdk.cloud.spi;version="${project.version}",com.servicemesh.agility.sdk.cloud.util;version="${project.version}"
+                            </Export-Package>
+                        </manifestEntries>
+                    </archive>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

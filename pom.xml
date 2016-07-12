@@ -8,7 +8,7 @@
 	<groupId>com.servicemesh</groupId>
 	<artifactId>agility.platform-sdk</artifactId>
 	<packaging>pom</packaging>
-	<version>3.1.1</version>
+	<version>10.2.2.1001-SNAPSHOT</version>
 
 	<name>agility.platform-sdk</name>
 
@@ -41,6 +41,13 @@
                 </snapshotRepository>	
 	</distributionManagement>
 
+
+    <scm>
+        <connection>https://github.com/csc/csc-agility-platform-sdk</connection>
+        <developerConnection>scm:git|git@github.com:csc/csc-agility-platform-sdk.git</developerConnection>
+        <url>https://github.com/csc/csc-agility-platform-sdk</url>
+	</scm>
+
 	<repositories>
 		<repository>
             <id>csc-opensource-repo</id>
@@ -67,6 +74,11 @@
 		<dependency>
 			<groupId>com.sun.xml.bind</groupId>
 			<artifactId>jaxb-impl</artifactId>
+			<version>2.2.11</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-core</artifactId>
 			<version>2.2.11</version>
 		</dependency>
 		<dependency>
@@ -453,7 +465,7 @@
 						<dependency>
 							<groupId>com.servicemesh</groupId>
 							<artifactId>agility.api.docs.annotation</artifactId>
-							<version>1.1.4</version>
+							<version>${project.version}</version>
 						</dependency>
 					</dependencies>
 				</plugin>
@@ -529,12 +541,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>2.4</version>
-					<configuration>
-						<archive>
-							<manifestFile>${project.build.directory}/classes/META-INF/MANIFEST.MF</manifestFile>
-						</archive>
-					</configuration>
+					<version>3.0.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
