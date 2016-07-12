@@ -41,6 +41,13 @@
                 </snapshotRepository>	
 	</distributionManagement>
 
+
+    <scm>
+        <connection>https://github.com/csc/csc-agility-platform-sdk</connection>
+        <developerConnection>scm:git|git@github.com:csc/csc-agility-platform-sdk.git</developerConnection>
+        <url>https://github.com/csc/csc-agility-platform-sdk</url>
+	</scm>
+
 	<repositories>
 		<repository>
             <id>csc-opensource-repo</id>
