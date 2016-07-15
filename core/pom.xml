@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 
 	<modelVersion>4.0.0</modelVersion>
@@ -14,7 +13,7 @@
 	<parent>
 		<groupId>com.servicemesh</groupId>
 		<artifactId>agility.platform-sdk</artifactId>
-		<version>10.2.2.1001-SNAPSHOT</version>
+		<version>10.2.2.1001</version>
 	</parent>
 
 	<properties>
@@ -86,14 +85,11 @@
 									<attribute name="prefix" default="" />
 									<attribute name="suffix" default="" />
 									<sequential>
-										<copy
-											file="${src.pkg.dir}/@{package}/@{prefix}_KeyName_@{suffix}.java"
-											toFile="${gen.pkg.dir}/@{package}/@{prefix}@{keyName}@{suffix}.java">
+										<copy file="${src.pkg.dir}/@{package}/@{prefix}_KeyName_@{suffix}.java" toFile="${gen.pkg.dir}/@{package}/@{prefix}@{keyName}@{suffix}.java">
 											<filterset begintoken="_" endtoken="_">
 												<filter token="KeyName" value="@{keyName}" />
 												<filter token="KeyType" value="@{keyType}" />
-												<filter token="Warning"
-													value="***** DO NOT EDIT: Generated from template *****" />
+												<filter token="Warning" value="***** DO NOT EDIT: Generated from template *****" />
 											</filterset>
 										</copy>
 									</sequential>
@@ -106,14 +102,11 @@
 									<attribute name="prefix" default="" />
 									<attribute name="suffix" default="" />
 									<sequential>
-										<copy
-											file="${src.pkg.dir}/@{package}/@{prefix}_ValueName_@{suffix}.java"
-											toFile="${gen.pkg.dir}/@{package}/@{prefix}@{valueName}@{suffix}.java">
+										<copy file="${src.pkg.dir}/@{package}/@{prefix}_ValueName_@{suffix}.java" toFile="${gen.pkg.dir}/@{package}/@{prefix}@{valueName}@{suffix}.java">
 											<filterset begintoken="_" endtoken="_">
 												<filter token="ValueName" value="@{valueName}" />
 												<filter token="ValueType" value="@{valueType}" />
-												<filter token="Warning"
-													value="***** DO NOT EDIT: Generated from template *****" />
+												<filter token="Warning" value="***** DO NOT EDIT: Generated from template *****" />
 											</filterset>
 										</copy>
 									</sequential>
@@ -126,14 +119,11 @@
 									<attribute name="prefix" default="" />
 									<attribute name="suffix" default="" />
 									<sequential>
-										<copy
-											file="${test.sources.src.pkg.dir}/@{package}/@{prefix}_ValueName_@{suffix}.java"
-											toFile="${test.sources.gen.pkg.dir}/@{package}/@{prefix}@{valueName}@{suffix}.java">
+										<copy file="${test.sources.src.pkg.dir}/@{package}/@{prefix}_ValueName_@{suffix}.java" toFile="${test.sources.gen.pkg.dir}/@{package}/@{prefix}@{valueName}@{suffix}.java">
 											<filterset begintoken="_" endtoken="_">
 												<filter token="ValueName" value="@{valueName}" />
 												<filter token="ValueType" value="@{valueType}" />
-												<filter token="Warning"
-													value="***** DO NOT EDIT: Generated from template *****" />
+												<filter token="Warning" value="***** DO NOT EDIT: Generated from template *****" />
 											</filterset>
 										</copy>
 									</sequential>
@@ -148,16 +138,13 @@
 									<attribute name="prefix" default="" />
 									<attribute name="suffix" default="" />
 									<sequential>
-										<copy
-											file="${src.pkg.dir}/@{package}/@{prefix}_KeyName__ValueName_@{suffix}.java"
-											toFile="${gen.pkg.dir}/@{package}/@{prefix}@{keyName}@{valueName}@{suffix}.java">
+										<copy file="${src.pkg.dir}/@{package}/@{prefix}_KeyName__ValueName_@{suffix}.java" toFile="${gen.pkg.dir}/@{package}/@{prefix}@{keyName}@{valueName}@{suffix}.java">
 											<filterset begintoken="_" endtoken="_">
 												<filter token="KeyName" value="@{keyName}" />
 												<filter token="KeyType" value="@{keyType}" />
 												<filter token="ValueName" value="@{valueName}" />
 												<filter token="ValueType" value="@{valueType}" />
-												<filter token="Warning"
-													value="***** DO NOT EDIT: Generated from template *****" />
+												<filter token="Warning" value="***** DO NOT EDIT: Generated from template *****" />
 											</filterset>
 										</copy>
 									</sequential>
@@ -172,16 +159,13 @@
 									<attribute name="prefix" default="" />
 									<attribute name="suffix" default="" />
 									<sequential>
-										<copy
-											file="${test.sources.src.pkg.dir}/@{package}/@{prefix}_KeyName__ValueName_@{suffix}.java"
-											toFile="${test.sources.gen.pkg.dir}/@{package}/@{prefix}@{keyName}@{valueName}@{suffix}.java">
+										<copy file="${test.sources.src.pkg.dir}/@{package}/@{prefix}_KeyName__ValueName_@{suffix}.java" toFile="${test.sources.gen.pkg.dir}/@{package}/@{prefix}@{keyName}@{valueName}@{suffix}.java">
 											<filterset begintoken="_" endtoken="_">
 												<filter token="KeyName" value="@{keyName}" />
 												<filter token="KeyType" value="@{keyType}" />
 												<filter token="ValueName" value="@{valueName}" />
 												<filter token="ValueType" value="@{valueType}" />
-												<filter token="Warning"
-													value="***** DO NOT EDIT: Generated from template *****" />
+												<filter token="Warning" value="***** DO NOT EDIT: Generated from template *****" />
 											</filterset>
 										</copy>
 									</sequential>
@@ -192,35 +176,23 @@
 									<attribute name="valueType" />
 									<sequential>
 										<!-- common -->
-										<generateValueType valueName="@{valueName}"
-											valueType="@{valueType}" package="common" prefix="MapG" />
+										<generateValueType valueName="@{valueName}" valueType="@{valueType}" package="common" prefix="MapG" />
 										<!-- comparator -->
-										<generateValueType valueName="@{valueName}"
-											valueType="@{valueType}" package="comparator" prefix="Cmp" />
-										<generateValueType valueName="@{valueName}"
-											valueType="@{valueType}" package="comparator" prefix="Eq" />
-										<generateValueType valueName="@{valueName}"
-											valueType="@{valueType}" package="comparator" prefix="Comparator" />
+										<generateValueType valueName="@{valueName}" valueType="@{valueType}" package="comparator" prefix="Cmp" />
+										<generateValueType valueName="@{valueName}" valueType="@{valueType}" package="comparator" prefix="Eq" />
+										<generateValueType valueName="@{valueName}" valueType="@{valueType}" package="comparator" prefix="Comparator" />
 										<!-- hash -->
-										<generateValueType valueName="@{valueName}"
-											valueType="@{valueType}" package="hash" prefix="HashMapG" />
+										<generateValueType valueName="@{valueName}" valueType="@{valueType}" package="hash" prefix="HashMapG" />
 										<!-- heap -->
-										<generateValueType valueName="@{valueName}"
-											valueType="@{valueType}" package="heap" prefix="HeapG" />
+										<generateValueType valueName="@{valueName}" valueType="@{valueType}" package="heap" prefix="HeapG" />
 										<!-- search -->
-										<generateValueType valueName="@{valueName}"
-											valueType="@{valueType}" package="search" prefix="Search" />
+										<generateValueType valueName="@{valueName}" valueType="@{valueType}" package="search" prefix="Search" />
 										<!-- sort -->
-										<generateValueType valueName="@{valueName}"
-											valueType="@{valueType}" package="sort" prefix="PermutationSort" />
-										<generateValueType valueName="@{valueName}"
-											valueType="@{valueType}" package="sort" prefix="Sort" />
+										<generateValueType valueName="@{valueName}" valueType="@{valueType}" package="sort" prefix="PermutationSort" />
+										<generateValueType valueName="@{valueName}" valueType="@{valueType}" package="sort" prefix="Sort" />
 										<!-- vector -->
-										<generateValueType valueName="@{valueName}"
-											valueType="@{valueType}" package="vector" prefix="Vector" />
-										<generateValueTypeForTests
-											valueName="@{valueName}" valueType="@{valueType}" package="vector"
-											prefix="Vector" suffix="Test" />
+										<generateValueType valueName="@{valueName}" valueType="@{valueType}" package="vector" prefix="Vector" />
+										<generateValueTypeForTests valueName="@{valueName}" valueType="@{valueType}" package="vector" prefix="Vector" suffix="Test" />
 									</sequential>
 								</macrodef>
 
@@ -232,24 +204,13 @@
 									<attribute name="valueType" />
 									<sequential>
 										<!-- common -->
-										<generateKeyValueType keyName="@{keyName}"
-											keyType="@{keyType}" valueName="@{valueName}" valueType="@{valueType}"
-											package="common" prefix="Map" />
+										<generateKeyValueType keyName="@{keyName}" keyType="@{keyType}" valueName="@{valueName}" valueType="@{valueType}" package="common" prefix="Map" />
 										<!-- hash -->
-										<generateKeyValueType keyName="@{keyName}"
-											keyType="@{keyType}" valueName="@{valueName}" valueType="@{valueType}"
-											package="hash" prefix="HashMap" />
-										<generateKeyValueTypeForTests
-											keyName="@{keyName}" keyType="@{keyType}" valueName="@{valueName}"
-											valueType="@{valueType}" package="hash" prefix="HashMap"
-											suffix="Test" />
+										<generateKeyValueType keyName="@{keyName}" keyType="@{keyType}" valueName="@{valueName}" valueType="@{valueType}" package="hash" prefix="HashMap" />
+										<generateKeyValueTypeForTests keyName="@{keyName}" keyType="@{keyType}" valueName="@{valueName}" valueType="@{valueType}" package="hash" prefix="HashMap" suffix="Test" />
 										<!-- heap -->
-										<generateKeyValueType keyName="@{keyName}"
-											keyType="@{keyType}" valueName="@{valueName}" valueType="@{valueType}"
-											package="heap" prefix="Heap" />
-										<generateKeyValueTypeForTests
-											keyName="@{keyName}" keyType="@{keyType}" valueName="@{valueName}"
-											valueType="@{valueType}" package="heap" prefix="Heap" suffix="Test" />
+										<generateKeyValueType keyName="@{keyName}" keyType="@{keyType}" valueName="@{valueName}" valueType="@{valueType}" package="heap" prefix="Heap" />
+										<generateKeyValueTypeForTests keyName="@{keyName}" keyType="@{keyType}" valueName="@{valueName}" valueType="@{valueType}" package="heap" prefix="Heap" suffix="Test" />
 									</sequential>
 								</macrodef>
 
@@ -258,42 +219,26 @@
 									<attribute name="keyType" />
 									<sequential>
 										<!-- common -->
-										<generateKeyType keyName="@{keyName}" keyType="@{keyType}"
-											package="common" prefix="Set" />
-										<generateKeyType keyName="@{keyName}" keyType="@{keyType}"
-											package="common" prefix="Map" suffix="G" />
+										<generateKeyType keyName="@{keyName}" keyType="@{keyType}" package="common" prefix="Set" />
+										<generateKeyType keyName="@{keyName}" keyType="@{keyType}" package="common" prefix="Map" suffix="G" />
 										<!-- hash -->
-										<generateKeyType keyName="@{keyName}" keyType="@{keyType}"
-											package="hash" prefix="AbstractHash" />
-										<generateKeyType keyName="@{keyName}" keyType="@{keyType}"
-											package="hash" prefix="Hash" />
-										<generateKeyType keyName="@{keyName}" keyType="@{keyType}"
-											package="hash" prefix="HashMap" suffix="G" />
-										<generateKeyType keyName="@{keyName}" keyType="@{keyType}"
-											package="hash" prefix="HashSet" />
+										<generateKeyType keyName="@{keyName}" keyType="@{keyType}" package="hash" prefix="AbstractHash" />
+										<generateKeyType keyName="@{keyName}" keyType="@{keyType}" package="hash" prefix="Hash" />
+										<generateKeyType keyName="@{keyName}" keyType="@{keyType}" package="hash" prefix="HashMap" suffix="G" />
+										<generateKeyType keyName="@{keyName}" keyType="@{keyType}" package="hash" prefix="HashSet" />
 										<!-- heap -->
-										<generateKeyType keyName="@{keyName}" keyType="@{keyType}"
-											package="heap" prefix="AbstractHeap" />
-										<generateKeyType keyName="@{keyName}" keyType="@{keyType}"
-											package="heap" prefix="Heap" suffix="G" />
+										<generateKeyType keyName="@{keyName}" keyType="@{keyType}" package="heap" prefix="AbstractHeap" />
+										<generateKeyType keyName="@{keyName}" keyType="@{keyType}" package="heap" prefix="Heap" suffix="G" />
 
 										<!-- Nested generation of KeyValue types -->
-										<generateKeyValueTypes keyName="@{keyName}"
-											keyType="@{keyType}" valueName="Char" valueType="char" />
-										<generateKeyValueTypes keyName="@{keyName}"
-											keyType="@{keyType}" valueName="Byte" valueType="byte" />
-										<generateKeyValueTypes keyName="@{keyName}"
-											keyType="@{keyType}" valueName="Short" valueType="short" />
-										<generateKeyValueTypes keyName="@{keyName}"
-											keyType="@{keyType}" valueName="Int" valueType="int" />
-										<generateKeyValueTypes keyName="@{keyName}"
-											keyType="@{keyType}" valueName="Long" valueType="long" />
-										<generateKeyValueTypes keyName="@{keyName}"
-											keyType="@{keyType}" valueName="Float" valueType="float" />
-										<generateKeyValueTypes keyName="@{keyName}"
-											keyType="@{keyType}" valueName="Double" valueType="double" />
-										<generateKeyValueTypes keyName="@{keyName}"
-											keyType="@{keyType}" valueName="Object" valueType="Object" />
+										<generateKeyValueTypes keyName="@{keyName}" keyType="@{keyType}" valueName="Char" valueType="char" />
+										<generateKeyValueTypes keyName="@{keyName}" keyType="@{keyType}" valueName="Byte" valueType="byte" />
+										<generateKeyValueTypes keyName="@{keyName}" keyType="@{keyType}" valueName="Short" valueType="short" />
+										<generateKeyValueTypes keyName="@{keyName}" keyType="@{keyType}" valueName="Int" valueType="int" />
+										<generateKeyValueTypes keyName="@{keyName}" keyType="@{keyType}" valueName="Long" valueType="long" />
+										<generateKeyValueTypes keyName="@{keyName}" keyType="@{keyType}" valueName="Float" valueType="float" />
+										<generateKeyValueTypes keyName="@{keyName}" keyType="@{keyType}" valueName="Double" valueType="double" />
+										<generateKeyValueTypes keyName="@{keyName}" keyType="@{keyType}" valueName="Object" valueType="Object" />
 									</sequential>
 								</macrodef>
 
@@ -301,22 +246,14 @@
 								<mkdir dir="${gen.dir}" />
 								<mkdir dir="${test.sources.gen.dir}" />
 
-								<generateValueTypes valueName="Char"
-									valueType="char" />
-								<generateValueTypes valueName="Byte"
-									valueType="byte" />
-								<generateValueTypes valueName="Short"
-									valueType="short" />
-								<generateValueTypes valueName="Int"
-									valueType="int" />
-								<generateValueTypes valueName="Long"
-									valueType="long" />
-								<generateValueTypes valueName="Float"
-									valueType="float" />
-								<generateValueTypes valueName="Double"
-									valueType="double" />
-								<generateValueTypes valueName="Object"
-									valueType="Object" />
+								<generateValueTypes valueName="Char" valueType="char" />
+								<generateValueTypes valueName="Byte" valueType="byte" />
+								<generateValueTypes valueName="Short" valueType="short" />
+								<generateValueTypes valueName="Int" valueType="int" />
+								<generateValueTypes valueName="Long" valueType="long" />
+								<generateValueTypes valueName="Float" valueType="float" />
+								<generateValueTypes valueName="Double" valueType="double" />
+								<generateValueTypes valueName="Object" valueType="Object" />
 
 								<generateKeyTypes keyName="Char" keyType="char" />
 								<generateKeyTypes keyName="Byte" keyType="byte" />

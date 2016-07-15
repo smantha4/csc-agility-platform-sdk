@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.servicemesh</groupId>
 	<artifactId>agility.platform-sdk</artifactId>
 	<packaging>pom</packaging>
-	<version>10.2.2.1001-SNAPSHOT</version>
+	<version>10.2.2.1001</version>
 
 	<name>agility.platform-sdk</name>
 
@@ -46,7 +45,8 @@
         <connection>https://github.com/csc/csc-agility-platform-sdk</connection>
         <developerConnection>scm:git|git@github.com:csc/csc-agility-platform-sdk.git</developerConnection>
         <url>https://github.com/csc/csc-agility-platform-sdk</url>
-	</scm>
+	  <tag>10.2.2.1001</tag>
+  </scm>
 
 	<repositories>
 		<repository>
