@@ -177,6 +177,10 @@
 									<arg value="-c" />
 									<arg value="sed -f ${sed.script.dir}/fixCalendar -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/AuthToken.java" />
 								</exec>
+							    <exec executable="/bin/sh">
+							        <arg value='-c'/>
+							        <arg value="sed -f ${sed.script.dir}/fixCalendar -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/VolumeStorage.java"/>
+							    </exec>
 								<exec executable="/bin/sh">
 									<arg value="-c" />
 									<arg value="sed -f ${sed.script.dir}/fixValidator -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/FieldValidators.java" />

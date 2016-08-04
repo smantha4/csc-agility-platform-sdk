@@ -73,6 +73,16 @@ REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIB
                      </xsd:appinfo>
                   </xsd:annotation>
                </xsd:element>
+			   
+               <xsd:element name="deployment" type="agility:Link" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Reference to deployment Topology." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
                
                <xsd:element name="state" type="agility:State" minOccurs="0">
                   <xsd:annotation>
@@ -331,6 +341,16 @@ REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIB
                      <xsd:appinfo>
                         <annox:annotate target="field">
                            <a:ApiField comment="True if the Agility Instance is in a pending state or a startup of the instance is pending." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+			   
+               <xsd:element name="operatingSystem" type="agility:Link" minOccurs="0">
+                   <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Reference to the Operating System for which the Instance was provisioned." systemGenerated="true" />
                         </annox:annotate>
                      </xsd:appinfo>
                   </xsd:annotation>
