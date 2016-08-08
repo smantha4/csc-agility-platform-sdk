@@ -1,4 +1,4 @@
-# csc-agility-platform-sdk
+# CSC Agility Platform SDK
 The projects contained in this repository are used for developing Cloud Adapters or Service Adapters for the CSC Agility Platform&trade;. The projects are as follows.
 * com.servicemesh.core - Foundation classes for every Agility Platform SDK.
 * com.servicemesh.io - Supports I/O via HTTP/HTTPS, Proxies, and Remote Shell.
@@ -10,6 +10,7 @@ The projects contained in this repository are used for developing Cloud Adapters
 ## How to Build this project:
 
 **To Build all modules:**
+Install Apache Maven
 From project root folder, run
 
 <code>mvn clean install</code>
@@ -18,7 +19,7 @@ For more information, see [the Wiki](https://github.com/csc/csc-agility-platform
 
 ## Eclipse Configuration
 
-* Make sure Java 8, maven are installed
+* Make sure Java 8, Apache Maven are installed
 * Make sure m2e plugin is installed. [m2e is a Maven integration in Eclipse.]
 * Install m2e connector for build-helper-maven-plugin (http://repo1.maven.org/maven2/.m2e/connectors/m2eclipse-buildhelper/0.15.0/N/0.15.0.201207090124/)
 * Run maven build step mentioned in "How to Build this project" section above
