@@ -498,8 +498,23 @@ public class Context
         if (values != null && values.size() > 0)
         {
             result = values.get(0);
+            return Integer.valueOf(result);
         }
-        return Integer.valueOf(result);
+        return null;
+
+    }
+	
+    public Boolean getParamBooleanValue(String key)
+    {
+        String result = null;
+        List<String> values = _queryParams.get(key);
+        if (values != null && values.size() > 0)
+        {
+            result = values.get(0);
+            return Boolean.valueOf(result);
+        }
+        return null;
+
     }
 
     public void clearParams()

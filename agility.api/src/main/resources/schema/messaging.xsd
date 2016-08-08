@@ -854,6 +854,79 @@ REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIB
          </xsd:extension>
       </xsd:complexContent>
    </xsd:complexType>
+   
+   <xsd:element name="InstanceCanonicalNameRequest" type="agility:InstanceCanonicalNameRequest"/>
+      <xsd:complexType name="InstanceCanonicalNameRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>InstanceCanonicalNameRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Message to request the canonical name for the instance"
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:ApiRequest">
+            <xsd:sequence>
+               <xsd:element name="instanceId" type="xsd:int">
+               <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Unique Instance identifier." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="networkInterfaceId" type="xsd:int">
+               <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Unique NetworkInterface identifier." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   
+   <xsd:element name="InstanceCanonicalNameResponse" type="agility:InstanceCanonicalNameResponse"/>
+      <xsd:complexType name="InstanceCanonicalNameResponse">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>InstanceCanonicalNameResponse</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Response message for the canonical name for the instance"
+                           description = "" 
+                           externalDocLink = ""
+                           introducedIn = "3.2" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="agility:ApiResponse">
+            <xsd:sequence>
+               <xsd:element name="instanceCanonicalName" type="xsd:string">
+               <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Canonical name of the instance" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
 
    <xsd:element name="CloudPropertyRequest" type="agility:CloudPropertyRequest"/>
       <xsd:complexType name="CloudPropertyRequest">

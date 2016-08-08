@@ -1261,7 +1261,7 @@ REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIB
                   </xsd:annotation>
                </xsd:element>
                
-               <xsd:element name="dsnServers" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+               <xsd:element name="dnsServers" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
                   <xsd:annotation>
                      <xsd:appinfo>
                         <annox:annotate target="field">

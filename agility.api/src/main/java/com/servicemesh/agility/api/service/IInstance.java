@@ -19,6 +19,7 @@ import com.servicemesh.agility.api.ScriptStatus;
 import com.servicemesh.agility.api.Snapshot;
 import com.servicemesh.agility.api.Task;
 import com.servicemesh.agility.api.Variable;
+import com.servicemesh.agility.api.VolumeStorage;
 
 /**
  * Exposes operations on a virtual machine instance.
@@ -448,4 +449,16 @@ public interface IInstance
      * @throws Exception
      */
     public List<Task> snapshotAllVolumes(Instance instance) throws Exception;
+	
+    /**
+     * Get all volume storages available for attachment to an instance
+     *
+     * @param instanceId
+     *            The target instance id
+     * @param context
+     *            optional context to specify returned volume storage attributes
+     * @return List of VolumeStorage assets
+     * @throws Exception
+     */
+    public List<VolumeStorage> getAvailableVolumes(int instanceId, Context context) throws Exception;
 }
