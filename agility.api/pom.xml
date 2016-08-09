@@ -11,7 +11,7 @@
 	<parent>
 		<groupId>com.servicemesh</groupId>
 		<artifactId>agility.platform-sdk</artifactId>
-		<version>10.2.2.1002-SNAPSHOT</version>
+		<version>10.2.2.1002</version>
 	</parent>
 
 	<properties>
@@ -178,8 +178,8 @@
 									<arg value="sed -f ${sed.script.dir}/fixCalendar -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/AuthToken.java" />
 								</exec>
 							    <exec executable="/bin/sh">
-							        <arg value='-c'/>
-							        <arg value="sed -f ${sed.script.dir}/fixCalendar -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/VolumeStorage.java"/>
+							        <arg value="-c" />
+							        <arg value="sed -f ${sed.script.dir}/fixCalendar -itmp ${xjc.generated.sources.dir}/com/servicemesh/agility/api/VolumeStorage.java" />
 							    </exec>
 								<exec executable="/bin/sh">
 									<arg value="-c" />
