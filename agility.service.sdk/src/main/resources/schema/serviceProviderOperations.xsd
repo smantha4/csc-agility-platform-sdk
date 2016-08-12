@@ -1,0 +1,270 @@
+<!--
+COPYRIGHT (C) 2008-2013 SERVICEMESH, INC.  ALL RIGHTS RESERVED.  CONFIDENTIAL AND PROPRIETARY. 
+ 
+ALL SOFTWARE, INFORMATION AND ANY OTHER RELATED COMMUNICATIONS (COLLECTIVELY, "WORKS") ARE CONFIDENTIAL AND PROPRIETARY INFORMATION THAT ARE THE EXCLUSIVE PROPERTY OF SERVICEMESH.     ALL WORKS ARE PROVIDED UNDER THE APPLICABLE AGREEMENT OR END USER LICENSE AGREEMENT IN EFFECT BETWEEN YOU AND SERVICEMESH.  UNLESS OTHERWISE SPECIFIED IN THE APPLICABLE AGREEMENT, ALL WORKS ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.  ALL USE, DISCLOSURE AND/OR REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIBITED.
+-->
+<xsd:schema targetNamespace="http://servicemesh.com/agility/sdk/service" 
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="qualified"
+   xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0" jaxb:extensionBindingPrefixes="xjc annox"
+   xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+   xmlns:annox="http://annox.dev.java.net" 
+   xmlns:a="http://annox.dev.java.net/com.servicemesh.agility.tools.annotation"
+   xmlns:jl="http://annox.dev.java.net/java.lang"
+   xmlns:jxml="http://annox.dev.java.net/javax.xml.bind.annotation"
+   xmlns:agility="http://servicemesh.com/agility/api"
+   xmlns:core="http://servicemesh.com/core/messaging"
+   xmlns:service="http://servicemesh.com/agility/sdk/service">
+   
+   <xsd:include schemaLocation="general.xsd" />
+   <xsd:import namespace="http://servicemesh.com/agility/api" schemaLocation="agilityReferences.xsd"/>
+   <xsd:import namespace="http://servicemesh.com/core/messaging" schemaLocation="coreReferences.xsd"/>
+   
+   <xsd:complexType name="ServiceProviderPreCreateRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>ServiceProviderPreCreateRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to signal that a service provider instance has been created" 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="service:ServiceProviderRequest">
+            <xsd:sequence>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="ServiceProviderPostCreateRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>ServiceProviderPostCreateRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to signal that a service provider instance has been created" 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="service:ServiceProviderRequest">
+            <xsd:sequence>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="ServiceProviderPreUpdateRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>ServiceProviderPreUpdateRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to signal that service provider parameters have changed" 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="service:ServiceProviderRequest">
+            <xsd:sequence>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="ServiceProviderPostUpdateRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>ServiceProviderPreUpdateRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to signal that service provider parameters have changed" 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="service:ServiceProviderRequest">
+            <xsd:sequence>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="ServiceProviderPreDeleteRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>ServiceProviderDeleteRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to signal that a service provider instance has been removed" 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="service:ServiceProviderRequest">
+            <xsd:sequence>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="ServiceProviderPostDeleteRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>ServiceProviderDeleteRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to signal that a service provider instance has been removed" 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="service:ServiceProviderRequest">
+            <xsd:sequence>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="ServiceProviderSyncRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>ServiceProviderSyncRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to signal that service provider parameters have changed" 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="service:ServiceProviderRequest">
+            <xsd:sequence>
+            	<xsd:element name="serviceInstance" type="agility:ServiceInstance" minOccurs="0" maxOccurs="unbounded">
+			         <xsd:annotation>
+			            <xsd:appinfo>
+			               <annox:annotate target="field">
+			                  <a:ApiField comment="List of all service instances." />
+			               </annox:annotate>
+			            </xsd:appinfo>
+			         </xsd:annotation>
+			      </xsd:element>
+			      <xsd:element name="connectedAsset" type="agility:Asset" minOccurs="0" maxOccurs="unbounded">
+			         <xsd:annotation>
+			            <xsd:appinfo>
+			               <annox:annotate target="field">
+			                  <a:ApiField comment="List of assets connected to service instances." />
+			               </annox:annotate>
+			            </xsd:appinfo>
+			         </xsd:annotation>
+			      </xsd:element>
+			    <xsd:element name="connection" type="agility:Connection" minOccurs="0" maxOccurs="unbounded">
+			       <xsd:annotation>
+			          <xsd:appinfo>
+			             <annox:annotate target="field">
+			                <a:ApiField comment="List of connections to the service instances." />
+			             </annox:annotate>
+			          </xsd:appinfo>
+			       </xsd:annotation>
+			   </xsd:element>   
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="ServiceProviderStartRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>ServiceProviderStartRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to start the service provider" 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="service:ServiceProviderRequest">
+            <xsd:sequence>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="ServiceProviderStopRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>ServiceProviderStopRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to stop the service provider" 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="service:ServiceProviderRequest">
+            <xsd:sequence>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="ServiceProviderPingRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>ServiceProviderPingRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request object used to test connectivity to the service provider" 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="service:ServiceProviderRequest">
+            <xsd:sequence>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+
+</xsd:schema>

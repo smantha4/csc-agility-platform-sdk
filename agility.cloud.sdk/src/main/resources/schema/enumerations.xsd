@@ -1,0 +1,64 @@
+<!--
+COPYRIGHT (C) 2008-2013 SERVICEMESH, INC.  ALL RIGHTS RESERVED.  CONFIDENTIAL AND PROPRIETARY. 
+ 
+ALL SOFTWARE, INFORMATION AND ANY OTHER RELATED COMMUNICATIONS (COLLECTIVELY, "WORKS") ARE CONFIDENTIAL AND PROPRIETARY INFORMATION THAT ARE THE EXCLUSIVE PROPERTY OF SERVICEMESH.     ALL WORKS ARE PROVIDED UNDER THE APPLICABLE AGREEMENT OR END USER LICENSE AGREEMENT IN EFFECT BETWEEN YOU AND SERVICEMESH.  UNLESS OTHERWISE SPECIFIED IN THE APPLICABLE AGREEMENT, ALL WORKS ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.  ALL USE, DISCLOSURE AND/OR REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIBITED.
+-->
+<xsd:schema targetNamespace="http://servicemesh.com/agility/sdk/cloud" 
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="qualified"
+   xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0" jaxb:extensionBindingPrefixes="xjc annox"
+   xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+   xmlns:annox="http://annox.dev.java.net" 
+   xmlns:a="http://annox.dev.java.net/com.servicemesh.agility.tools.annotation"
+   xmlns:jl="http://annox.dev.java.net/java.lang"
+   xmlns:jxml="http://annox.dev.java.net/javax.xml.bind.annotation"
+   xmlns:agility="http://servicemesh.com/agility/api"
+   xmlns:core="http://servicemesh.com/core/messaging"
+   xmlns:cloud="http://servicemesh.com/agility/sdk/cloud">
+   
+   <xsd:simpleType name="PropertyName" >
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>PropertyName</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment="PropertyName Enumeration" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      
+      <xsd:restriction base="xsd:string" >
+         <xsd:enumeration value="cloudType"/>
+         <xsd:enumeration value="publicKeyName"/>
+         <xsd:enumeration value="privateKeyName"/>
+         <xsd:enumeration value="specifyKey"/>
+         <xsd:enumeration value="subscriptionSupported"/>
+         <xsd:enumeration value="cloudCredentialsSupported"/>
+         <xsd:enumeration value="storageSupported"/>
+         <xsd:enumeration value="locationSupported"/>
+         <xsd:enumeration value="networkSupported"/>
+         <xsd:enumeration value="accountNumberSupported"/>
+         <xsd:enumeration value="hostnameSupported"/>
+         <xsd:enumeration value="certificateSupported"/>
+         <xsd:enumeration value="vmmSupported"/>
+         <xsd:enumeration value="vpcSupported"/>
+         <xsd:enumeration value="iconPath"/>
+         <xsd:enumeration value="keyType"/>
+         <xsd:enumeration value="shutdownBeforeSnapshots"/>
+         <xsd:enumeration value="dontReorderDisks"/>
+         <xsd:enumeration value="diskClonedWithImage"/>
+         <xsd:enumeration value="diskCloneSupported"/>
+         <xsd:enumeration value="diskDetachSupported"/>
+         <xsd:enumeration value="diskDetachedOnSnapshot"/>
+         <xsd:enumeration value="modelChangeSupported"/>
+         <xsd:enumeration value="cloudFirewallSupported"/>
+         <xsd:enumeration value="loginSupported"/>
+         <xsd:enumeration value="adminCredentialsSupported"/>
+         <xsd:enumeration value="adminPublicKeyName"/>
+         <xsd:enumeration value="adminPrivateKeyName"/>
+         <xsd:enumeration value="storageSyncLimited"/>
+         <xsd:enumeration value="skipStartupAfterClone"/>
+      </xsd:restriction>
+   </xsd:simpleType>
+      
+</xsd:schema>
