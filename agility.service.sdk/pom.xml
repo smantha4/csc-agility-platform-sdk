@@ -5,17 +5,15 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>agility.sdk-service</artifactId>
+	<artifactId>agility.service.sdk</artifactId>
 	<packaging>jar</packaging>
 	
-	<!-- This module name deviated from standard naming convention as a folder ".service" 
-	is considered as a Bundle in MAC. -->
-	<name>agility.sdk-service</name>
+	<name>agility.service.sdk</name>
 
 	<parent>
 		<groupId>com.servicemesh</groupId>
 		<artifactId>agility.platform-sdk</artifactId>
-		<version>10.2.2.1003-SNAPSHOT</version>
+		<version>10.2.3.1001-SNAPSHOT</version>
 	</parent>
 	
 	<properties>
@@ -25,7 +23,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.servicemesh</groupId>
-			<artifactId>io</artifactId>
+			<artifactId>agility.io</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
@@ -140,10 +138,10 @@
                         </manifest>
                         <manifestEntries>
                             <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
-                            <Bundle-Name>Agility - SDK - Service Adapter</Bundle-Name>
+                            <Bundle-Name>CSC Agility Platform - SDK - Service Adapter</Bundle-Name>
                             <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
                             <Bundle-Version>${project.version}</Bundle-Version>
-                            <Bundle-Vendor>ServiceMesh</Bundle-Vendor>
+                            <Bundle-Vendor>CSC</Bundle-Vendor>
                             <DynamicImport-Package>*</DynamicImport-Package>
                             <Import-Package>
                                 com.servicemesh.agility.api;version="${project.version}",com.servicemesh.core.async;version="${project.version}",com.servicemesh.core.messaging;version="${project.version}",com.servicemesh.core.reactor;version="${project.version}",com.servicemesh.io.proxy,org.osgi.framework,org.osgi.util.tracker;version="1.5.1"   

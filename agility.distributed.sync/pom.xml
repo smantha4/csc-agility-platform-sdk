@@ -12,13 +12,13 @@
 	<parent>
 		<groupId>com.servicemesh</groupId>
 		<artifactId>agility.platform-sdk</artifactId>
-		<version>10.2.2.1003-SNAPSHOT</version>
+		<version>10.2.3.1001-SNAPSHOT</version>
 	</parent>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.servicemesh</groupId>
-			<artifactId>core</artifactId>
+			<artifactId>agility.core</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 	</dependencies>
@@ -90,11 +90,11 @@
                         </manifest>
                         <manifestEntries>
                             <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
-                            <Bundle-Name>Agility - Distributed Sync</Bundle-Name>
+                            <Bundle-Name>CSC Agility Platform - Distributed Sync</Bundle-Name>
                             <Bundle-Activator>com.servicemesh.agility.distributed.impl.Activator</Bundle-Activator>
                             <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
                             <Bundle-Version>${project.version}</Bundle-Version>
-                            <Bundle-Vendor>ServiceMesh</Bundle-Vendor>
+                            <Bundle-Vendor>CSC</Bundle-Vendor>
                             <DynamicImport-Package>*</DynamicImport-Package>
                             <Import-Package>
                             	com.servicemesh.core.async;version="${project.version}",org.apache.log4j;version="[1.2.17,2.0.0)",org.apache.zookeeper,org.osgi.framework,org.osgi.util.tracker    

@@ -7,18 +7,18 @@
 	<groupId>com.servicemesh</groupId>
 	<artifactId>agility.platform-sdk</artifactId>
 	<packaging>pom</packaging>
-	<version>10.2.2.1003-SNAPSHOT</version>
+	<version>10.2.3.1001-SNAPSHOT</version>
 
 	<name>agility.platform-sdk</name>
 
 	<modules>
 		<module>agility.api.docs.annotation</module>
-		<module>core</module>
-		<module>io</module>
+		<module>agility.core</module>
+		<module>agility.io</module>
 		<module>agility.api</module>
 		<module>agility.distributed.sync</module>
-		<module>agility.sdk.cloud</module>
-		<module>agility.sdk-service</module>
+		<module>agility.cloud.sdk</module>
+		<module>agility.service.sdk</module>
 	</modules>
 
 	<properties>

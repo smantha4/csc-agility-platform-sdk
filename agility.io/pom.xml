@@ -5,21 +5,21 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>io</artifactId>
+	<artifactId>agility.io</artifactId>
 	<packaging>jar</packaging>
 
-	<name>io</name>
+	<name>agility.io</name>
 
 	<parent>
 		<groupId>com.servicemesh</groupId>
 		<artifactId>agility.platform-sdk</artifactId>
-		<version>10.2.2.1003-SNAPSHOT</version>
+		<version>10.2.3.1001-SNAPSHOT</version>
 	</parent>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.servicemesh</groupId>
-			<artifactId>core</artifactId>
+			<artifactId>agility.core</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
@@ -106,10 +106,10 @@
                         </manifest>
                         <manifestEntries>
                             <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
-                            <Bundle-Name>IO Services</Bundle-Name>
+                            <Bundle-Name>CSC Agility Platform IO Services</Bundle-Name>
                             <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
                             <Bundle-Version>${project.version}</Bundle-Version>
-                            <Bundle-Vendor>ServiceMesh</Bundle-Vendor>
+                            <Bundle-Vendor>CSC</Bundle-Vendor>
                             <DynamicImport-Package>*</DynamicImport-Package>
                             <Import-Package>
                                 com.servicemesh.core.async,com.servicemesh.core.reactor,javax.crypto,javax.crypto.interfaces,javax.crypto.spec,javax.naming,javax.naming.ldap,javax.naming.directory,javax.net.ssl,javax.security.auth.x500,javax.xml,javax.xml.bind,javax.xml.parsers,javax.xml.transform,javax.xml.transform.dom,javax.xml.transform.stream,org.apache.commons.codec.binary,org.apache.commons.logging,org.apache.log4j;version="[1.2.17,2.0.0)",org.ietf.jgss,org.slf4j,org.w3c.dom,org.xml.sax 

@@ -5,15 +5,15 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>core</artifactId>
+	<artifactId>agility.core</artifactId>
 	<packaging>jar</packaging>
 
-	<name>core</name>
+	<name>agility.core</name>
 
 	<parent>
 		<groupId>com.servicemesh</groupId>
 		<artifactId>agility.platform-sdk</artifactId>
-		<version>10.2.2.1003-SNAPSHOT</version>
+		<version>10.2.3.1001-SNAPSHOT</version>
 	</parent>
 
 	<properties>
@@ -336,10 +336,10 @@
 						</manifest>
 						<manifestEntries>
 							<Bundle-ManifestVersion>2</Bundle-ManifestVersion>
-							<Bundle-Name>ServiceMesh Core Frameworks</Bundle-Name>
+							<Bundle-Name>CSC Agility Platform Core Frameworks</Bundle-Name>
 							<Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
 							<Bundle-Version>${project.version}</Bundle-Version>
-							<Bundle-Vendor>ServiceMesh Maven</Bundle-Vendor>
+							<Bundle-Vendor>CSC</Bundle-Vendor>
 							<DynamicImport-Package>*</DynamicImport-Package>
 							<Import-Package>
 								org.apache.commons.logging,org.apache.log4j;version="[1.2.17,2.0.0)"
