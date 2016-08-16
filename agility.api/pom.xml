@@ -37,7 +37,6 @@
 					<include>**/*</include>
 				</includes>
 				<excludes>
-					<exclude>**/schema/**</exclude>
 					<exclude>**/scripts/**</exclude>
 					<exclude>**/sed/**</exclude>
 				</excludes>
