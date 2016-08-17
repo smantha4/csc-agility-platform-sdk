@@ -107,7 +107,7 @@
                         <manifestEntries>
                             <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
                             <Bundle-Name>CSC Agility Platform IO Services</Bundle-Name>
-                            <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
+                            <Bundle-SymbolicName>${project.groupId}.io</Bundle-SymbolicName>
                             <Bundle-Version>${project.version}</Bundle-Version>
                             <Bundle-Vendor>CSC</Bundle-Vendor>
                             <DynamicImport-Package>*</DynamicImport-Package>

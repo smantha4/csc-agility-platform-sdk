@@ -300,7 +300,7 @@
                             </Import-Package>
                             <Bundle-ClassPath>.</Bundle-ClassPath>
                             <Export-Package>
-                                com.servicemesh.agility.api;version="${project.version}",com.servicemesh.agility.api.service;version="${project.version}" 
+                                com.servicemesh.agility.api;version="${project.version}",com.servicemesh.agility.api.service;version="${project.version}",com.servicemesh.agility.annotation;version="${project.version}" 
                             </Export-Package>
                         </manifestEntries>
                     </archive>
