@@ -34,6 +34,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.NTCredentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.AuthCache;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.RequestBuilder;
@@ -43,6 +44,8 @@ import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.impl.auth.BasicScheme;
+import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
@@ -320,10 +323,14 @@ public class DefaultHttpClient implements IHttpClient
             CredentialsProvider credsProvider = generateCredentialsProvider(request, config.getCredentials());
             if (credsProvider != null)
             {
-                HttpClientContext clientContext = HttpClientContext.create();
+              final AuthCache authCache = new BasicAuthCache();
+              authCache.put(endpoint, new BasicScheme());
 
-                clientContext.setCredentialsProvider(credsProvider);
-                context = clientContext;
+              final HttpClientContext clientContext = HttpClientContext.create();
+
+              clientContext.setCredentialsProvider(credsProvider);
+              clientContext.setAuthCache(authCache);
+              context = clientContext;
             }
         }
         else if (requestTimeout != null)
@@ -338,25 +345,6 @@ public class DefaultHttpClient implements IHttpClient
 
         if (proxyHost != null)
         {
-            URI uri = request.getUri();
-            int port = uri.getPort();
-            if (port == -1)
-            {
-                if (uri.getScheme().equals("http"))
-                {
-                    port = 80;
-                }
-                else if (uri.getScheme().equals("https"))
-                {
-                    port = 443;
-                }
-                else
-                {
-                    port = 80; //  decent default???
-                }
-            }
-            HttpHost endpoint = new HttpHost(uri.getHost(), port, uri.getScheme());
-
             proxyHost.setEndpoint(endpoint);
         }
 
@@ -459,6 +447,26 @@ public class DefaultHttpClient implements IHttpClient
         }
 
         return provider;
+    }
+
+    private HttpHost parseEndpoint(final IHttpRequest request)
+    {
+      final URI uri = request.getUri();
+      int port = uri.getPort();
+
+      if (port == -1)
+      {
+        switch (uri.getScheme())
+        {
+            case "https":
+                port = 443;
+                break;
+            default:
+                port = 80;
+        }
+      }
+
+      return new HttpHost(uri.getHost(), port, uri.getScheme());
     }
 
     private static class EasyTrustManager implements X509TrustManager

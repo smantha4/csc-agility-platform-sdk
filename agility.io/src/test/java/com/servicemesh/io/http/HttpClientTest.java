@@ -55,6 +55,7 @@ import org.junit.rules.TemporaryFolder;
 import com.github.tomakehurst.wiremock.http.Fault;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import com.github.tomakehurst.wiremock.stubbing.Scenario;
+import com.google.common.io.BaseEncoding;
 import com.servicemesh.core.async.Promise;
 import com.servicemesh.io.http.Credentials.CredentialsType;
 import com.servicemesh.io.http.impl.DefaultHttpCallback;
@@ -908,6 +909,58 @@ public class HttpClientTest
         Assert.assertNotNull(httpResponse.getStatus());
         Assert.assertEquals(200, httpResponse.getStatusCode());
         verify(postRequestedFor(urlEqualTo(requestURL)).withHeader("Cookie", equalTo(cookieHttpValue)));
+        httpClient.close();
+    }
+
+    @Test
+    public void testAuthorizationHeaderNotPresent() throws Exception
+    {
+        final String authorizationRequestBody = "<request>authorization header test</request>";
+        final String authorizationResponseBody = "<response>authorization header tested</response>";
+        final String requestURL = "/agility/api/current/storeproducttype";
+        final String stringUri = "https://localhost:" + instanceRule.httpsPort() + requestURL;
+        final IHttpRequest request = HttpClientFactory.getInstance().createRequest(HttpMethod.POST, new URI(stringUri));
+
+        request.setContent(authorizationRequestBody);
+        stubFor(post(urlEqualTo(requestURL)).willReturn(
+                aResponse().withStatus(200).withHeader("Content-Type", "text/xml").withBody(authorizationResponseBody)));
+
+        final IHttpClientConfigBuilder builder = HttpClientFactory.getInstance().getConfigBuilder();
+        final IHttpClient httpClient = HttpClientFactory.getInstance().getClient(builder.build());
+        final Future<IHttpResponse> future = httpClient.execute(request);
+        final IHttpResponse httpResponse = future.get(10, TimeUnit.SECONDS);
+        Assert.assertNotNull(httpResponse.getStatus());
+        Assert.assertEquals(200, httpResponse.getStatusCode());
+        verify(postRequestedFor(urlEqualTo(requestURL)).withoutHeader("Authorization"));
+        httpClient.close();
+    }
+
+    @Test
+    public void testAuthorizationHeaderPresent() throws Exception
+    {
+        final String authorizationRequestBody = "<request>authorization header test</request>";
+        final String authorizationResponseBody = "<response>authorization header tested</response>";
+        final String requestURL = "/agility/api/current/storeproducttype";
+        final String stringUri = "https://localhost:" + instanceRule.httpsPort() + requestURL;
+        final IHttpRequest request = HttpClientFactory.getInstance().createRequest(HttpMethod.POST, new URI(stringUri));
+        final Credentials credentials = new Credentials(CredentialsType.CREDENTIALS_TYPE_NTCREDS);
+        credentials.setPassword("admin");
+        credentials.setUsername("admin");
+        final String auth = "admin:admin";
+        final String authEncoded = BaseEncoding.base64().encode(auth.getBytes());
+
+        request.setContent(authorizationRequestBody);
+        stubFor(post(urlEqualTo(requestURL)).willReturn(
+                aResponse().withStatus(200).withHeader("Content-Type", "text/xml").withBody(authorizationResponseBody)));
+
+        final IHttpClientConfigBuilder builder = HttpClientFactory.getInstance().getConfigBuilder();
+        builder.setCredentials(credentials);
+        final IHttpClient httpClient = HttpClientFactory.getInstance().getClient(builder.build());
+        final Future<IHttpResponse> future = httpClient.execute(request);
+        final IHttpResponse httpResponse = future.get(10, TimeUnit.SECONDS);
+        Assert.assertNotNull(httpResponse.getStatus());
+        Assert.assertEquals(200, httpResponse.getStatusCode());
+        verify(postRequestedFor(urlEqualTo(requestURL)).withHeader("Authorization", equalTo("Basic " + authEncoded)));
         httpClient.close();
     }
 
