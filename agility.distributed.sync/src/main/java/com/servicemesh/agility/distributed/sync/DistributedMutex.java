@@ -143,6 +143,9 @@ public class DistributedMutex
 
     /**
      * Releases the lock.
+     * DE2087: whc - when DistNodes.java runs a script on an instance, no lock is created. This cause an error
+     * message to appear in the agility.log file. This was actually not an error condition since there were no locks to begin
+     * with. I changed this to appear as a warning in the log.
      */
     public void unlock()
     {
@@ -150,14 +153,14 @@ public class DistributedMutex
         ConcurrentHashMap<String, LockEntry> locks = _locks.get();
         if (locks == null)
         {
-            logger.error("unlock(" + _path + ") attempt to release lock that was not acquired by calling thread\n"
-                    + getCurrentStackFrame());
+            logger.warn("unlock(" + _path + "): An attempt was made to release the lock for '_path'; however, there are"
+                    + " no locks registered.\n" + getCurrentStackFrame());
             return;
         }
         LockEntry lock = locks.get(_path);
         if (lock == null)
         {
-            logger.error("unlock(" + _path + ") attempt to release lock that was not acquired by calling thread\n"
+            logger.warn("unlock(" + _path + ") attempt to release lock that was not acquired by calling thread\n"
                     + getCurrentStackFrame());
             return;
         }

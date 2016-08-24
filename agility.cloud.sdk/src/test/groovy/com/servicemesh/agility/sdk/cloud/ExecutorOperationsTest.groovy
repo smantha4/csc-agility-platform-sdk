@@ -15,7 +15,7 @@ import com.servicemesh.core.async.QueueingHandler;
 
 class ExecutorOperationsTest extends spock.lang.Specification
 {
-  /*
+  
   def "executor dispatch IInstance.boot request"()
   {
     InstanceBootRequest request = new InstanceBootRequest();
@@ -30,7 +30,6 @@ class ExecutorOperationsTest extends spock.lang.Specification
 
     then:
       response == qhandler.get()
-      assert(response.getMessage().equals("mock"));
   }
-  */
+  
 }
