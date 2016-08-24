@@ -15,13 +15,7 @@ abstract class ExecutorAdapter extends CloudAdapter {
 
    public ExecutorAdapter() 
    {
-      super(new AsyncService(TimerReactor.getTimerReactor("Mock")), Executors.newCachedThreadPool(new ThreadFactory() {
-
-		@Override
-		public Thread newThread(Runnable r) {
-			return new Thread(r, "mock");
-		}
-       }));
+      super(new AsyncService(TimerReactor.getTimerReactor("Mock")));
    }
 
    public void sendRequest(Request request, ResponseHandler<Response> handler)

@@ -216,6 +216,7 @@ public class DistributedConfig implements Watcher
                     }
                     catch (KeeperException.NodeExistsException ex)
                     {
+                        logger.warn("An exception occurred while acquiring path '" + path + "' for zookeeper session " + zk.getSessionId(), ex);
                         return false;
                     }
                     return true;
