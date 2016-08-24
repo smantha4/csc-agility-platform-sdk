@@ -293,6 +293,7 @@ public class DefaultHttpClient implements IHttpClient
         Integer requestTimeout = request.getRequestTimeout();
         RequestConfig.Builder configBuilder = RequestConfig.custom();
         HttpContext context = null;
+        final HttpHost endpoint = parseEndpoint(request);
 
         if (config != null)
         {
