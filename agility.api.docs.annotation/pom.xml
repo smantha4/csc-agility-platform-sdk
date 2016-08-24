@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>com.servicemesh</groupId>
 		<artifactId>agility.platform-sdk</artifactId>
-		<version>10.2.3.1005-SNAPSHOT</version>
+		<version>11.0.0.1001-SNAPSHOT</version>
 	</parent>
 
    <name>agility.api.docs.annotation</name>
