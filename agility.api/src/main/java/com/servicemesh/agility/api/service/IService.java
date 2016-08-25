@@ -30,6 +30,8 @@ public interface IService<T>
 
     T update(T asset, Asset parent, Context context) throws Exception;
 
+    T patch(int id, String patchDocument, Context context) throws Exception;
+
     Task delete(T asset, Asset parent) throws Exception;
 
     Task softDelete(T asset, Asset parent) throws Exception;
