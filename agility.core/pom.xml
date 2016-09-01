@@ -24,12 +24,13 @@
 		<test.sources.gen.dir>target/generated-test-sources/</test.sources.gen.dir>
 		<test.sources.src.dir>${project.basedir}/src/test/java/</test.sources.src.dir>
 	</properties>
-	
+
 	<dependencies>
 		<dependency>
-			<groupId>com.servicemesh</groupId>
-			<artifactId>agility.api.docs.annotation</artifactId>
-			<version>${project.parent.version}</version>
+        <groupId>com.servicemesh.tools</groupId>
+        <artifactId>agility-api-docs-annotation</artifactId>
+        <version>[1.1,)</version>
+        <type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.xmlbeans</groupId>
@@ -367,10 +368,6 @@
 								<artifactItem>
 									<groupId>org.freemarker</groupId>
 									<artifactId>freemarker</artifactId>
-								</artifactItem>
-								<artifactItem>
-									<groupId>com.servicemesh</groupId>
-									<artifactId>agility.api.docs.annotation</artifactId>
 								</artifactItem>
 								<artifactItem>
 									<groupId>org.hamcrest</groupId>
