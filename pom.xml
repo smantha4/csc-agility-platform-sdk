@@ -473,11 +473,6 @@
 							<artifactId>jaxb2-basics</artifactId>
 							<version>0.11.0</version>
 						</dependency>
-						<!--dependency>
-							<groupId>com.servicemesh</groupId>
-							<artifactId>agility.api.docs.annotation</artifactId>
-							<version>${project.version}</version>
-						</dependency -->
 						<dependency>
 			        <groupId>com.servicemesh.tools</groupId>
 			        <artifactId>agility-api-docs-annotation</artifactId>
