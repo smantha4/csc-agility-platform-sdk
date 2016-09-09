@@ -142,6 +142,18 @@ REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIB
                   </xsd:annotation>
                </xsd:element>
                
+               <xsd:element name="propertyDefinitionGroup" type="agility:Baselink" minOccurs="0">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="Optional reference to the property definition group as read only."
+                           		introducedIn="3.3"
+                           		systemGenerated="true" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
             </xsd:sequence>
          </xsd:extension>
       </xsd:complexContent>
