@@ -7,7 +7,7 @@
 	<groupId>com.servicemesh</groupId>
 	<artifactId>agility.platform-sdk</artifactId>
 	<packaging>pom</packaging>
-	<version>10.2.4.1006-SNAPSHOT</version>
+	<version>10.2.4.1006</version>
 
 	<name>agility.platform-sdk</name>
 
@@ -44,7 +44,7 @@
         <connection>https://github.com/csc/csc-agility-platform-sdk</connection>
         <developerConnection>scm:git|git@github.com:csc/csc-agility-platform-sdk.git</developerConnection>
         <url>https://github.com/csc/csc-agility-platform-sdk</url>
-	  <tag>HEAD</tag>
+	  <tag>10.2.4.1006</tag>
   </scm>
 
 	<repositories>
