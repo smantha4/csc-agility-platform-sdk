@@ -15,6 +15,7 @@ import com.servicemesh.agility.api.Instance;
 import com.servicemesh.agility.api.Link;
 import com.servicemesh.agility.api.Package;
 import com.servicemesh.agility.api.Policy;
+import com.servicemesh.agility.api.Script;
 import com.servicemesh.agility.api.Task;
 import com.servicemesh.agility.api.Template;
 
@@ -216,4 +217,15 @@ public interface ITemplate
      */
     public void finalizeDelete(Task parentTask, Template template, boolean isParentContext, boolean releaseVolumes)
             throws Exception;
+    
+    /**
+     * Returns a list of Operation Scripts for the Template
+     * 
+     * @param template - Template to retrieve operational scripts
+     * 
+     * @return - List<Script> A list of Operational Scripts for the Template
+     * 
+     */
+    public List<Script> getOperationalScripts(Template template);
+    
 }
