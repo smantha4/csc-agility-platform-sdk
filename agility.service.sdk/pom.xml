@@ -13,7 +13,7 @@
 	<parent>
 		<groupId>com.servicemesh</groupId>
 		<artifactId>agility.platform-sdk</artifactId>
-		<version>10.2.4.1008</version>
+		<version>10.2.4.1009-SNAPSHOT</version>
 	</parent>
 	
 	<properties>
