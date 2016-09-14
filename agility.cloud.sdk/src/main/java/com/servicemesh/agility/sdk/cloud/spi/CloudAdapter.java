@@ -42,6 +42,8 @@ import com.servicemesh.agility.sdk.cloud.msgs.CustomerGatewayDeleteRequest;
 import com.servicemesh.agility.sdk.cloud.msgs.DHCPOptionsAssociateRequest;
 import com.servicemesh.agility.sdk.cloud.msgs.DHCPOptionsCreateRequest;
 import com.servicemesh.agility.sdk.cloud.msgs.DHCPOptionsDeleteRequest;
+import com.servicemesh.agility.sdk.cloud.msgs.HostSyncRequest;
+import com.servicemesh.agility.sdk.cloud.msgs.HostSyncResponse;
 import com.servicemesh.agility.sdk.cloud.msgs.ImageCreateRequest;
 import com.servicemesh.agility.sdk.cloud.msgs.ImageDeleteRequest;
 import com.servicemesh.agility.sdk.cloud.msgs.ImageResponse;
@@ -207,6 +209,12 @@ public abstract class CloudAdapter implements BundleActivator
     public abstract ICredential getCredentialOperations();
 
     public abstract IImage getImageOperations();
+    
+    /* This method needs to be overridden by the vSphere adapter to process Host sync requests */
+    public ISync<HostSyncRequest, HostSyncResponse> getHostSync()
+    {
+    	return new HostSyncHandler();  //  Provide a default handler that just completes this phase of sync.
+    }
 
     /*
      * These operations are optional for a cloud adapter.  If not implemented, 
@@ -2284,6 +2292,29 @@ public abstract class CloudAdapter implements BundleActivator
         public ICancellable sync(RepositorySyncRequest request, ResponseHandler<RepositorySyncResponse> handler)
         {
             RepositorySyncResponse response = new RepositorySyncResponse();
+            response.setStatus(Status.COMPLETE);
+            handler.onResponse(response);
+            return null;
+        }
+    }
+    
+    /*
+     * This is the default handler for syncing Hostss.  Since only the vSphere adapter needs this, a default
+     * implementation is provided here so that all the other adapters don't have to handle this message.
+     * 
+     * The vSphere adapter will override the getHostSync() method above and provide it's own implementation
+     * of the ISync<HostSyncRequest,HostSyncResponse> interface.
+     */
+    public class HostSyncHandler implements ISync<HostSyncRequest, HostSyncResponse>
+    {
+        public HostSyncHandler()
+        {
+        }
+
+        @Override
+        public ICancellable sync(HostSyncRequest request, ResponseHandler<HostSyncResponse> handler)
+        {
+            HostSyncResponse response = new HostSyncResponse();
             response.setStatus(Status.COMPLETE);
             handler.onResponse(response);
             return null;
