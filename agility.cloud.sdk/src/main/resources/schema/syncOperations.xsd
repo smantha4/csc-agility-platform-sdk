@@ -765,5 +765,67 @@ ALL SOFTWARE, INFORMATION AND ANY OTHER RELATED COMMUNICATIONS (COLLECTIVELY, "W
          </xsd:extension>
       </xsd:complexContent>
    </xsd:complexType>
+   
+   <xsd:complexType name="HostSyncRequest">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>ModelSyncRequest</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Request for Host Sync." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="cloud:CloudRequest">
+            <xsd:sequence>
+               <xsd:element name="location" type="agility:Location" minOccurs="0" maxOccurs="unbounded">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="List of Location objects." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="HostSyncResponse">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>ModelSyncResponse</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment = "Response for Host Sync." 
+                           description = "" 
+                           externalDocLink = "" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+
+      <xsd:complexContent>
+         <xsd:extension base="cloud:CloudResponse">
+            <xsd:sequence>
+               <xsd:element name="host" type="agility:Host">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="List of Host objects." />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
       
 </xsd:schema>
