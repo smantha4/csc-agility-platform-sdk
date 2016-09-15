@@ -1228,6 +1228,24 @@ public abstract class CloudAdapter implements BundleActivator
                 }
             }
         });
+        
+        register(HostSyncRequest.class, new Dispatch<HostSyncRequest, HostSyncResponse>() {
+            @Override
+            public ICancellable execute(HostSyncRequest request, ResponseHandler<HostSyncResponse> handler)
+            {
+                ClassLoader cl = Thread.currentThread().getContextClassLoader();
+                ISync<HostSyncRequest, HostSyncResponse> isync = getHostSync();
+                try
+                {
+                    Thread.currentThread().setContextClassLoader(isync.getClass().getClassLoader());
+                    return isync.sync(request, handler);
+                }
+                finally
+                {
+                    Thread.currentThread().setContextClassLoader(cl);
+                }
+            }
+        });
 
         //
         // Asset Notification operations
