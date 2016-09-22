@@ -1,20 +1,20 @@
 <!--
-COPYRIGHT (C) 2008-2013 SERVICEMESH, INC.  ALL RIGHTS RESERVED.  CONFIDENTIAL AND PROPRIETARY. 
- 
+COPYRIGHT (C) 2008-2013 SERVICEMESH, INC.  ALL RIGHTS RESERVED.  CONFIDENTIAL AND PROPRIETARY.
+
 ALL SOFTWARE, INFORMATION AND ANY OTHER RELATED COMMUNICATIONS (COLLECTIVELY, "WORKS") ARE CONFIDENTIAL AND PROPRIETARY INFORMATION THAT ARE THE EXCLUSIVE PROPERTY OF SERVICEMESH.     ALL WORKS ARE PROVIDED UNDER THE APPLICABLE AGREEMENT OR END USER LICENSE AGREEMENT IN EFFECT BETWEEN YOU AND SERVICEMESH.  UNLESS OTHERWISE SPECIFIED IN THE APPLICABLE AGREEMENT, ALL WORKS ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.  ALL USE, DISCLOSURE AND/OR REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIBITED.
 -->
-<xsd:schema targetNamespace="http://servicemesh.com/agility/sdk/service" 
+<xsd:schema targetNamespace="http://servicemesh.com/agility/sdk/service"
    xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="qualified"
    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0" jaxb:extensionBindingPrefixes="xjc annox"
    xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
-   xmlns:annox="http://annox.dev.java.net" 
+   xmlns:annox="http://annox.dev.java.net"
    xmlns:a="http://annox.dev.java.net/com.servicemesh.agility.tools.annotation"
    xmlns:jl="http://annox.dev.java.net/java.lang"
    xmlns:jxml="http://annox.dev.java.net/javax.xml.bind.annotation"
    xmlns:agility="http://servicemesh.com/agility/api"
    xmlns:core="http://servicemesh.com/core/messaging"
    xmlns:service="http://servicemesh.com/agility/sdk/service">
-   
+
    <xsd:include schemaLocation="general.xsd" />
    <xsd:import namespace="http://servicemesh.com/agility/api" schemaLocation="agilityReferences.xsd"/>
    <xsd:import namespace="http://servicemesh.com/core/messaging" schemaLocation="coreReferences.xsd"/>
@@ -26,8 +26,8 @@ ALL SOFTWARE, INFORMATION AND ANY OTHER RELATED COMMUNICATIONS (COLLECTIVELY, "W
                <jxml:XmlRootElement>
                   <jxml:name>ConnectionPreCreateRequest</jxml:name>
                </jxml:XmlRootElement>
-               <a:ApiModel comment = "Request object used to signal that a connection has changed state" 
-                           description = "" 
+               <a:ApiModel comment = "Request object used to signal that a connection has changed state"
+                           description = ""
                            externalDocLink = "" />
             </annox:annotate>
          </xsd:appinfo>
@@ -87,12 +87,22 @@ ALL SOFTWARE, INFORMATION AND ANY OTHER RELATED COMMUNICATIONS (COLLECTIVELY, "W
                   </xsd:annotation>
                </xsd:element>
 
+               <xsd:element name="variable" type="agility:AssetProperty" minOccurs="0" maxOccurs="unbounded">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="List of variables inherited from containment hierarchy"/>
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+
             </xsd:sequence>
          </xsd:extension>
       </xsd:complexContent>
    </xsd:complexType>
 
-   
+
    <xsd:complexType name="ConnectionPreCreateRequest">
       <xsd:annotation>
          <xsd:appinfo>
@@ -100,8 +110,8 @@ ALL SOFTWARE, INFORMATION AND ANY OTHER RELATED COMMUNICATIONS (COLLECTIVELY, "W
                <jxml:XmlRootElement>
                   <jxml:name>ConnectionPreCreateRequest</jxml:name>
                </jxml:XmlRootElement>
-               <a:ApiModel comment = "Request object used to signal that a connection has been created" 
-                           description = "" 
+               <a:ApiModel comment = "Request object used to signal that a connection has been created"
+                           description = ""
                            externalDocLink = "" />
             </annox:annotate>
          </xsd:appinfo>
@@ -122,8 +132,8 @@ ALL SOFTWARE, INFORMATION AND ANY OTHER RELATED COMMUNICATIONS (COLLECTIVELY, "W
                <jxml:XmlRootElement>
                   <jxml:name>ConnectionPostCreateRequest</jxml:name>
                </jxml:XmlRootElement>
-               <a:ApiModel comment = "Request object used to signal that a connection has been created" 
-                           description = "" 
+               <a:ApiModel comment = "Request object used to signal that a connection has been created"
+                           description = ""
                            externalDocLink = "" />
             </annox:annotate>
          </xsd:appinfo>
@@ -144,8 +154,8 @@ ALL SOFTWARE, INFORMATION AND ANY OTHER RELATED COMMUNICATIONS (COLLECTIVELY, "W
                <jxml:XmlRootElement>
                   <jxml:name>ConnectionPreUpdateRequest</jxml:name>
                </jxml:XmlRootElement>
-               <a:ApiModel comment = "Request object used to signal that connection parameters are going to change" 
-                           description = "" 
+               <a:ApiModel comment = "Request object used to signal that connection parameters are going to change"
+                           description = ""
                            externalDocLink = "" />
             </annox:annotate>
          </xsd:appinfo>
@@ -166,8 +176,8 @@ ALL SOFTWARE, INFORMATION AND ANY OTHER RELATED COMMUNICATIONS (COLLECTIVELY, "W
                <jxml:XmlRootElement>
                   <jxml:name>ConnectionPreUpdateRequest</jxml:name>
                </jxml:XmlRootElement>
-               <a:ApiModel comment = "Request object used to signal that connection parameters have changed" 
-                           description = "" 
+               <a:ApiModel comment = "Request object used to signal that connection parameters have changed"
+                           description = ""
                            externalDocLink = "" />
             </annox:annotate>
          </xsd:appinfo>
@@ -188,8 +198,8 @@ ALL SOFTWARE, INFORMATION AND ANY OTHER RELATED COMMUNICATIONS (COLLECTIVELY, "W
                <jxml:XmlRootElement>
                   <jxml:name>ServiceProviderDeleteRequest</jxml:name>
                </jxml:XmlRootElement>
-               <a:ApiModel comment = "Request object used to signal that a connection is being removed" 
-                           description = "" 
+               <a:ApiModel comment = "Request object used to signal that a connection is being removed"
+                           description = ""
                            externalDocLink = "" />
             </annox:annotate>
          </xsd:appinfo>
@@ -210,8 +220,8 @@ ALL SOFTWARE, INFORMATION AND ANY OTHER RELATED COMMUNICATIONS (COLLECTIVELY, "W
                <jxml:XmlRootElement>
                   <jxml:name>ServiceProviderDeleteRequest</jxml:name>
                </jxml:XmlRootElement>
-               <a:ApiModel comment = "Request object used to signal that a connection has been removed" 
-                           description = "" 
+               <a:ApiModel comment = "Request object used to signal that a connection has been removed"
+                           description = ""
                            externalDocLink = "" />
             </annox:annotate>
          </xsd:appinfo>
