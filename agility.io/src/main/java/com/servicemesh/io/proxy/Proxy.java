@@ -17,9 +17,12 @@
 
 package com.servicemesh.io.proxy;
 
+import com.servicemesh.io.http.HttpVersion;
+
 public class Proxy extends Host
 {
     private final ProxyType _type;
+    private String _httpVersion;
     private final String _admin;
     private final String _password;
     private Host _targetHost;
@@ -30,7 +33,12 @@ public class Proxy extends Host
     }
 
     public Proxy(final String hostname, final int port, final ProxyType type, final Host targetHost, final String admin,
-            final String password)
+            final String password) {
+        this(hostname, port, type, targetHost, admin, password, null);
+    }
+
+    public Proxy(final String hostname, final int port, final ProxyType type, final Host targetHost, final String admin,
+                 final String password, final String httpVersion)
     {
         super(hostname, port);
 
@@ -43,6 +51,8 @@ public class Proxy extends Host
         _type = type;
         _admin = admin;
         _password = password;
+        _httpVersion = (httpVersion == null) ? HttpVersion.getDefault().value() : httpVersion;
+
     }
 
     public ProxyType getType()
@@ -68,6 +78,14 @@ public class Proxy extends Host
     public Host getTargetHost()
     {
         return _targetHost;
+    }
+
+    public String getHttpVersion() {
+        return (_httpVersion == null) ? HttpVersion.getDefault().value() : _httpVersion;
+    }
+
+    public void setHttpVersion(String _httpVersion) {
+        this._httpVersion = _httpVersion;
     }
 
     @Override
