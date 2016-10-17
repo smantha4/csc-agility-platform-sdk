@@ -23,5 +23,6 @@ ALL SOFTWARE, INFORMATION AND ANY OTHER RELATED COMMUNICATIONS (COLLECTIVELY, "W
    <xsd:include schemaLocation="../../../../../agility.api/src/main/resources/schema/storage.xsd" />
    <xsd:include schemaLocation="../../../../../agility.api/src/main/resources/schema/package.xsd" />
    <xsd:include schemaLocation="../../../../../agility.api/src/main/resources/schema/vpc.xsd" />
+   <xsd:include schemaLocation="../../../../../agility.api/src/main/resources/schema/policy.xsd" />
       
 </xsd:schema>
