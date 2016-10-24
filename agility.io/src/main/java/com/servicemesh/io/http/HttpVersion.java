@@ -83,4 +83,22 @@ public enum HttpVersion
     {
         return _value;
     }
+
+    public static HttpVersion getDefault() {
+
+        return HttpVersion.values()[0];
+    }
+
+    public static boolean isHostHeaderRequired(String httpVersion) {
+        return !HttpVersion.HTTP_1_0.value().equalsIgnoreCase(httpVersion);
+    }
+
+    public static HttpVersion parseHttpVersionValue(String httpVersion) {
+        for (HttpVersion versionObj: HttpVersion.values()) {
+            if (versionObj.value().equalsIgnoreCase(httpVersion)) {
+                return versionObj;
+            }
+        }
+        return null;
+    }
 }

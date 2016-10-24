@@ -23,6 +23,7 @@ import java.nio.ByteBuffer;
 import javax.net.ssl.SSLException;
 import javax.xml.bind.DatatypeConverter;
 
+import com.servicemesh.io.http.HttpVersion;
 import org.apache.http.Header;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
@@ -96,9 +97,15 @@ public class HttpProxySetupHandler implements ProxySetupHandler
         HttpRequest request = null;
 
         String uri = _proxyHost.getTargetHost().getHostName() + ":" + _proxyHost.getTargetHost().getPort();
-        ProtocolVersion protocolVersion = new ProtocolVersion("HTTP", 1, 0);
+        HttpVersion parsedHttpVersion = HttpVersion.parseHttpVersionValue(_proxyHost.getHttpVersion());
+        if (parsedHttpVersion == null) {
+            throw new RuntimeException("Invalid HttpVersion. some examples are HTTP/1.0, HTTP/1.1 ");
+        }
+        ProtocolVersion protocolVersion = new ProtocolVersion(parsedHttpVersion.getProtocol(), parsedHttpVersion.getMajorVersion(), parsedHttpVersion.getMinorVersion());
         request = new BasicHttpRequest("CONNECT", uri, protocolVersion);
-
+        if(HttpVersion.isHostHeaderRequired(_proxyHost.getHttpVersion())) {
+            request.addHeader("Host", _proxyHost.getTargetHost().getHostName() + ":" + _proxyHost.getTargetHost().getPort());
+        }
         if ((_proxyHost.getPrincipal() != null) && !_proxyHost.getPrincipal().isEmpty())
         {
             StringBuilder builder = new StringBuilder(_proxyHost.getPrincipal());

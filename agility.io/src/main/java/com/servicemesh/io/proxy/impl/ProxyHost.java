@@ -17,6 +17,7 @@
 
 package com.servicemesh.io.proxy.impl;
 
+import com.servicemesh.io.http.HttpVersion;
 import org.apache.http.HttpHost;
 
 import com.servicemesh.io.proxy.Host;
@@ -28,6 +29,7 @@ public class ProxyHost extends HttpHost
     private static final long serialVersionUID = -6644556465101928281L;
 
     private final ProxyType _type;
+    private String _httpVersion;
     private final String _principal;
     private final String _credentials;
     private HttpHost _targetHost;
@@ -38,13 +40,19 @@ public class ProxyHost extends HttpHost
     }
 
     public ProxyHost(final String hostname, final int port, final String scheme, final String principal, final String credentials,
-            final HttpHost targetHost)
+                     final HttpHost targetHost) {
+        this(hostname, port, scheme, (String) null, (String) null, targetHost, null);
+    }
+
+    public ProxyHost(final String hostname, final int port, final String scheme, final String principal, final String credentials,
+            final HttpHost targetHost, String httpVersion)
     {
         super(hostname, port, scheme);
         _targetHost = targetHost;
         _principal = principal;
         _credentials = credentials;
         _type = ProxyType.match(scheme);
+        _httpVersion = (httpVersion == null) ? HttpVersion.getDefault().value() : httpVersion;
     }
 
     public ProxyHost(final Proxy proxy)
@@ -103,6 +111,14 @@ public class ProxyHost extends HttpHost
     public ProxyType getProxyType()
     {
         return _type;
+    }
+
+    public String getHttpVersion() {
+        return (_httpVersion == null) ? HttpVersion.getDefault().value() : _httpVersion;
+    }
+
+    public void setHttpVersion(String httpVersion) {
+        this._httpVersion = httpVersion;
     }
 
     @Override
