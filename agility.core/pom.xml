@@ -24,7 +24,7 @@
 		<test.sources.gen.dir>target/generated-test-sources/</test.sources.gen.dir>
 		<test.sources.src.dir>${project.basedir}/src/test/java/</test.sources.src.dir>
 	</properties>
-
+	
 	<dependencies>
 		<dependency>
         <groupId>com.servicemesh.tools</groupId>

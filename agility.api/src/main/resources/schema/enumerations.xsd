@@ -639,5 +639,23 @@ REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIB
          <xsd:enumeration value="All_Networks" />
       </xsd:restriction>
    </xsd:simpleType>
-  
+
+
+   <xsd:simpleType name="HttpVersion" >
+      <xsd:annotation>
+         <xsd:appinfo>
+            <annox:annotate target="class">
+               <jxml:XmlRootElement>
+                  <jxml:name>HttpVersion</jxml:name>
+               </jxml:XmlRootElement>
+               <a:ApiModel comment="HttpVersion Enumeration" />
+            </annox:annotate>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:restriction base="xsd:string" >
+         <xsd:enumeration value="HTTP_1_0" />
+         <xsd:enumeration value="HTTP_1_1" />
+      </xsd:restriction>
+   </xsd:simpleType>
+
 </xsd:schema>
