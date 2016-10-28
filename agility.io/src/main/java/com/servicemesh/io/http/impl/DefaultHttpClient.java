@@ -324,14 +324,14 @@ public class DefaultHttpClient implements IHttpClient
             CredentialsProvider credsProvider = generateCredentialsProvider(request, config.getCredentials());
             if (credsProvider != null)
             {
-              final AuthCache authCache = new BasicAuthCache();
-              authCache.put(endpoint, new BasicScheme());
+                final AuthCache authCache = new BasicAuthCache();
+                authCache.put(endpoint, new BasicScheme());
 
-              final HttpClientContext clientContext = HttpClientContext.create();
+                final HttpClientContext clientContext = HttpClientContext.create();
 
-              clientContext.setCredentialsProvider(credsProvider);
-              clientContext.setAuthCache(authCache);
-              context = clientContext;
+                clientContext.setCredentialsProvider(credsProvider);
+                clientContext.setAuthCache(authCache);
+                context = clientContext;
             }
         }
         else if (requestTimeout != null)
@@ -380,14 +380,22 @@ public class DefaultHttpClient implements IHttpClient
 
     private void setSSLContext(final HttpAsyncClientBuilder builder, final IHttpClientConfig config)
     {
-        TrustManager trustManager = new EasyTrustManager();
+        TrustManager[] trustManagers = null;
+        if (config != null && config.getTrustManagers() != null && config.getTrustManagers().length > 0)
+        {
+            trustManagers = config.getTrustManagers();
+        }
+        else
+        {
+            TrustManager trustManager = new EasyTrustManager();
+            trustManagers = new TrustManager[] { trustManager };
+        }
         KeyManager[] keyManagers = (config != null) ? config.getKeyManagers() : null;
 
         try
         {
             SSLContext sslContext = SSLContext.getInstance("TLS");
-
-            sslContext.init(keyManagers, new TrustManager[] { trustManager }, null);
+            sslContext.init(keyManagers, trustManagers, null);
             builder.setSSLStrategy(new SSLIOSessionStrategy(sslContext));
         }
         catch (Exception ex)
@@ -399,14 +407,24 @@ public class DefaultHttpClient implements IHttpClient
     private Registry<SchemeIOSessionStrategy> generateRegistry(final IHttpClientConfig config)
     {
         RegistryBuilder<SchemeIOSessionStrategy> builder = RegistryBuilder.create();
-        TrustManager trustManager = new EasyTrustManager();
+
+        TrustManager[] trustManagers = null;
+        if (config != null && config.getTrustManagers() != null && config.getTrustManagers().length > 0)
+        {
+            trustManagers = config.getTrustManagers();
+        }
+        else
+        {
+            TrustManager trustManager = new EasyTrustManager();
+            trustManagers = new TrustManager[] { trustManager };
+        }
+
         KeyManager[] keyManagers = (config != null) ? config.getKeyManagers() : null;
 
         try
         {
             SSLContext sslContext = SSLContext.getInstance("TLS");
-
-            sslContext.init(keyManagers, new TrustManager[] { trustManager }, null);
+            sslContext.init(keyManagers, trustManagers, null);
             builder.register("https", new HttpsIOSessionStrategy(sslContext, SSLIOSessionStrategy.ALLOW_ALL_HOSTNAME_VERIFIER));
         }
         catch (Exception ex)
@@ -452,22 +470,22 @@ public class DefaultHttpClient implements IHttpClient
 
     private HttpHost parseEndpoint(final IHttpRequest request)
     {
-      final URI uri = request.getUri();
-      int port = uri.getPort();
+        final URI uri = request.getUri();
+        int port = uri.getPort();
 
-      if (port == -1)
-      {
-        switch (uri.getScheme())
+        if (port == -1)
         {
-            case "https":
-                port = 443;
-                break;
-            default:
-                port = 80;
+            switch (uri.getScheme())
+            {
+                case "https":
+                    port = 443;
+                    break;
+                default:
+                    port = 80;
+            }
         }
-      }
 
-      return new HttpHost(uri.getHost(), port, uri.getScheme());
+        return new HttpHost(uri.getHost(), port, uri.getScheme());
     }
 
     private static class EasyTrustManager implements X509TrustManager

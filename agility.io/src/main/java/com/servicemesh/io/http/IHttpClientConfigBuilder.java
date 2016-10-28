@@ -18,6 +18,7 @@
 package com.servicemesh.io.http;
 
 import javax.net.ssl.KeyManager;
+import javax.net.ssl.TrustManager;
 
 import com.servicemesh.io.proxy.Proxy;
 
@@ -94,6 +95,15 @@ public interface IHttpClientConfigBuilder
      * @return IHttpClientConfigBuilder with key managers set.
      */
     public IHttpClientConfigBuilder setKeyManagers(final KeyManager[] keyManagers);
+    
+    /**
+     * Set the key managers to be used for SSL/TLS communications.
+     * 
+     * @param keyManagers
+     *            Sources for authentication keys.
+     * @return IHttpClientConfigBuilder with key managers set.
+     */
+    public IHttpClientConfigBuilder setTrustManagers(final TrustManager[] trustManagers);
 
     /**
      * Set credentials for connections that require multi-request negotiation.

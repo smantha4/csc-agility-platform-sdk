@@ -18,6 +18,7 @@
 package com.servicemesh.io.http;
 
 import javax.net.ssl.KeyManager;
+import javax.net.ssl.TrustManager;
 
 import com.servicemesh.io.proxy.Proxy;
 
@@ -78,6 +79,13 @@ public interface IHttpClientConfig
      * @return The configured key managers if set, otherwise null.
      */
     public KeyManager[] getKeyManagers();
+    
+    /**
+     * Returns the configured trust managers.
+     * 
+     * @return The configured trust managers if set, otherwise null.
+     */
+    public TrustManager[] getTrustManagers();
 
     /**
      * Returns the configured credentials.
