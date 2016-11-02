@@ -18,6 +18,7 @@
 package com.servicemesh.io.http.impl;
 
 import javax.net.ssl.KeyManager;
+import javax.net.ssl.TrustManager;
 
 import com.servicemesh.io.http.Credentials;
 import com.servicemesh.io.http.IHttpClientConfig;
@@ -33,6 +34,7 @@ public class DefaultHttpClientConfig implements IHttpClientConfig
     private Long busyRetryInterval = null;
     private Integer maxConnections = null;
     private KeyManager[] keyManagers = null;
+    private TrustManager[] trustManagers = null;
     private Credentials credentials = null;
     private Proxy proxy = null;
     private Boolean manualCookieManagement = Boolean.FALSE;
@@ -48,11 +50,17 @@ public class DefaultHttpClientConfig implements IHttpClientConfig
         clone.setRetries(retryValue);
         clone.setMaxConnections(maxConnections);
         clone.setKeyManagers(keyManagers);
+        clone.setTrustManagers(trustManagers);
         clone.setCredentials(credentials);
         clone.setProxy(proxy);
         clone.setManualCookieManagement(manualCookieManagement);
 
         return clone;
+    }
+    
+    @Override
+    public TrustManager[] getTrustManagers() {
+    	return trustManagers;
     }
 
     /**
@@ -151,6 +159,11 @@ public class DefaultHttpClientConfig implements IHttpClientConfig
     public void setKeyManagers(final KeyManager[] keyManagers)
     {
         this.keyManagers = keyManagers;
+    }
+    
+    public void setTrustManagers(final TrustManager[] trustManagers)
+    {
+        this.trustManagers = trustManagers;
     }
 
     /**

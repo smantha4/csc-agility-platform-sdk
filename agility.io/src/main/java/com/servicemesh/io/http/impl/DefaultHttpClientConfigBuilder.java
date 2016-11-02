@@ -18,6 +18,7 @@
 package com.servicemesh.io.http.impl;
 
 import javax.net.ssl.KeyManager;
+import javax.net.ssl.TrustManager;
 
 import com.servicemesh.io.http.Credentials;
 import com.servicemesh.io.http.IHttpClientConfig;
@@ -176,4 +177,10 @@ public class DefaultHttpClientConfigBuilder implements IHttpClientConfigBuilder
 
         return adapted;
     }
+
+	@Override
+	public IHttpClientConfigBuilder setTrustManagers(TrustManager[] trustManagers) {
+		_config.setTrustManagers(trustManagers);
+		return this;
+	}
 }
