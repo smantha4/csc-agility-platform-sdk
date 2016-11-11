@@ -193,6 +193,21 @@ REPRODUCTION OF WORKS NOT EXPRESSLY AUTHORIZED BY SERVICEMESH IS STRICTLY PROHIB
                   </xsd:annotation>
                </xsd:element>
                
+               <!--  This field was added so that the old BlaseDS call can be replaced by the API call to retrieve
+               operational scripts.  The UI needs the package(s) that the script is in so that the script variables
+               can be retrieved correctly.  This field is only populated when the operational scripts are retrieved
+               because only the packages visible to the template are used.  Otherwise a security issue can occur as
+               we might not have visibility to all packages that hold this script. -->
+               <xsd:element name="packages" type="agility:Link" minOccurs="0" maxOccurs="unbounded">
+                  <xsd:annotation>
+                     <xsd:appinfo>
+                        <annox:annotate target="field">
+                           <a:ApiField comment="List of packages that this script is a member of for a particular Template.  Only filled in when retrieving Operational Scripts" />
+                        </annox:annotate>
+                     </xsd:appinfo>
+                  </xsd:annotation>
+               </xsd:element>
+               
             </xsd:sequence>
          </xsd:extension>
       </xsd:complexContent>
