@@ -18,6 +18,7 @@ import com.servicemesh.agility.api.ApiRequest;
 import com.servicemesh.agility.api.ApiResponse;
 import com.servicemesh.agility.api.Asset;
 import com.servicemesh.agility.api.AuthType;
+import com.servicemesh.agility.api.Cloud;
 import com.servicemesh.agility.api.Credential;
 import com.servicemesh.agility.api.DeleteRequest;
 import com.servicemesh.agility.api.Property;
@@ -46,8 +47,11 @@ public class ServiceAdapterTest
         listOfProxies.add(mockProxy);
         listOfProxies.add(mockProxy2);
         List<com.servicemesh.io.proxy.Proxy> returnProxyList = new ArrayList<com.servicemesh.io.proxy.Proxy>();
-
-        when(mockSPR.getProxies()).thenReturn(listOfProxies);
+        Cloud mockCloud = mock(Cloud.class);
+        List<Cloud> mockCloudList = new ArrayList<Cloud>();
+        mockCloudList.add(mockCloud);
+        when(mockSPR.getClouds()) .thenReturn(mockCloudList);
+        when(mockCloud.getProxies()).thenReturn(listOfProxies);
         when(mockProxy.getProxyUsage()).thenReturn(ProxyUsage.PROXY_ALL);
         when(mockProxy.getProxyType()).thenReturn(ProxyType.PROXY_HTTP);
         when(mockProxy.getAuthType()).thenReturn(AuthType.AUTH_NONE);
@@ -77,7 +81,11 @@ public class ServiceAdapterTest
         List<com.servicemesh.io.proxy.Proxy> returnProxyList = new ArrayList<com.servicemesh.io.proxy.Proxy>();
         Credential mockProxyCred = mock(Credential.class);
 
-        when(mockSPR.getProxies()).thenReturn(listOfProxies);
+        Cloud mockCloud = mock(Cloud.class);
+        List<Cloud> mockCloudList = new ArrayList<Cloud>();
+        mockCloudList.add(mockCloud);
+        when(mockSPR.getClouds()) .thenReturn(mockCloudList);
+        when(mockCloud.getProxies()).thenReturn(listOfProxies);
         when(mockProxy.getProxyUsage()).thenReturn(ProxyUsage.PROXY_MANAGER_CLOUD);
         when(mockProxy.getProxyType()).thenReturn(ProxyType.PROXY_HTTPS);
         when(mockProxy.getAuthType()).thenReturn(AuthType.AUTH_CONFIGURED);
@@ -103,7 +111,11 @@ public class ServiceAdapterTest
         listOfProxies.add(mockProxy);
         List<com.servicemesh.io.proxy.Proxy> returnProxyList = new ArrayList<com.servicemesh.io.proxy.Proxy>();
 
-        when(mockSPR.getProxies()).thenReturn(listOfProxies);
+        Cloud mockCloud = mock(Cloud.class);
+        List<Cloud> mockCloudList = new ArrayList<Cloud>();
+        mockCloudList.add(mockCloud);
+        when(mockSPR.getClouds()) .thenReturn(mockCloudList);
+        when(mockCloud.getProxies()).thenReturn(listOfProxies);
         when(mockProxy.getProxyUsage()).thenReturn(ProxyUsage.PROXY_MANAGER_CLOUD);
         when(mockProxy.getProxyType()).thenReturn(ProxyType.PROXY_HTTP);
         when(mockProxy.getAuthType()).thenReturn(AuthType.AUTH_SESSION);
