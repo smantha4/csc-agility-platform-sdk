@@ -14,6 +14,7 @@ import org.osgi.util.tracker.ServiceTracker;
 import com.servicemesh.agility.api.ApiRequest;
 import com.servicemesh.agility.api.ApiResponse;
 import com.servicemesh.agility.api.Asset;
+import com.servicemesh.agility.api.Cloud;
 import com.servicemesh.agility.api.CreateRequest;
 import com.servicemesh.agility.api.Credential;
 import com.servicemesh.agility.api.DeleteRequest;
@@ -225,10 +226,12 @@ public abstract class ServiceAdapter implements BundleActivator
 
     public static List<Proxy> getProxyConfig(ServiceProviderRequest request, ProxyUsage usage)
     {
+    	// Get the cloud from the  request
+    	Cloud cloud = request.getClouds().get(0);
         //  Get the proxies specified by the usage type requested
         List<Proxy> proxies = new ArrayList<Proxy>();
         Proxy last = null;
-        for (com.servicemesh.agility.api.Proxy proxy : request.getProxies())
+        for (com.servicemesh.agility.api.Proxy proxy : cloud.getProxies())
         {
             if (proxy.getProxyUsage().equals(usage) || proxy.getProxyUsage().equals(ProxyUsage.PROXY_ALL))
             {
