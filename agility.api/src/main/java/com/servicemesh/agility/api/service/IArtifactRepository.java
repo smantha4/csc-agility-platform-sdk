@@ -5,10 +5,7 @@ import java.util.List;
 import com.servicemesh.agility.api.Artifact;
 import com.servicemesh.agility.api.ServiceProvider;
 
-/**
- * Exposes additional operations to manage the following types from com.servicemesh.agility.api package: Project, Environment,
- * Topology Template, Instance
- */
+/* Exposes operations for the Artifactory Adapter
 public interface IArtifactRepository
 {
 
