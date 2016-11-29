@@ -5,7 +5,9 @@ import java.util.List;
 import com.servicemesh.agility.api.Artifact;
 import com.servicemesh.agility.api.ServiceProvider;
 
-// Exposes operations for the Artifactory Adapter
+/**
+ * Exposes operations for the Artifactory Adapter
+ */
 public interface IArtifactRepository
 {
 
