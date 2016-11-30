@@ -7,7 +7,7 @@
 	<classpathentry kind="var" path="M2_REPO/javax/xml/jsr173/1.0/jsr173-1.0.jar"/>
 	<classpathentry kind="var" path="M2_REPO/javax/xml/bind/jaxb-api/2.2.5/jaxb-api-2.2.5.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="/core"/>
+	<classpathentry kind="src" path="/agility.core"/>
 	<classpathentry kind="var" path="M2_REPO/org/apache/xmlbeans/xmlbeans/2.6.0/xmlbeans-2.6.0.jar"/>
 	<classpathentry kind="var" path="M2_REPO/stax/stax-api/1.0.1/stax-api-1.0.1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/commons-lang/commons-lang/2.5/commons-lang-2.5.jar"/>
@@ -112,6 +112,6 @@
 	<classpathentry kind="var" path="M2_REPO/org/powermock/powermock-reflect/1.6.4/powermock-reflect-1.6.4-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/powermock/powermock-api-support/1.6.4/powermock-api-support-1.6.4-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/powermock/powermock-classloading-base/1.6.4/powermock-classloading-base-1.6.4-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/com/servicemesh/agility.api.docs.annotation/1.1.4/agility.api.docs.annotation-1.1.4.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/servicemesh/tools/agility-api-docs-annotation/1.2.0/agility-api-docs-annotation-1.2.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
