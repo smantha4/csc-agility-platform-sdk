@@ -24,7 +24,7 @@
 		<test.sources.gen.dir>target/generated-test-sources/</test.sources.gen.dir>
 		<test.sources.src.dir>${project.basedir}/src/test/java/</test.sources.src.dir>
 	</properties>
-	
+
 	<dependencies>
 		<dependency>
         <groupId>com.servicemesh.tools</groupId>
@@ -347,6 +347,9 @@
 							<Export-Package>
 								com.servicemesh.core.collections;version="${project.version}",com.servicemesh.core.collections.hash;version="${project.version}",com.servicemesh.core.collections.heap;version="${project.version}",com.servicemesh.core.collections.list;version="${project.version}",com.servicemesh.core.collections.search;version="${project.version}",com.servicemesh.core.collections.sort;version="${project.version}",com.servicemesh.core.collections.vector;version="${project.version}",com.servicemesh.core.messaging;version="${project.version}",com.servicemesh.core.reactor;version="${project.version}",com.servicemesh.core.async;version="${project.version}"
 							</Export-Package>
+							<Agility-Bundle-Type>
+								agility-core
+							</Agility-Bundle-Type>
 						</manifestEntries>
 					</archive>
 				</configuration>

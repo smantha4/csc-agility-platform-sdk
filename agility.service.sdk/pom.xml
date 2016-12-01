@@ -7,7 +7,7 @@
 
 	<artifactId>agility.service.sdk</artifactId>
 	<packaging>jar</packaging>
-	
+
 	<name>agility.service.sdk</name>
 
 	<parent>
@@ -15,11 +15,11 @@
 		<artifactId>agility.platform-sdk</artifactId>
 		<version>11.0.0.1021-SNAPSHOT</version>
 	</parent>
-	
+
 	<properties>
 		<xjc.generated.sources.dir>${project.build.directory}/generated-sources/xjc</xjc.generated.sources.dir>
 	</properties>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>com.servicemesh</groupId>
@@ -141,12 +141,15 @@
                             <Bundle-Vendor>CSC</Bundle-Vendor>
                             <DynamicImport-Package>*</DynamicImport-Package>
                             <Import-Package>
-                                com.servicemesh.agility.api;version="${project.version}",com.servicemesh.core.async;version="${project.version}",com.servicemesh.core.messaging;version="${project.version}",com.servicemesh.core.reactor;version="${project.version}",com.servicemesh.io.proxy,org.osgi.framework,org.osgi.util.tracker;version="1.5.1"   
+                                com.servicemesh.agility.api;version="${project.version}",com.servicemesh.core.async;version="${project.version}",com.servicemesh.core.messaging;version="${project.version}",com.servicemesh.core.reactor;version="${project.version}",com.servicemesh.io.proxy,org.osgi.framework,org.osgi.util.tracker;version="1.5.1"
                             </Import-Package>
                             <Bundle-ClassPath>.,cobertura.jar</Bundle-ClassPath>
                             <Export-Package>
-                                com.servicemesh.agility.sdk.service.exception;version="${project.version}",com.servicemesh.agility.sdk.service.helper;version="${project.version}",com.servicemesh.agility.sdk.service.msgs;version="${project.version}",com.servicemesh.agility.sdk.service.spi;version="${project.version}",com.servicemesh.agility.sdk.service.operations;version="${project.version}",com.servicemesh.agility.sdk.service.util;version="${project.version}" 
+                                com.servicemesh.agility.sdk.service.exception;version="${project.version}",com.servicemesh.agility.sdk.service.helper;version="${project.version}",com.servicemesh.agility.sdk.service.msgs;version="${project.version}",com.servicemesh.agility.sdk.service.spi;version="${project.version}",com.servicemesh.agility.sdk.service.operations;version="${project.version}",com.servicemesh.agility.sdk.service.util;version="${project.version}"
                             </Export-Package>
+							<Agility-Bundle-Type>
+								agility-core
+							</Agility-Bundle-Type>
                         </manifestEntries>
                     </archive>
 				</configuration>
