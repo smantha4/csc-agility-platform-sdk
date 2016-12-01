@@ -6,6 +6,8 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="src" path="target/generated-test-sources"/>
+	<classpathentry kind="src" path="target/generated-sources"/>
 	<classpathentry excluding="**" kind="src" output="target/test-classes" path="src/test/resources">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
@@ -14,11 +16,6 @@
 	<classpathentry kind="src" output="target/classes" path="src/main/java">
 		<attributes>
 			<attribute name="optional" value="true"/>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry excluding="**" kind="src" output="target/classes" path="src/main/resources">
-		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
@@ -106,12 +103,6 @@
 	<classpathentry kind="var" path="M2_REPO/org/codehaus/jackson/jackson-core-asl/1.7.3/jackson-core-asl-1.7.3.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/codehaus/jackson/jackson-mapper-asl/1.7.3/jackson-mapper-asl-1.7.3.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/eclipse/org.eclipse.osgi/3.8.0.v20120529-1548/org.eclipse.osgi-3.8.0.v20120529-1548.jar"/>
-	<classpathentry kind="var" path="M2_REPO/agility-platform-sdk/local/httpasyncclient/4.1/httpasyncclient-4.1.jar"/>
-	<classpathentry kind="var" path="M2_REPO/agility-platform-sdk/local/httpcore/4.4.1/httpcore-4.4.1.jar"/>
-	<classpathentry kind="var" path="M2_REPO/agility-platform-sdk/local/httpcore-nio/4.4.1/httpcore-nio-4.4.1.jar"/>
-	<classpathentry kind="var" path="M2_REPO/agility-platform-sdk/local/test/jsocks/1.0/jsocks-1.0.jar"/>
-	<classpathentry kind="var" path="M2_REPO/agility-platform-sdk/local/test/littleproxy-shade/1.0.0/littleproxy-shade-1.0.0.jar"/>
-	<classpathentry kind="var" path="M2_REPO/agility-platform-sdk/local/test/poc-models/0.0.1/poc-models-0.0.1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/mockito/mockito-all/1.10.19/mockito-all-1.10.19.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/spockframework/spock-core/0.6-groovy-1.8/spock-core-0.6-groovy-1.8.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/powermock/powermock-core/1.6.4/powermock-core-1.6.4.jar" sourcepath="M2_REPO/org/powermock/powermock-core/1.6.4/powermock-core-1.6.4-sources.jar"/>
@@ -140,18 +131,6 @@
 	<classpathentry kind="var" path="M2_REPO/org/powermock/powermock-reflect/1.6.4/powermock-reflect-1.6.4-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/powermock/powermock-api-support/1.6.4/powermock-api-support-1.6.4-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/powermock/powermock-classloading-base/1.6.4/powermock-classloading-base-1.6.4-sources.jar"/>
-	<classpathentry kind="src" output="target/classes" path="target/generated-sources">
-		<attributes>
-			<attribute name="optional" value="true"/>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="src" output="target/test-classes" path="target/generated-test-sources">
-		<attributes>
-			<attribute name="optional" value="true"/>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
