@@ -13,7 +13,7 @@
 		<artifactId>agility.platform-sdk</artifactId>
 		<version>11.0.0.1021-SNAPSHOT</version>
 	</parent>
-	
+
 	<properties>
 		<xjc.generated.sources.dir>${project.build.directory}/generated-sources/xjc</xjc.generated.sources.dir>
 	</properties>
@@ -139,12 +139,15 @@
                             <Bundle-Vendor>CSC</Bundle-Vendor>
                             <DynamicImport-Package>*</DynamicImport-Package>
                             <Import-Package>
-								com.servicemesh.agility.api;version="${project.version}",com.servicemesh.core.async;version="${project.version}",com.servicemesh.core.messaging;version="${project.version}",com.servicemesh.core.reactor;version="${project.version}",com.servicemesh.io.proxy,org.osgi.framework,org.osgi.util.tracker;version="1.5.1"  
+								com.servicemesh.agility.api;version="${project.version}",com.servicemesh.core.async;version="${project.version}",com.servicemesh.core.messaging;version="${project.version}",com.servicemesh.core.reactor;version="${project.version}",com.servicemesh.io.proxy,org.osgi.framework,org.osgi.util.tracker;version="1.5.1"
                             </Import-Package>
                             <Bundle-ClassPath>.</Bundle-ClassPath>
                             <Export-Package>
                                 com.servicemesh.agility.sdk.cloud.exception;version="${project.version}",com.servicemesh.agility.sdk.cloud.helper;version="${project.version}",com.servicemesh.agility.sdk.cloud.msgs;version="${project.version}",com.servicemesh.agility.sdk.cloud.spi;version="${project.version}",com.servicemesh.agility.sdk.cloud.util;version="${project.version}"
                             </Export-Package>
+							<Agility-Bundle-Type>
+								agility-core
+							</Agility-Bundle-Type>
                         </manifestEntries>
                     </archive>
 				</configuration>

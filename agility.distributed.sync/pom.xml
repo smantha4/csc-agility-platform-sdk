@@ -97,13 +97,16 @@
                             <Bundle-Vendor>CSC</Bundle-Vendor>
                             <DynamicImport-Package>*</DynamicImport-Package>
                             <Import-Package>
-                            	com.servicemesh.core.async;version="${project.version}",org.apache.log4j;version="[1.2.17,2.0.0)",org.apache.zookeeper,org.osgi.framework,org.osgi.util.tracker    
+                            	com.servicemesh.core.async;version="${project.version}",org.apache.log4j;version="[1.2.17,2.0.0)",org.apache.zookeeper,org.osgi.framework,org.osgi.util.tracker
                             </Import-Package>
                             <Bundle-ClassPath>.,java-uuid-generator-3.0.0.jar</Bundle-ClassPath>
                             <Export-Package>
-                                com.servicemesh.agility.distributed.node,com.servicemesh.agility.distributed.sync 
+                                com.servicemesh.agility.distributed.node,com.servicemesh.agility.distributed.sync
                             </Export-Package>
-                        </manifestEntries>
+                            <Agility-Bundle-Type>
+								agility-core
+							</Agility-Bundle-Type>
+			       </manifestEntries>
                     </archive>
 				</configuration>
 			</plugin>

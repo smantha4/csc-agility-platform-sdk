@@ -122,7 +122,7 @@
                             <Bundle-Vendor>CSC</Bundle-Vendor>
                             <DynamicImport-Package>*</DynamicImport-Package>
                             <Import-Package>
-                                com.servicemesh.core.async,com.servicemesh.core.reactor,javax.crypto,javax.crypto.interfaces,javax.crypto.spec,javax.naming,javax.naming.ldap,javax.naming.directory,javax.net.ssl,javax.security.auth.x500,javax.xml,javax.xml.bind,javax.xml.parsers,javax.xml.transform,javax.xml.transform.dom,javax.xml.transform.stream,org.apache.commons.codec.binary,org.apache.commons.logging,org.apache.log4j;version="[1.2.17,2.0.0)",org.ietf.jgss,org.slf4j,org.w3c.dom,org.xml.sax 
+                                com.servicemesh.core.async,com.servicemesh.core.reactor,javax.crypto,javax.crypto.interfaces,javax.crypto.spec,javax.naming,javax.naming.ldap,javax.naming.directory,javax.net.ssl,javax.security.auth.x500,javax.xml,javax.xml.bind,javax.xml.parsers,javax.xml.transform,javax.xml.transform.dom,javax.xml.transform.stream,org.apache.commons.codec.binary,org.apache.commons.logging,org.apache.log4j;version="[1.2.17,2.0.0)",org.ietf.jgss,org.slf4j,org.w3c.dom,org.xml.sax
                             </Import-Package>
                             <Bundle-ClassPath>
                             	.,guava-16.0.1.jar,httpasyncclient-4.1.jar,httpclient-4.4.1.jar,httpcore-4.4.1.jar,httpcore-nio-4.4.1.jar,jaxb-impl-2.2.11.jar,jaxb-xjc-2.2.11.jar, jaxb2-basics-0.11.0.jar,jaxb2-basics-annotate-1.0.2.jar,jaxb2-basics-ant-0.11.0.jar,jaxb2-basics-runtime-0.11.0.jar,jaxb2-basics-tools-0.11.0.jar,commons-lang-2.5.jar,bcprov-jdk15on-1.55.jar,bcpkix-jdk15on-1.55.jar
@@ -130,7 +130,10 @@
                             <Export-Package>
                                 com.servicemesh.io.http,com.servicemesh.io.proxy,com.servicemesh.io.util
                             </Export-Package>
-                        </manifestEntries>
+							<Agility-Bundle-Type>
+								agility-core
+							</Agility-Bundle-Type>
+				        </manifestEntries>
                     </archive>
 				</configuration>
 			</plugin>
