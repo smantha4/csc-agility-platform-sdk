@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.servicemesh.agility.api.AccessList;
+import com.servicemesh.agility.api.AssetProperty;
 import com.servicemesh.agility.api.Cloud;
 import com.servicemesh.agility.api.ConfigurationResource;
 import com.servicemesh.agility.api.Instance;
@@ -50,6 +51,17 @@ public interface IInstance
      * @throws Exception
      */
     public Task executeScriptTask(Instance instance, Script script) throws Exception;
+    
+    /**
+     * Executes the specified script on a running virtual machine instance.
+     *
+     * @param instance The target instance
+     * @param script The script to be executed
+     * @param variables A list of variables set by the user
+     * @return Returns a task that can be monitored by the caller.
+     * @throws Exception
+     */
+    public Task executeScriptTask(Instance instance, Script script, List<AssetProperty> variables) throws Exception;
 
     /**
      * If supported by the underlying cloud adapter creates a named snapshot of the virtual machine state.
