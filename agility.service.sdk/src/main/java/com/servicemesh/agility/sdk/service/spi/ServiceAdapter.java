@@ -232,7 +232,7 @@ public abstract class ServiceAdapter implements BundleActivator
 
         if (request.getClouds() == null || request.getClouds().isEmpty())
         {
-            logger.error("Clouds assocaiated with request are empty. Returning empty list of proxies");
+            logger.warn("Clouds associated with the request are empty. Returning empty list of proxies");
             return proxies;
         }
         // Get the cloud from the  request
