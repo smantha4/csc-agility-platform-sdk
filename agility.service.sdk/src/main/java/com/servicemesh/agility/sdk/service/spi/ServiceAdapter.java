@@ -226,10 +226,18 @@ public abstract class ServiceAdapter implements BundleActivator
 
     public static List<Proxy> getProxyConfig(ServiceProviderRequest request, ProxyUsage usage)
     {
-    	// Get the cloud from the  request
-    	Cloud cloud = request.getClouds().get(0);
+
         //  Get the proxies specified by the usage type requested
         List<Proxy> proxies = new ArrayList<Proxy>();
+
+        if (request.getClouds() == null || request.getClouds().isEmpty())
+        {
+            logger.warn("Clouds associated with the request are empty. Returning empty list of proxies");
+            return proxies;
+        }
+        // Get the cloud from the  request
+        Cloud cloud = request.getClouds().get(0);
+
         Proxy last = null;
         for (com.servicemesh.agility.api.Proxy proxy : cloud.getProxies())
         {

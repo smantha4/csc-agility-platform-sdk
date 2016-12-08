@@ -50,7 +50,7 @@ public class ServiceAdapterTest
         Cloud mockCloud = mock(Cloud.class);
         List<Cloud> mockCloudList = new ArrayList<Cloud>();
         mockCloudList.add(mockCloud);
-        when(mockSPR.getClouds()) .thenReturn(mockCloudList);
+        when(mockSPR.getClouds()).thenReturn(mockCloudList);
         when(mockCloud.getProxies()).thenReturn(listOfProxies);
         when(mockProxy.getProxyUsage()).thenReturn(ProxyUsage.PROXY_ALL);
         when(mockProxy.getProxyType()).thenReturn(ProxyType.PROXY_HTTP);
@@ -84,7 +84,7 @@ public class ServiceAdapterTest
         Cloud mockCloud = mock(Cloud.class);
         List<Cloud> mockCloudList = new ArrayList<Cloud>();
         mockCloudList.add(mockCloud);
-        when(mockSPR.getClouds()) .thenReturn(mockCloudList);
+        when(mockSPR.getClouds()).thenReturn(mockCloudList);
         when(mockCloud.getProxies()).thenReturn(listOfProxies);
         when(mockProxy.getProxyUsage()).thenReturn(ProxyUsage.PROXY_MANAGER_CLOUD);
         when(mockProxy.getProxyType()).thenReturn(ProxyType.PROXY_HTTPS);
@@ -114,7 +114,7 @@ public class ServiceAdapterTest
         Cloud mockCloud = mock(Cloud.class);
         List<Cloud> mockCloudList = new ArrayList<Cloud>();
         mockCloudList.add(mockCloud);
-        when(mockSPR.getClouds()) .thenReturn(mockCloudList);
+        when(mockSPR.getClouds()).thenReturn(mockCloudList);
         when(mockCloud.getProxies()).thenReturn(listOfProxies);
         when(mockProxy.getProxyUsage()).thenReturn(ProxyUsage.PROXY_MANAGER_CLOUD);
         when(mockProxy.getProxyType()).thenReturn(ProxyType.PROXY_HTTP);
@@ -127,6 +127,23 @@ public class ServiceAdapterTest
                 returnProxyList.get(0).getHostname().equals("dummyHost"));
         Assert.assertTrue("The test Proxy was not given Proxy Type correctly",
                 returnProxyList.get(0).getType().equals(com.servicemesh.io.proxy.ProxyType.HTTP_PROXY));
+    }
+
+    @Test
+    public void testSessionGetProxyWithNoCloudsPassedIn() throws Exception
+    {
+        ServiceProviderRequest mockSPR = mock(ServiceProviderRequest.class);
+        List<Proxy> listOfProxies = new ArrayList<Proxy>();
+        Proxy mockProxy = mock(Proxy.class);
+        listOfProxies.add(mockProxy);
+        List<com.servicemesh.io.proxy.Proxy> returnProxyList = new ArrayList<com.servicemesh.io.proxy.Proxy>();
+
+        List<Cloud> mockCloudList = new ArrayList<Cloud>();
+        when(mockSPR.getClouds()).thenReturn(mockCloudList);
+
+        returnProxyList = ServiceAdapter.getProxyConfig(mockSPR);
+        Assert.assertTrue("One Proxy should've been created", returnProxyList.size() == 0);
+
     }
 
     @Test
